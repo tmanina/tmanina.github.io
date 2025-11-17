@@ -1,0 +1,257 @@
+/* Custom styles */
+:root {
+  --primary-gradient: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
+  --teal-primary: #14b8a6;
+  --teal-dark: #0d9488;
+  --cyan-primary: #0891b2;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+  min-height: 100vh;
+}
+
+.gradient-bg {
+  background: var(--primary-gradient);
+}
+
+.gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(20, 184, 166, 0.1), 0 10px 10px -5px rgba(20, 184, 166, 0.04) !important;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.text-teal-600 {
+  color: var(--teal-primary);
+}
+
+.bg-teal-600 {
+  background-color: var(--teal-primary);
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.nav-pills .nav-link.active {
+  background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
+  color: white;
+}
+
+.nav-pills .nav-link {
+  color: #6c757d;
+  transition: all 0.3s;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+  background: #f8f9fa;
+}
+/* Islamic calendar styles */
+.islamic-calendar {
+  direction: rtl;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.islamic-calendar .card-header {
+  background: linear-gradient(135deg, #e9f3ff, #f4ecff);
+  border-bottom: none;
+}
+
+.islamic-calendar .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.islamic-calendar .calendar-day {
+  background-color: #f8f9fa;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    background-color 0.12s ease;
+  font-size: 0.9rem;
+}
+
+.islamic-calendar .calendar-day:hover {
+  background-color: #e9f2ff;
+  box-shadow: 0 0.35rem 0.75rem rgba(13, 110, 253, 0.15);
+  transform: translateY(-1px);
+}
+
+.islamic-calendar .calendar-day.day-today {
+  background: linear-gradient(135deg, #0d6efd, #6f42c1);
+  color: #f8f9fa;
+  box-shadow: 0 0.55rem 1.2rem rgba(13, 110, 253, 0.4);
+}
+
+.islamic-calendar .calendar-day.day-today .small {
+  color: rgba(248, 249, 250, 0.9);
+}
+
+.islamic-calendar .calendar-day-empty {
+  min-height: 2.5rem;
+}
+
+.islamic-calendar .today-badge {
+  font-size: 0.7rem;
+  padding-inline: 0.45rem;
+  padding-block: 0.15rem;
+}
+/* ==============================
+   Islamic Calendar Light / Dark Theme
+   ============================== */
+
+/* الأساس */
+.islamic-calendar {
+  direction: rtl;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+/* الهيدر */
+.islamic-calendar .card-header {
+  background: linear-gradient(135deg, var(--bs-primary-bg-subtle), var(--bs-purple-bg-subtle));
+  border-bottom: none;
+}
+
+/* شبكة الأيام */
+.islamic-calendar .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: .35rem;
+}
+
+.islamic-calendar .calendar-day {
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+  transition: all .12s ease;
+  font-size: .9rem;
+  border: 1px solid var(--bs-border-color-translucent);
+}
+
+/* Hover */
+.islamic-calendar .calendar-day:hover {
+  background-color: var(--bs-primary-bg-subtle);
+  box-shadow: 0 0.35rem 0.75rem rgba(var(--bs-primary-rgb), .25);
+  transform: translateY(-1px);
+}
+
+/* اليوم الحالي (Today) */
+.islamic-calendar .calendar-day.day-today {
+  background: linear-gradient(135deg, var(--bs-primary), var(--bs-purple));
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 0.55rem 1.2rem rgba(var(--bs-primary-rgb), .45);
+}
+
+.islamic-calendar .calendar-day.day-today .small {
+  color: rgba(255, 255, 255, .9) !important;
+}
+
+/* الخلايا الفارغة */
+.islamic-calendar .calendar-day-empty {
+  min-height: 2.5rem;
+}
+
+/* الشارة "اليوم" */
+.islamic-calendar .today-badge {
+  font-size: .65rem;
+  padding: .15rem .45rem;
+  background: var(--bs-light);
+  color: var(--bs-primary);
+}
+
+/* ==============================
+   Dark Mode adjustments
+   ============================== */
+
+html[data-bs-theme="dark"] .islamic-calendar {
+  background: var(--bs-gray-900);
+  color: var(--bs-light);
+}
+
+html[data-bs-theme="dark"] .islamic-calendar .calendar-day {
+  background-color: var(--bs-dark-bg-subtle);
+  border-color: var(--bs-border-color);
+  color: var(--bs-light);
+}
+
+html[data-bs-theme="dark"] .islamic-calendar .calendar-day:hover {
+  background-color: rgba(var(--bs-primary-rgb), .15);
+}
+
+html[data-bs-theme="dark"] .islamic-calendar .card-header {
+  background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), .25), rgba(var(--bs-purple-rgb), .25));
+}
+
+html[data-bs-theme="dark"] .islamic-calendar .today-badge {
+  background: var(--bs-light);
+  color: var(--bs-primary);
+}
+/* Hero section (مرحباً بك في طمانينة) */
+.home-hero-gradient {
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  color: #ffffff;               /* ✅ يثبت النص دايماً أبيض */
+}
+
+/* في الوضع الداكن نخلي الخلفية أغمق شوي لكن النص يبقى واضح */
+html[data-bs-theme="dark"] .home-hero-gradient {
+  background: radial-gradient(circle at top, #3b82f6, #1f2937);
+  color: #ffffff;
+}
+
+/* لو حاب تصغّر النص الفرعي شوية */
+.home-hero-gradient p {
+  opacity: 0.95;
+}

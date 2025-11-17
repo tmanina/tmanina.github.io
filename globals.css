@@ -1,0 +1,39 @@
+body {
+  background-color: #f8f9fa;
+}
+
+[data-bs-theme="dark"] body {
+  background-color: #333;
+  color: #fff;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #444;
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link {
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link.active {
+    background-color: #6610f2;
+}
+
+[data-bs-theme="dark"] .btn-light {
+    background-color: #444;
+    color: #fff;
+    border-color: #555;
+}
+
+
+.gradient-bg {
+  background: linear-gradient(135deg, #6610f2, #6f42c1);
+  color: white;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6610f2, #d63384);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
