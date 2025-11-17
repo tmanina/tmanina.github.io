@@ -1,12 +1,37 @@
-import { useState, useCallback } from 'react'
+"use client"
 
-export const useToast = () => {
-  const [toast, setToast] = useState<{ title: string; variant?: 'default' | 'destructive'; duration?: number } | null>(null)
+import * as React from "react"
 
-  const showToast = useCallback((props: { title: string; variant?: 'default' | 'destructive'; duration?: number }) => {
-    setToast(props)
-    setTimeout(() => setToast(null), props.duration || 3000)
+type ToastVariant = "success" | "danger" | "warning" | "info"
+
+interface ToastOptions {
+  message: string
+  variant?: ToastVariant
+}
+
+/**
+ * هوك بسيط لعرض Toast عبر alert أو console (ممكن تطوّره لاحقاً لواجهة Bootstrap حقيقية)
+ */
+export function useToast() {
+  const showToast = React.useCallback((options: ToastOptions) => {
+    const { message, variant = "info" } = options
+
+    // هنا تقدر لاحقاً تربطه بـ Toast UI حقيقي في الصفحة
+    // حالياً هنستخدم console + alert كتصرف مبدئي:
+    console.log(`[${variant.toUpperCase()}]`, message)
+    if (typeof window !== "undefined") {
+      // مؤقتاً - عشان تشوف النتيجة
+      // تقدر تشيل الـ alert لما تعمل UI للـ toast
+      // eslint-disable-next-line no-alert
+      alert(message)
+    }
   }, [])
 
-  return { toast, toast: showToast }
+  // نرجّع نفس الفنكشن باسمين:
+  // toast → للاستخدام الحالي
+  // showToast → للي يحب يكتبها صريحة
+  return {
+    toast: showToast,
+    showToast,
+  }
 }
