@@ -10,6 +10,13 @@ type AdhkarItem = {
 
 type RemainingMap = Record<string, number>
 
+type ProgressData = {
+  history: Record<string, number>
+  lastDate?: string
+}
+
+const PROGRESS_STORAGE_KEY = "tmanina_progress"
+
 // ====== بيانات أذكار الصباح ======
 const morningTitle = "أذكار الصباح"
 
@@ -153,7 +160,7 @@ const morningAdhkar: AdhkarItem[] = [
     bless: "",
   },
   {
-    zekr: `اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ ، عَلَيْكَ تَوَكَّلْتُ ، وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ , مَا شَاءَ اللَّهُ كَانَ ، وَمَا لَمْ يَشَأْ لَمْ يَكُنْ ، وَلا حَوْلَ وَلا قُوَّةَ إِلا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ , أَعْلَمُ أَنَّ اللَّهَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ ، وَأَنَّ اللَّهَ قَدْ أَحَاطَ بِكُلِّ شَيْءٍ عِلْمًا , اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي ، وَمِنْ شَرِّ كُلِّ دَابَّةٍ أَنْتَ آخِذٌ بِنَاصِيَتِهَا ، إِنَّ رَبِّي عَلَى صِرَاطٍ مُسْتَقِيمٍ.`,
+    zekr: `اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ ، عَلَيْكَ تَوَكَّلْتُ ، وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ , مَا شَاءَ اللَّهُ كَانَ ، وَمَا لَمْ يَشَأْ لَمْ يَكُنْ ، وَلا حَوْلَ وَلا قُوَّةَ إِلا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ , أَعْلَمُ أَنَّ اللَّهَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ ، وَأَنَّ اللَّهَ قَدْ أَحَاطَ بِكُلِّ شَيْءٍ عِلْمًا , اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي ، وَمِنْ شَرِّ كُلِّ دَابَّةٍ أَنْتَ آخِذٌ بِنَاصِيَتِهَا ، إِنَّ رَبِّي عَلَى صِرَاطٍ مُسْتَقِيمٍ.`,
     repeat: 1,
     bless: "",
   },
@@ -265,7 +272,7 @@ const eveningAdhkar: AdhkarItem[] = [
     bless: "",
   },
   {
-    zekr: `اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ، وَالفَـقْر ، وَأَعـوذُ بِكَ مِنْ عَذابِ القَـبْر ، لا إلهَ إلاّ أَنْـتَ.`,
+    zekr: `اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ، وَالفَـقْر ، وَأَعـوذُ بِكَ مِنْ عَذابِ القَـبْر ، لا إلهَ إلاّ أَنْتَ.`,
     repeat: 3,
     bless: "",
   },
@@ -295,7 +302,7 @@ const eveningAdhkar: AdhkarItem[] = [
     bless: "",
   },
   {
-    zekr: `اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَى آلِ إِبْرَاهِيمَ،إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَآلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَى آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ.`,
+    zekr: `اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَى آلِ إِبْرَاهِيمَ،إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَآلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَى آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ.`,
     repeat: 10,
     bless: "من صلى على حين يصبح وحين يمسى ادركته شفاعتى يوم القيامة.",
   },
@@ -320,7 +327,7 @@ const eveningAdhkar: AdhkarItem[] = [
     bless: "",
   },
   {
-    zekr: `اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ ، عَلَيْكَ تَوَكَّلْتُ ، وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ , مَا شَاءَ اللَّهُ كَانَ ، وَمَا لَمْ يَشَأْ لَمْ يَكُنْ ، وَلا حَوْلَ وَلا قُوَّةَ إِلا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ , أَعْلَمُ أَنَّ اللَّهَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ ، وَأَنَّ اللَّهَ قَدْ أَحَاطَ بِكُلِّ شَيْءٍ عِلْمًا , اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي ، وَمِنْ شَرِّ كُلِّ دَابَّةٍ أَنْتَ آخِذٌ بِنَاصِيَتِهَا ، إِنَّ رَبِّي عَلَى صِرَاطٍ مُسْتَقِيمٍ.`,
+    zekr: `اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ ، عَلَيْكَ تَوَكَّلْتُ ، وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ , مَا شَاءَ اللَّهُ كَانَ ، وَمَا لَمْ يَشَأْ لَمْ يَكُنْ ، وَلا حَوْلَ وَلا قُوَّةَ إِلا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ , أَعْلَمُ أَنَّ اللَّهَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ ، وَأَنَّ اللَّهَ قَدْ أَحَاطَ بِكُلِّ شَيْءٍ عِلْمًا , اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي ، وَمِنْ شَرِّ كُلِّ دَابَّةٍ أَنْتَ آخِذٌ بِنَاصِيَتِهَا ، إِنَّ رَبِّي عَلَى صِرَاطٍ مُسْتَقِيمٍ.`,
     repeat: 1,
     bless: "",
   },
@@ -338,7 +345,7 @@ const eveningAdhkar: AdhkarItem[] = [
   },
 ]
 
-// ====== دالة لبناء العدادات الابتدائية ======
+// ====== دوال المساعدة ======
 function getInitialRemaining(): RemainingMap {
   const initial: RemainingMap = {}
   morningAdhkar.forEach((dhikr, index) => {
@@ -349,22 +356,13 @@ function getInitialRemaining(): RemainingMap {
   })
   return initial
 }
-// نفس الملف: morning-evening.tsx (فوق export function MorningEvening)
 
-const PROGRESS_STORAGE_KEY = "tmanina_progress"
-
-type ProgressData = {
-  history: Record<string, number>
-  lastDate?: string
-}
-
-// زيادة عدد الأذكار في هذا اليوم وتخزينه في localStorage
 function incrementDailyDhikr(step: number) {
   if (typeof window === "undefined") return
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const dateKey = today.toISOString().slice(0, 10) // YYYY-MM-DD
+  const dateKey = today.toISOString().slice(0, 10)
 
   let data: ProgressData = { history: {} }
 
@@ -376,7 +374,7 @@ function incrementDailyDhikr(step: number) {
         data = parsed as ProgressData
       }
     } catch {
-      // ignore parse error
+      // ignore
     }
   }
 
@@ -385,95 +383,135 @@ function incrementDailyDhikr(step: number) {
   data.lastDate = dateKey
 
   window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data))
-
-  // إشعار الـ Dashboard عشان يحدث نفسه بدون ريفريش
   window.dispatchEvent(new Event("tmanina-progress-updated"))
+}
+
+async function copyDhikr(zekr: string) {
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(zekr)
+      alert("تم نسخ الذكر  ")
+    } else {
+      const dummy = document.createElement("textarea")
+      dummy.value = zekr
+      document.body.appendChild(dummy)
+      dummy.select()
+      document.execCommand("copy")
+      document.body.removeChild(dummy)
+      alert("تم نسخ الذكر إلى الحافظة ✅")
+    }
+  } catch (error) {
+    console.error("Copy failed", error)
+    alert("تعذّر نسخ الذكر، حاول مرة أخرى.")
+  }
 }
 
 // ====== الكومبوننت الرئيسي ======
 export function MorningEvening() {
   const [remaining, setRemaining] = React.useState<RemainingMap>(getInitialRemaining)
 
-const handleDhikrClick = (key: string, maxRepeat: number) => {
-  // نقرأ القيمة الحالية من الـ state مباشرة
-  const current = remaining[key] ?? maxRepeat
-  if (current <= 0) return
+  const handleDhikrClick = (key: string, maxRepeat: number) => {
+    const current = remaining[key] ?? maxRepeat
+    if (current <= 0) return
 
-  // كل ضغطة = ذكر واحد (نزيد التقدّم في localStorage مرة واحدة فقط)
-  incrementDailyDhikr(1)
+    const newRemaining = current - 1
 
-  // نحدّث العدّاد في الواجهة
-  setRemaining((prev) => ({
-    ...prev,
-    [key]: current - 1,
-  }))
-}
+    incrementDailyDhikr(1)
 
+    setRemaining((prev) => ({
+      ...prev,
+      [key]: newRemaining,
+    }))
 
+    if (newRemaining <= 0 && current > 0 && typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate?.(60)
+      } catch {
+        // ignore
+      }
+    }
+  }
 
-  // ✅ زر إعادة تعيين كل العدادات
   const resetAllCounters = () => {
     setRemaining(getInitialRemaining())
   }
 
-  const renderAdhkar = (
-    list: AdhkarItem[],
-    prefix: "morning" | "evening"
-  ) => (
+  const renderAdhkar = (list: AdhkarItem[], prefix: "morning" | "evening") => (
     <div className="vstack gap-3">
       {list.map((dhikr, index) => {
         const key = `${prefix}-${index}`
         const remainingCount = remaining[key] ?? dhikr.repeat
         const isDone = remainingCount <= 0
+        const circleContent = isDone ? "✅" : remainingCount
 
         return (
           <div
             key={key}
             onClick={() => handleDhikrClick(key, dhikr.repeat)}
-            className={`p-4 rounded-3 border-2 ${
+            className={`p-3 p-md-4 rounded-4 border ${
               isDone
                 ? "border-success bg-success bg-opacity-10"
-                : "border bg-body"
+                : "border border-body-secondary bg-body"
             }`}
-            style={{ cursor: "pointer", transition: "all 0.3s" }}
+            style={{
+              cursor: "pointer",
+              transition: "all 0.25s ease",
+            }}
           >
-            <div className="d-flex gap-3">
-              {/* دائرة العداد */}
-              <div
-                className={`rounded-circle border-2 d-flex align-items-center justify-content-center flex-shrink-0 ${
-                  isDone
-                    ? "bg-success border-success text-white"
-                    : "bg-body border-secondary text-body"
-                }`}
-                style={{ width: "32px", height: "32px", minWidth: "32px" }}
+            {/* نص الذكر من أول البوكس */}
+            <div className="flex-fill">
+              <p
+                className="fs-5 lh-lg mb-2"
+                style={{ textAlign: "justify" }}
               >
-                {isDone ? (
-                  <i className="fas fa-check small" />
-                ) : (
-                  <span className="small fw-bold">{remainingCount}</span>
-                )}
-              </div>
+                {dhikr.zekr}
+              </p>
 
-              {/* النص */}
-              <div className="flex-fill">
-                <p className="fs-5 lh-lg mb-2">{dhikr.zekr}</p>
+              {/* بركة الذكر فقط */}
+              {dhikr.bless && (
+                <p className="small text-success mb-0">{dhikr.bless}</p>
+              )}
+            </div>
 
-                <div className="d-flex align-items-center gap-2 text-body-secondary small flex-wrap">
-                  <i className="fas fa-redo" />
-                  <span>التكرار المطلوب: {dhikr.repeat}</span>
-                  <span className="mx-1">•</span>
-                  <span>
-                    المتبقي:{" "}
-                    {remainingCount > 0
-                      ? `${remainingCount} مرة`
-                      : "اكتمل هذا الذكر ✅"}
-                  </span>
+            {/* الشريط السفلي: عدد التكرار + نسخ */}
+            <div className="mt-3 pt-2 border-top d-flex text-center small">
+              {/* زر عدد التكرار مع دائرة متغيرة (remaining) */}
+              <button
+                type="button"
+                className="btn btn-link flex-fill text-decoration-none text-body-secondary d-flex align-items-center justify-content-center gap-2 py-2"
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+              >
+                <span>عدد التكرار</span>
+                <div
+                  className="rounded-circle d-inline-flex align-items-center justify-content-center"
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    border: "1px solid rgba(0,0,0,0.15)",
+                    backgroundColor: "var(--bs-body-bg)",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  {circleContent}
                 </div>
+              </button>
 
-                {dhikr.bless && (
-                  <p className="small text-success mt-2 mb-0">{dhikr.bless}</p>
-                )}
-              </div>
+              <div className="border-start" />
+
+              {/* زر نسخ */}
+              <button
+                type="button"
+                className="btn btn-link flex-fill text-decoration-none text-body-secondary d-flex align-items-center justify-content-center gap-2 py-2"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  copyDhikr(dhikr.zekr)
+                }}
+              >
+                <i className="fas fa-copy" />
+                <span>نسخ</span>
+              </button>
             </div>
           </div>
         )
@@ -537,7 +575,7 @@ const handleDhikrClick = (key: string, maxRepeat: number) => {
                   {morningTitle}
                 </h2>
               </div>
-              <div className="card-body p-4">
+              <div className="card-body p-3 p-md-4">
                 {renderAdhkar(morningAdhkar, "morning")}
               </div>
             </div>
@@ -556,7 +594,7 @@ const handleDhikrClick = (key: string, maxRepeat: number) => {
                   {eveningTitle}
                 </h2>
               </div>
-              <div className="card-body p-4">
+              <div className="card-body p-3 p-md-4">
                 {renderAdhkar(eveningAdhkar, "evening")}
               </div>
             </div>

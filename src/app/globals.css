@@ -8,7 +8,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+  background: linear-gradient(135deg, #aeb1b0 0%, #cfd5d5 100%);
   min-height: 100vh;
 }
 
@@ -190,7 +190,7 @@ html {
 /* اليوم الحالي (Today) */
 .islamic-calendar .calendar-day.day-today {
   background: linear-gradient(135deg, var(--bs-primary), var(--bs-purple));
-  color: #fff !important;
+  color: #9b9a9a !important;
   border: none;
   box-shadow: 0 0.55rem 1.2rem rgba(var(--bs-primary-rgb), .45);
 }
@@ -242,13 +242,13 @@ html[data-bs-theme="dark"] .islamic-calendar .today-badge {
 /* Hero section (مرحباً بك في طمانينة) */
 .home-hero-gradient {
   background: linear-gradient(135deg, #0d6efd, #6610f2);
-  color: #ffffff;               /* ✅ يثبت النص دايماً أبيض */
+  color: #a59a9a;               /* ✅ يثبت النص دايماً أبيض */
 }
 
 /* في الوضع الداكن نخلي الخلفية أغمق شوي لكن النص يبقى واضح */
 html[data-bs-theme="dark"] .home-hero-gradient {
   background: radial-gradient(circle at top, #3b82f6, #1f2937);
-  color: #ffffff;
+  color: #837e7e;
 }
 
 /* لو حاب تصغّر النص الفرعي شوية */
@@ -258,7 +258,7 @@ html[data-bs-theme="dark"] .home-hero-gradient {
 /* زر الصعود للأعلى - تصميم احترافي */
 .back-to-top-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 20px;              /* ديسكتوب: قريب من تحت */
   right: 20px;
   width: 55px;
   height: 55px;
@@ -268,7 +268,7 @@ html[data-bs-theme="dark"] .home-hero-gradient {
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  display: none;
+  display: none;             /* بيظهر بالـ JS لما scrollY > 300 */
   justify-content: center;
   align-items: center;
   z-index: 3000;
@@ -295,3 +295,30 @@ html[data-bs-theme="dark"] .home-hero-gradient {
     opacity: 1;
   }
 }
+
+/* 📱 على الموبايل / التابلت: نرفعه فوق شريط الـ bottom nav */
+@media (max-width: 992px) {
+  .back-to-top-btn {
+    bottom: 60px;  /* ارفعها لو لسه متغطية (مثلاً 100 أو 110px) */
+  }
+}
+/* زر الشات العائم في اليسار لجميع الأجهزة */
+.floating-chat-btn {
+  width: 60px;
+  height: 60px;
+  bottom: 20px;        /* مكان واضح في كل الأجهزة */
+  left: 20px;          /* زر في اليسار */
+  right: auto;         /* إلغاء اليمين */
+  z-index: 1050;
+  position: fixed;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* على الموبايل + التابلت — نرفعه للأعلى قليلًا بسبب الـ bottom nav */
+@media (max-width: 992px) {
+  .floating-chat-btn {
+    bottom: 70px;     /* رفعه فوق bottom navigation */
+  }
+}
+
+

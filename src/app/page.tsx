@@ -16,8 +16,8 @@ export default function Home() {
       <main className="flex-grow-1">
         <div className="container py-4">
 
-          {/* Tabs bar */}
-          <div className="main-tabs-wrapper mb-4">
+          {/* Tabs bar – تظهر فقط على الديسكتوب */}
+          <div className="main-tabs-wrapper mb-4 d-none d-md-block">
             <ul
               className="nav nav-pills nav-fill bg-body rounded-4 shadow-sm p-2 gap-1 flex-nowrap main-tabs"
               id="mainTabs"
@@ -116,14 +116,14 @@ export default function Home() {
               <div className="row g-4">
                 <div className="col-12">
                   <div className="card border-0 shadow-lg rounded-4 overflow-hidden home-hero-card">
-  <div className="home-hero-gradient p-4 p-md-5 text-white">
-    <h1 className="h3 h-md-2 mb-2 fw-bold">
-      مرحباً بك في طمانينة
-    </h1>
-    <p className="mb-0 mb-md-1">
-      تقرّب إلى الله بالأذكار والعبادات، في مكان واحد منظم وجميل.
-    </p>
-  </div>
+                    <div className="home-hero-gradient p-4 p-md-5 text-white">
+                      <h1 className="h3 h-md-2 mb-2 fw-bold">
+                        مرحباً بك في طمانينة
+                      </h1>
+                      <p className="mb-0 mb-md-1">
+                        تقرّب إلى الله بالأذكار والعبادات، في مكان واحد منظم وجميل.
+                      </p>
+                    </div>
 
                     <div className="card-body p-3 p-md-4">
                       <div className="row g-3 g-md-4">
