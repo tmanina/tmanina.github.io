@@ -32,7 +32,7 @@ export function Header() {
             <i className="fas fa-mosque text-white fs-4"></i>
           </div>
           <div>
-            <h1 className="h3 mb-0 fw-bold gradient-text">طمانينة</h1>
+            <h1 className="h3 mb-0 fw-bold gradient-text">طمأنينة</h1>
             <p className="small text-muted mb-0 d-none d-sm-block">رفيقك الروحاني</p>
           </div>
         </a>
