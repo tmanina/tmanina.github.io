@@ -110,23 +110,44 @@ export function TasbihCircle() {
         .circle-shake {
           animation: shake 0.4s ease-in-out, pulse 0.4s ease-in-out;
         }
+
+        /* Main Integrated Circle */
+        .main-circle {
+            width: 220px;
+            height: 220px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+            border-radius: 50%;
+            background-color: transparent;
+            box-shadow: none !important;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
         
+        .main-circle:active {
+            transform: scale(0.95);
+        }
+
         @media (max-width: 768px) {
           .tasbih-container {
             gap: 1rem;
           }
-          .circle-wrapper {
-            width: 200px !important;
-            height: 200px !important;
-          }
-          .circle-svg {
-            width: 200px !important;
-            height: 200px !important;
-          }
-          .inner-circle {
-            width: 160px !important;
-            height: 160px !important;
-          }
+        }
+
+        @media (max-width: 576px) {
+            .main-circle {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .main-circle {
+                width: 160px;
+                height: 160px;
+            }
         }
       `}</style>
 
@@ -170,10 +191,10 @@ export function TasbihCircle() {
                                         <div
                                             key={button.id}
                                             className={`btn rounded-pill ${index === 0
-                                                    ? "gradient-bg text-white"
-                                                    : completedDhikrs.includes(button.id)
-                                                        ? "btn-success"
-                                                        : "btn-outline-secondary"
+                                                ? "gradient-bg text-white"
+                                                : completedDhikrs.includes(button.id)
+                                                    ? "btn-success"
+                                                    : "btn-outline-secondary"
                                                 }`}
                                             style={{
                                                 transition: "all 0.3s ease",
@@ -193,9 +214,29 @@ export function TasbihCircle() {
                             </div>
 
                             {/* Circle with 3-segment Progress Border */}
-                            <div className="position-relative d-flex justify-content-center align-items-center circle-wrapper" style={{ width: "280px", height: "280px" }}>
-                                {/* SVG Progress Circle with 3 segments */}
-                                <svg width="280" height="280" viewBox="0 0 280 280" className="circle-svg" style={{ position: "absolute" }}>
+                            {/* Circle with 3-segment Progress Border */}
+
+                            {/* Integrated Circle with SVG Border */}
+
+
+                            <div
+                                onClick={handleCircleClick}
+                                className={`main-circle d-flex align-items-center justify-content-center ${isPressed ? "circle-shake" : ""}`}
+                            >
+                                {/* SVG Border */}
+                                <svg
+                                    style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        pointerEvents: "none",
+                                        zIndex: 1
+                                    }}
+                                    viewBox="0 0 220 220"
+                                    preserveAspectRatio="xMidYMid meet"
+                                >
                                     <defs>
                                         <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                             <stop offset="0%" stopColor="#7d9d7f" />
@@ -203,17 +244,17 @@ export function TasbihCircle() {
                                         </linearGradient>
                                     </defs>
 
-                                    {/* 3 Background segments (gray) with gaps */}
+                                    {/* Base Arc Segments - Three separate arcs with gaps */}
                                     {[0, 1, 2].map((segmentIndex) => {
-                                        const radius = 120
-                                        const centerX = 140
-                                        const centerY = 140
-                                        const strokeWidth = 10
+                                        const radius = 105
+                                        const centerX = 110
+                                        const centerY = 110
 
-                                        // Each segment is 110 degrees, gap is 10 degrees
-                                        const segmentAngle = 110
-                                        const startAngle = -90 + segmentIndex * 120
-                                        const endAngle = startAngle + segmentAngle
+                                        // Each arc is 100 degrees with 20 degree gaps
+                                        const arcAngle = 100
+                                        const gapAngle = 20
+                                        const startAngle = -90 + segmentIndex * (arcAngle + gapAngle)
+                                        const endAngle = startAngle + arcAngle
 
                                         const startRad = (startAngle * Math.PI) / 180
                                         const endRad = (endAngle * Math.PI) / 180
@@ -225,29 +266,30 @@ export function TasbihCircle() {
 
                                         return (
                                             <path
-                                                key={`bg-${segmentIndex}`}
+                                                key={`base-${segmentIndex}`}
                                                 d={`M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`}
                                                 fill="none"
-                                                stroke="#d4c4b0"
-                                                strokeWidth={strokeWidth}
+                                                stroke="#e0e0e0"
+                                                strokeWidth="8"
+                                                opacity="0.3"
                                                 strokeLinecap="round"
                                             />
                                         )
                                     })}
 
-                                    {/* Progress segments (fill based on clicks) */}
+                                    {/* Progress Segments - Fill in as clicked */}
                                     {[0, 1, 2].map((segmentIndex) => {
-                                        // Only show segment if we've reached that click count
                                         if (clickCount <= segmentIndex) return null
 
-                                        const radius = 120
-                                        const centerX = 140
-                                        const centerY = 140
-                                        const strokeWidth = 10
+                                        const radius = 105
+                                        const centerX = 110
+                                        const centerY = 110
 
-                                        const segmentAngle = 110
-                                        const startAngle = -90 + segmentIndex * 120
-                                        const endAngle = startAngle + segmentAngle
+                                        // Match the base arc dimensions
+                                        const arcAngle = 100
+                                        const gapAngle = 20
+                                        const startAngle = -90 + segmentIndex * (arcAngle + gapAngle)
+                                        const endAngle = startAngle + arcAngle
 
                                         const startRad = (startAngle * Math.PI) / 180
                                         const endRad = (endAngle * Math.PI) / 180
@@ -263,36 +305,18 @@ export function TasbihCircle() {
                                                 d={`M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`}
                                                 fill="none"
                                                 stroke="url(#progressGradient)"
-                                                strokeWidth={strokeWidth}
+                                                strokeWidth="8"
                                                 strokeLinecap="round"
-                                                style={{
-                                                    transition: "all 0.3s ease",
-                                                }}
+                                                style={{ transition: "all 0.3s ease" }}
                                             />
                                         )
                                     })}
                                 </svg>
 
-                                {/* Center clickable circle with dhikr name */}
-                                <div
-                                    onClick={handleCircleClick}
-                                    className={`rounded-circle shadow-lg inner-circle d-flex align-items-center justify-content-center ${isPressed ? "circle-shake" : ""
-                                        }`}
-                                    style={{
-                                        width: "220px",
-                                        height: "220px",
-                                        backgroundColor: 'var(--bs-body-bg)',
-                                        border: "3px solid var(--bs-border-color)",
-                                        cursor: "pointer",
-                                        userSelect: "none",
-                                        touchAction: "manipulation",
-                                        zIndex: 2,
-                                    }}
-                                >
-                                    <span className="h4 text-center px-4 fw-bold gradient-text">
-                                        {selectedButton?.text}
-                                    </span>
-                                </div>
+                                {/* Text Content */}
+                                <span className="h4 text-center px-4 fw-bold gradient-text position-relative" style={{ zIndex: 2 }}>
+                                    {selectedButton?.text}
+                                </span>
                             </div>
                         </div>
                     ) : (

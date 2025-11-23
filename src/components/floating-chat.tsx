@@ -472,12 +472,58 @@ export function FloatingChat() {
       <button
         type="button"
         onClick={handleToggle}
-        className="floating-chat-btn btn btn-lg rounded-circle gradient-bg text-white shadow-lg position-fixed d-flex align-items-center justify-content-center"
+        className="floating-chat-btn position-fixed d-flex align-items-center justify-content-center shadow-lg"
         aria-label="المساعد الديني"
       >
-        <i className={`fas ${isOpen ? "fa-times" : "fa-comment-dots"} fs-4`}></i>
+        <i className={`fas ${isOpen ? "fa-times" : "fa-comment-dots"} chat-icon`}></i>
       </button>
 
+      <style jsx>{`
+        .floating-chat-btn {
+          left: 20px;
+          bottom: 70px;
+          width: 60px;
+          height: 60px;
+          border: none;
+          border-radius: 50%;
+          padding: 0;
+          background: linear-gradient(135deg, #d4a574 0%, #7d9d7f 100%);
+          color: white;
+          z-index: 1050;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .floating-chat-btn:hover {
+          transform: translateY(-3px) scale(1.05);
+          box-shadow: 0 12px 32px rgba(212, 165, 116, 0.3);
+        }
+
+        .floating-chat-btn:active {
+          transform: translateY(-1px) scale(1.02);
+        }
+
+        .chat-icon {
+          font-size: 1.5rem;
+          transition: transform 0.3s ease;
+        }
+
+        .floating-chat-btn:hover .chat-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        @media (max-width: 992px) {
+          .floating-chat-btn {
+            bottom: 80px;
+            width: 56px;
+            height: 56px;
+          }
+
+          .chat-icon {
+            font-size: 1.3rem;
+          }
+        }
+      `}</style>
 
     </>
   )

@@ -11,31 +11,44 @@ import { TasbihCircle } from "@/components/tasbih-circle"
 import { About } from "@/components/about"
 import { AdhkarList } from "@/components/adhkar-list"
 import { SharePage } from "@/components/share-page"
+import { InstallPrompt } from "@/components/install-prompt"
+import { SplashScreen } from "@/components/splash-screen"
 
 export default function Home() {
   const [showSplash, setShowSplash] = React.useState(true)
   const [activeTab, setActiveTab] = React.useState("home")
+  const [dropdownOpen, setDropdownOpen] = React.useState(false)
 
+  // Safety timeout to ensure splash screen doesn't get stuck
   React.useEffect(() => {
-    const timer = setTimeout(() => {
+    const safetyTimer = setTimeout(() => {
       setShowSplash(false)
-    }, 2000) // 2 seconds as required
-    return () => clearTimeout(timer)
+    }, 3000) // 3 seconds max
+    return () => clearTimeout(safetyTimer)
   }, [])
 
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (dropdownOpen && !target.closest('.dropdown')) {
+        setDropdownOpen(false)
+      }
+    }
+
+    if (dropdownOpen) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [dropdownOpen])
+
+
+
   if (showSplash) {
-    return (
-      <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex flex-column align-items-center justify-content-center z-3" style={{ zIndex: 9999 }}>
-        <div className="text-center animate__animated animate__fadeIn">
-          <div className="mb-4">
-            <i className="fas fa-mosque text-white" style={{ fontSize: "4rem" }}></i>
-          </div>
-          <h1 className="display-1 fw-bold text-white mb-2" style={{ fontFamily: 'var(--font-arabic)' }}>طمأنينة</h1>
-          <p className="text-white-50 fs-4"> رفيقك في رحلة التقرب إلى الله
-          </p>
-        </div>
-      </div>
-    )
+    return <SplashScreen onFinish={() => setShowSplash(false)} />
   }
 
   return (
@@ -43,7 +56,7 @@ export default function Home() {
       <Header />
 
       <main className="flex-grow-1">
-        <div className="container py-4">
+        <div className="container pt-4 pb-5" style={{ paddingBottom: '180px' }}>
           {/* Navigation Pills */}
           <style jsx>{`
             .main-tabs {
@@ -54,7 +67,11 @@ export default function Home() {
               z-index: 9999;
               margin-bottom: 0 !important;
               border-radius: 0 !important;
-              border-top: 1px solid var(--bs-border-color);
+              border-top: 2px solid var(--bs-border-color);
+              background: rgba(var(--bs-body-bg-rgb), 0.95) !important;
+              backdrop-filter: blur(20px) saturate(180%);
+              -webkit-backdrop-filter: blur(20px) saturate(180%);
+              box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.15) !important;
             }
             
             @media (min-width: 992px) {
@@ -66,6 +83,9 @@ export default function Home() {
                 border-radius: 1rem !important;
                 margin-bottom: 1.5rem !important;
                 z-index: 10;
+                background: var(--bs-body-bg) !important;
+                backdrop-filter: none;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
               }
               
               .container {
@@ -84,9 +104,22 @@ export default function Home() {
                 bottom: 100% !important;
                 top: auto !important;
                 transform: none !important;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.75rem;
                 z-index: 10000 !important;
                 position: absolute !important;
+                left: 0 !important;
+                right: auto !important;
+                min-width: 180px;
+                max-height: 300px;
+                overflow-y: auto;
+              }
+
+              :global(.dropdown) {
+                position: static !important;
+              }
+
+              :global(.dropdown-menu.show) {
+                display: block;
               }
             }
             
@@ -95,74 +128,114 @@ export default function Home() {
               background-color: var(--bs-primary);
               color: white !important;
             }
+
+            /* Mobile navigation labels */
+            @media (max-width: 991px) {
+              .nav-label {
+                font-size: 0.65rem;
+                margin-top: 2px;
+              }
+
+              .main-tabs .nav-link {
+                padding: 0.5rem 0.25rem !important;
+              }
+
+              /* Hide dropdown arrow on mobile */
+              .dropdown-toggle-mobile::after {
+                display: none;
+              }
+            }
+
+            /* Show dropdown toggle arrow on desktop */
+            @media (min-width: 992px) {
+              .dropdown-toggle-mobile::after {
+                display: inline-block;
+                margin-left: 0.255em;
+                vertical-align: 0.255em;
+                content: "";
+                border-top: 0.3em solid;
+                border-right: 0.3em solid transparent;
+                border-bottom: 0;
+                border-left: 0.3em solid transparent;
+              }
+            }
           `}</style>
 
           <ul className="nav nav-pills nav-fill bg-body shadow-sm p-2 gap-1 flex-nowrap main-tabs mb-4" id="mainTabs" role="tablist">
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link rounded-pill d-flex align-items-center justify-content-center gap-2 ${activeTab === "home" ? "active" : ""}`}
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 ${activeTab === "home" ? "active" : ""}`}
                 onClick={() => setActiveTab("home")}
                 type="button"
               >
                 <i className="fas fa-home"></i>
-                <span className="d-none d-sm-inline">الرئيسية</span>
+                <span className="nav-label">الرئيسية</span>
               </button>
             </li>
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link rounded-pill d-flex align-items-center justify-content-center gap-2 ${activeTab === "adhkar-list" ? "active" : ""}`}
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 ${activeTab === "adhkar-list" ? "active" : ""}`}
                 onClick={() => setActiveTab("adhkar-list")}
+                data-tab="adhkar-list"
                 type="button"
               >
                 <i className="fas fa-book-open"></i>
-                <span className="d-none d-sm-inline">الأذكار</span>
+                <span className="nav-label">الأذكار</span>
               </button>
             </li>
 
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link rounded-pill d-flex align-items-center justify-content-center gap-2 ${activeTab === "prayer-times" ? "active" : ""}`}
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 ${activeTab === "prayer-times" ? "active" : ""}`}
                 onClick={() => setActiveTab("prayer-times")}
                 type="button"
               >
                 <i className="fas fa-clock"></i>
-                <span className="d-none d-sm-inline">مواقيت الصلاة</span>
+                <span className="nav-label">الصلاة</span>
               </button>
             </li>
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link rounded-pill d-flex align-items-center justify-content-center gap-2 ${activeTab === "calendar" ? "active" : ""}`}
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 ${activeTab === "calendar" ? "active" : ""}`}
                 onClick={() => setActiveTab("calendar")}
                 type="button"
               >
                 <i className="fas fa-calendar-alt"></i>
-                <span className="d-none d-sm-inline">التقويم</span>
+                <span className="nav-label">التقويم</span>
               </button>
             </li>
 
             {/* Share Tab */}
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link rounded-pill d-flex align-items-center justify-content-center gap-2 ${activeTab === "share" ? "active" : ""}`}
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 ${activeTab === "share" ? "active" : ""}`}
                 onClick={() => setActiveTab("share")}
                 type="button"
               >
                 <i className="fas fa-share-nodes"></i>
-                <span className="d-none d-sm-inline">نشر</span>
+                <span className="nav-label">نشر</span>
               </button>
             </li>
 
             {/* Dropdown for other items */}
             <li className="nav-item dropdown" role="presentation">
-              <a className="nav-link dropdown-toggle rounded-pill d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              <button
+                className={`nav-link rounded-pill d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-2 dropdown-toggle-mobile ${dropdownOpen ? 'show' : ''}`}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                type="button"
+                aria-expanded={dropdownOpen}
+              >
                 <i className="fas fa-bars"></i>
-                <span className="d-none d-sm-inline">المزيد</span>
-              </a>
-              <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2">
+                <span className="nav-label">المزيد</span>
+              </button>
+              <ul className={`dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 ${dropdownOpen ? 'show' : ''}`}>
                 <li>
                   <button
                     className={`dropdown-item rounded-3 d-flex align-items-center gap-2 py-2 mb-1 ${activeTab === "dashboard" ? "active" : ""}`}
-                    onClick={() => setActiveTab("dashboard")}
+                    onClick={() => {
+                      setActiveTab("dashboard")
+                      setDropdownOpen(false)
+                    }}
                   >
                     <i className="fas fa-chart-pie w-25 text-center"></i>
                     <span>الإحصائيات</span>
@@ -171,7 +244,10 @@ export default function Home() {
                 <li>
                   <button
                     className={`dropdown-item rounded-3 d-flex align-items-center gap-2 py-2 ${activeTab === "about" ? "active" : ""}`}
-                    onClick={() => setActiveTab("about")}
+                    onClick={() => {
+                      setActiveTab("about")
+                      setDropdownOpen(false)
+                    }}
                   >
                     <i className="fas fa-info-circle w-25 text-center"></i>
                     <span>عن التطبيق</span>
@@ -339,6 +415,7 @@ export default function Home() {
       </main>
 
       <FloatingChat />
+      <InstallPrompt />
     </div>
   )
 }

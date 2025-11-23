@@ -44,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" data-bs-theme="dark">
+    <html lang="ar" dir="rtl" data-bs-theme="light">
       <head>
         {/* Bootstrap RTL */}
         <link
@@ -62,6 +62,14 @@ export default function RootLayout({
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
+
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2b5a4b" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="طمأنينة" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
 
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" sizes="any" />

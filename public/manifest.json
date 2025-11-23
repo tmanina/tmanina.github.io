@@ -1,0 +1,27 @@
+{
+    "name": "طمأنينة - تطبيق الأذكار",
+    "short_name": "طمأنينة",
+    "description": "تطبيقك الشامل للأذكار، مواقيت الصلاة، والتقويم الإسلامي. تقرّب إلى الله بالأذكار والعبادات في مكان واحد.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#2b5a4b",
+    "theme_color": "#2b5a4b",
+    "orientation": "portrait",
+    "dir": "rtl",
+    "lang": "ar",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

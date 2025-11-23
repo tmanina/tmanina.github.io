@@ -1,0 +1,153 @@
+.splashContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #2b5a4b 0%, #1a3c32 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+    transition: opacity 0.8s ease-in-out, filter 0.8s ease-in-out;
+}
+
+.splashExit {
+    opacity: 0;
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+/* Background Pattern Effect */
+.bgPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 20%);
+    opacity: 0.6;
+}
+
+.contentWrapper {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Icon Animation */
+.iconWrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.iconGlow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.4) 0%, transparent 70%);
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+.mainIcon {
+    font-size: 5rem;
+    color: #d4a574;
+    /* Gold */
+    filter: drop-shadow(0 0 15px rgba(212, 165, 116, 0.5));
+    animation: scaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Text Animations */
+.title {
+    font-family: var(--font-arabic);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease-out 0.5s forwards;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-family: var(--font-arabic);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeUp 0.8s ease-out 0.8s forwards;
+}
+
+/* Decorative Line */
+.divider {
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+    margin: 1.5rem 0;
+    animation: expandWidth 1s ease-out 1s forwards;
+}
+
+/* Keyframes */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandWidth {
+    to {
+        width: 150px;
+    }
+}
