@@ -1,10 +1,11 @@
 // Service Worker for PWA
 const CACHE_NAME = 'tmanina-v1';
+const BASE_PATH = '/tmanina';
 const urlsToCache = [
-    '/',
-    '/manifest.json',
-    '/icon-192x192.png',
-    '/icon-512x512.png'
+    `${BASE_PATH}/`,
+    `${BASE_PATH}/manifest.json`,
+    `${BASE_PATH}/icon-192x192.png`,
+    `${BASE_PATH}/icon-512x512.png`
 ];
 
 // Install event - cache resources
