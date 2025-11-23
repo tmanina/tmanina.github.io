@@ -62,6 +62,24 @@ export default function Home() {
     }
   }, [dropdownOpen])
 
+  // Auto-update service worker
+  React.useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((registration) => {
+        // Check for updates every 60 seconds
+        setInterval(() => {
+          registration.update()
+        }, 60000)
+
+        // Reload page when new service worker takes control
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log('New version available, reloading...')
+          window.location.reload()
+        })
+      })
+    }
+  }, [])
+
 
 
   if (showSplash) {

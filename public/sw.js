@@ -1,5 +1,5 @@
 // Service Worker for PWA
-const CACHE_NAME = 'tmanina-v2';
+const CACHE_NAME = 'tmanina-v3'; // Increment version for updates
 const urlsToCache = [
     '/',
     '/manifest.json',
@@ -16,6 +16,7 @@ self.addEventListener('install', (event) => {
                 return cache.addAll(urlsToCache);
             })
     );
+    // Force the waiting service worker to become the active service worker
     self.skipWaiting();
 });
 
@@ -33,19 +34,28 @@ self.addEventListener('activate', (event) => {
             );
         })
     );
+    // Take control of all pages immediately
     self.clients.claim();
 });
 
-// Fetch event - serve from cache when possible
+// Fetch event - serve from cache when possible, but always check for updates
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
+                // Return cached version but also fetch fresh version
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    // Update cache with fresh version
+                    if (networkResponse && networkResponse.status === 200) {
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, networkResponse.clone());
+                        });
+                    }
+                    return networkResponse;
+                });
+
+                // Return cached response immediately, or wait for network
+                return response || fetchPromise;
             })
     );
 });
