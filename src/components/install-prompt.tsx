@@ -49,17 +49,18 @@ export function InstallPrompt() {
             userAgent: navigator.userAgent
         })
 
-        if (!isStandalone) {
-            // Always show prompt after delay if not installed, even if event didn't fire
-            // This ensures users see the install option
-            console.log('Scheduling install prompt to show in 3 seconds')
-            setTimeout(() => {
-                console.log('Setting showPrompt to true')
-                setShowPrompt(true)
-            }, 3000)
-        } else {
-            console.log('App already in standalone mode, not showing prompt')
-        }
+        // Install prompt disabled - users can use browser's native install option
+        // if (!isStandalone) {
+        //     // Always show prompt after delay if not installed, even if event didn't fire
+        //     // This ensures users see the install option
+        //     console.log('Scheduling install prompt to show in 3 seconds')
+        //     setTimeout(() => {
+        //         console.log('Setting showPrompt to true')
+        //         setShowPrompt(true)
+        //     }, 3000)
+        // } else {
+        //     console.log('App already in standalone mode, not showing prompt')
+        // }
 
         // Register service worker
         if ('serviceWorker' in navigator) {
