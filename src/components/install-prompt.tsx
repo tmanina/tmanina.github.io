@@ -79,28 +79,11 @@ export function InstallPrompt() {
         console.log('📦 deferredPrompt:', deferredPrompt)
 
         if (!deferredPrompt) {
-            console.log('⚠️ No deferredPrompt available - showing manual instructions')
+            console.log('⚠️ No deferredPrompt available - browser does not support auto-install')
 
-            // Show manual instructions if native prompt is not available
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-            const isAndroid = /Android/.test(navigator.userAgent)
-
-            // Provide more helpful message based on why it might not work
-            let message = ''
-
-            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-                message = '⚠️ التطبيق يجب أن يكون على HTTPS للتثبيت التلقائي\n\n'
-            }
-
-            if (isIOS) {
-                message += '📱 لتثبيت التطبيق على iPhone/iPad:\n\n1. اضغط على زر المشاركة ⬆️ في شريط الأدوات\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"'
-            } else if (isAndroid) {
-                message += '📱 لتثبيت التطبيق على Android:\n\n1. اضغط على القائمة ⋮ في المتصفح\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اضغط "تثبيت"\n\nملاحظة: تأكد أنك تستخدم Chrome أو Brave المحدث'
-            } else {
-                message += '💻 لتثبيت التطبيق:\n\n1. ابحث عن أيقونة التثبيت في شريط العنوان\n2. أو افتح قائمة المتصفح واختر "تثبيت التطبيق"\n\nملاحظة: يعمل التثبيت على متصفحات Chrome وEdge وSafari الحديثة'
-            }
-
-            alert(message)
+            // Just close the banner without showing alert
+            // The manual install option is available in the menu instead
+            setShowPrompt(false)
             return
         }
 
