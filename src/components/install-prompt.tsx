@@ -37,11 +37,25 @@ export function InstallPrompt() {
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
         // Check if already installed
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            setShowPrompt(false)
-        } else if (isDev) {
-            // In development, show the prompt for testing
-            setTimeout(() => setShowPrompt(true), 3000)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+
+        console.log('InstallPrompt Debug:', {
+            isStandalone,
+            isMobile: mobile,
+            isIOS: isIosDevice,
+            userAgent: navigator.userAgent
+        })
+
+        if (!isStandalone) {
+            // Always show prompt after delay if not installed, even if event didn't fire
+            // This ensures users see the install option
+            console.log('Scheduling install prompt to show in 3 seconds')
+            setTimeout(() => {
+                console.log('Setting showPrompt to true')
+                setShowPrompt(true)
+            }, 3000)
+        } else {
+            console.log('App already in standalone mode, not showing prompt')
         }
 
         // Register service worker
@@ -59,7 +73,17 @@ export function InstallPrompt() {
 
     const handleInstallClick = async () => {
         if (!deferredPrompt) {
-            alert("عذراً، المتصفح لا يدعم التثبيت المباشر حالياً أو أن التطبيق مثبت بالفعل.\n\nيمكنك التثبيت يدوياً من شريط العنوان (أيقونة التثبيت) أو القائمة.")
+            // Show manual instructions if native prompt is not available
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            const isAndroid = /Android/.test(navigator.userAgent)
+
+            if (isIOS) {
+                alert('📱 لتثبيت التطبيق على iPhone/iPad:\n\n1. اضغط على زر المشاركة ⬆️ في شريط الأدوات\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"')
+            } else if (isAndroid) {
+                alert('📱 لتثبيت التطبيق على Android:\n\n1. اضغط على القائمة ⋮ في المتصفح\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اضغط "تثبيت"')
+            } else {
+                alert('💻 لتثبيت التطبيق:\n\n1. ابحث عن أيقونة التثبيت في شريط العنوان\n2. أو افتح قائمة المتصفح واختر "تثبيت التطبيق"\n\nملاحظة: يعمل التثبيت على متصفحات Chrome وEdge وSafari الحديثة')
+            }
             return
         }
 
@@ -74,7 +98,7 @@ export function InstallPrompt() {
         setShowPrompt(false)
     }
 
-    if (!showPrompt && !isIOS) return null
+    if (!showPrompt) return null
 
     return (
         <>
