@@ -28,6 +28,7 @@ export function InstallPrompt() {
 
         // Listen for the 'beforeinstallprompt' event (Android/Desktop)
         const handleBeforeInstallPrompt = (e: Event) => {
+            console.log('✅ beforeinstallprompt event fired!')
             e.preventDefault()
             setDeferredPrompt(e)
             // Show prompt after a delay
@@ -35,6 +36,8 @@ export function InstallPrompt() {
         }
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+        console.log('📱 Install prompt listener registered')
 
         // Check if already installed
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches
@@ -72,26 +75,48 @@ export function InstallPrompt() {
     }, [])
 
     const handleInstallClick = async () => {
+        console.log('🔘 Install button clicked')
+        console.log('📦 deferredPrompt:', deferredPrompt)
+
         if (!deferredPrompt) {
+            console.log('⚠️ No deferredPrompt available - showing manual instructions')
+
             // Show manual instructions if native prompt is not available
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
             const isAndroid = /Android/.test(navigator.userAgent)
 
-            if (isIOS) {
-                alert('📱 لتثبيت التطبيق على iPhone/iPad:\n\n1. اضغط على زر المشاركة ⬆️ في شريط الأدوات\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"')
-            } else if (isAndroid) {
-                alert('📱 لتثبيت التطبيق على Android:\n\n1. اضغط على القائمة ⋮ في المتصفح\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اضغط "تثبيت"')
-            } else {
-                alert('💻 لتثبيت التطبيق:\n\n1. ابحث عن أيقونة التثبيت في شريط العنوان\n2. أو افتح قائمة المتصفح واختر "تثبيت التطبيق"\n\nملاحظة: يعمل التثبيت على متصفحات Chrome وEdge وSafari الحديثة')
+            // Provide more helpful message based on why it might not work
+            let message = ''
+
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                message = '⚠️ التطبيق يجب أن يكون على HTTPS للتثبيت التلقائي\n\n'
             }
+
+            if (isIOS) {
+                message += '📱 لتثبيت التطبيق على iPhone/iPad:\n\n1. اضغط على زر المشاركة ⬆️ في شريط الأدوات\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"'
+            } else if (isAndroid) {
+                message += '📱 لتثبيت التطبيق على Android:\n\n1. اضغط على القائمة ⋮ في المتصفح\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اضغط "تثبيت"\n\nملاحظة: تأكد أنك تستخدم Chrome أو Brave المحدث'
+            } else {
+                message += '💻 لتثبيت التطبيق:\n\n1. ابحث عن أيقونة التثبيت في شريط العنوان\n2. أو افتح قائمة المتصفح واختر "تثبيت التطبيق"\n\nملاحظة: يعمل التثبيت على متصفحات Chrome وEdge وSafari الحديثة'
+            }
+
+            alert(message)
             return
         }
 
-        deferredPrompt.prompt()
-        const { outcome } = await deferredPrompt.userChoice
+        try {
+            console.log('✅ Showing native install prompt')
+            deferredPrompt.prompt()
+            const { outcome } = await deferredPrompt.userChoice
+            console.log('📊 User choice:', outcome)
 
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt')
+            if (outcome === 'accepted') {
+                console.log('✅ User accepted the install prompt')
+            } else {
+                console.log('❌ User dismissed the install prompt')
+            }
+        } catch (error) {
+            console.error('❌ Error during install:', error)
         }
 
         setDeferredPrompt(null)
