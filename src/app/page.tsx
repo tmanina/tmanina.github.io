@@ -243,6 +243,28 @@ export default function Home() {
                 </li>
                 <li>
                   <button
+                    className={`dropdown-item rounded-3 d-flex align-items-center gap-2 py-2 mb-1`}
+                    onClick={() => {
+                      setDropdownOpen(false)
+                      // Show install instructions
+                      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+                      const isAndroid = /Android/.test(navigator.userAgent)
+
+                      if (isIOS) {
+                        alert('📱 لتثبيت التطبيق على iPhone/iPad:\n\n1. اضغط على زر المشاركة ⬆️ في شريط الأدوات\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"')
+                      } else if (isAndroid) {
+                        alert('📱 لتثبيت التطبيق على Android:\n\n1. اضغط على القائمة ⋮ في المتصفح\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اضغط "تثبيت"')
+                      } else {
+                        alert('💻 لتثبيت التطبيق:\n\n1. ابحث عن أيقونة التثبيت في شريط العنوان\n2. أو افتح قائمة المتصفح واختر "تثبيت التطبيق"\n\nملاحظة: يعمل التثبيت على متصفحات Chrome وEdge وSafari الحديثة')
+                      }
+                    }}
+                  >
+                    <i className="fas fa-download w-25 text-center"></i>
+                    <span>تثبيت التطبيق</span>
+                  </button>
+                </li>
+                <li>
+                  <button
                     className={`dropdown-item rounded-3 d-flex align-items-center gap-2 py-2 ${activeTab === "about" ? "active" : ""}`}
                     onClick={() => {
                       setActiveTab("about")
