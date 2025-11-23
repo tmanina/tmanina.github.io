@@ -19,6 +19,23 @@ export default function Home() {
   const [activeTab, setActiveTab] = React.useState("home")
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
 
+  // آيات عشوائية
+  const randomAyahs = [
+    { ayah: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", source: "(الرعد: 28)" },
+    { ayah: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا", source: "(الطلاق: 2)" },
+    { ayah: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", source: "(الشرح: 6)" },
+    { ayah: "فَاذْكُرُونِي أَذْكُرْكُمْ", source: "(البقرة: 152)" },
+    { ayah: "وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ", source: "(الحديد: 4)" }
+  ]
+
+  const [currentAyah] = React.useState(() => {
+    const randomIndex = Math.floor(Math.random() * randomAyahs.length)
+    return randomAyahs[randomIndex]
+  })
+
+  // نصوص عشوائية
+  const [showAIFirst] = React.useState(() => Math.random() > 0.5)
+
   // Safety timeout to ensure splash screen doesn't get stuck
   React.useEffect(() => {
     const safetyTimer = setTimeout(() => {
@@ -238,7 +255,7 @@ export default function Home() {
                     }}
                   >
                     <i className="fas fa-chart-pie w-25 text-center"></i>
-                    <span>الإحصائيات</span>
+                    <span>لوحة النشاط</span>
                   </button>
                 </li>
                 <li>
@@ -285,16 +302,33 @@ export default function Home() {
                 <div className="row g-4">
                   <div className="col-12">
                     <div className="card border-0 shadow-lg rounded-4 overflow-hidden home-hero-card">
-                      <div className="home-hero-gradient p-4 p-md-5 text-white">
-                        <h1 className="h3 h-md-2 mb-2 fw-bold">
-                          مرحباً بك في تطبيق طمأنينة
-                        </h1>
-                        <p className="mb-0 mb-md-1">
-                          تقرّب إلى الله بالأذكار والعبادات، في مكان واحد
-                          .
-                          <br></br>
-                          مع مساعد طمأنينة الذكي للرد علي جميع اسئلتك الدينية.
-                        </p>
+                      <div className="home-hero-gradient p-3 p-md-4 text-white">
+                        <div className="text-center">
+                          <h1 className="h3 h-md-2 mb-3 fw-bold">
+                            مرحباً بك في تطبيق طمأنينة
+                          </h1>
+
+                          <div className="my-3 py-2 px-3 rounded-3" style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                          }}>
+                            <p className="h5 mb-1 fw-bold" style={{ lineHeight: '1.6' }}>
+                              {currentAyah.ayah}
+                            </p>
+                            <p className="mb-0 small opacity-75">
+                              {currentAyah.source}
+                            </p>
+                          </div>
+
+                          <p className="mb-0 opacity-90">
+                            {showAIFirst ? (
+                              "مع مساعد طمأنينة الذكي للرد على جميع أسئلتك الدينية"
+                            ) : (
+                              "تقرّب إلى الله بالأذكار والعبادات، في مكان واحد"
+                            )}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

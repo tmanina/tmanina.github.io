@@ -2,7 +2,10 @@
 
 import * as React from "react"
 
-type City = "cairo" | "assiut" | "new-valley"
+type City = "cairo" | "giza" | "alexandria" | "port-said" | "suez" | "ismailia" | "damietta" |
+  "damanhur" | "tanta" | "mansoura" | "zagazig" | "shebin" | "banha" | "kafr-el-sheikh" |
+  "fayoum" | "beni-suef" | "minya" | "assiut" | "sohag" | "qena" | "luxor" | "aswan" |
+  "hurghada" | "new-valley" | "matrouh" | "north-sinai" | "south-sinai"
 
 interface CityInfo {
   name: string
@@ -22,8 +25,32 @@ interface PrayerTimesData {
 
 const egyptCities: Record<City, CityInfo> = {
   cairo: { name: "القاهرة", englishName: "Cairo", latitude: 30.0444, longitude: 31.2357 },
+  giza: { name: "الجيزة", englishName: "Giza", latitude: 30.0131, longitude: 31.2089 },
+  alexandria: { name: "الإسكندرية", englishName: "Alexandria", latitude: 31.2001, longitude: 29.9187 },
+  "port-said": { name: "بورسعيد", englishName: "Port Said", latitude: 31.2653, longitude: 32.3019 },
+  suez: { name: "السويس", englishName: "Suez", latitude: 29.9668, longitude: 32.5498 },
+  ismailia: { name: "الإسماعيلية", englishName: "Ismailia", latitude: 30.5833, longitude: 32.2722 },
+  damietta: { name: "دمياط", englishName: "Damietta", latitude: 31.4175, longitude: 31.8144 },
+  damanhur: { name: "البحيرة", englishName: "Damanhur", latitude: 31.0341, longitude: 30.4682 },
+  tanta: { name: "الغربية", englishName: "Tanta", latitude: 30.7865, longitude: 31.0004 },
+  mansoura: { name: "الدقهلية", englishName: "Mansoura", latitude: 31.0409, longitude: 31.3785 },
+  zagazig: { name: "الشرقية", englishName: "Zagazig", latitude: 30.5877, longitude: 31.5021 },
+  shebin: { name: "المنوفية", englishName: "Shebin El Kom", latitude: 30.5594, longitude: 31.0118 },
+  banha: { name: "القليوبية", englishName: "Banha", latitude: 30.4659, longitude: 31.1784 },
+  "kafr-el-sheikh": { name: "كفر الشيخ", englishName: "Kafr El Sheikh", latitude: 31.1107, longitude: 30.9388 },
+  fayoum: { name: "الفيوم", englishName: "Fayoum", latitude: 29.3084, longitude: 30.8428 },
+  "beni-suef": { name: "بني سويف", englishName: "Beni Suef", latitude: 29.0661, longitude: 31.0994 },
+  minya: { name: "المنيا", englishName: "Minya", latitude: 28.0871, longitude: 30.7618 },
   assiut: { name: "أسيوط", englishName: "Assiut", latitude: 27.1783, longitude: 31.1859 },
-  "new-valley": { name: "الوادي الجديد", englishName: "Al Wadi al Jadid", latitude: 25.4514, longitude: 30.5461 }, // Kharga Oasis coordinates approx
+  sohag: { name: "سوهاج", englishName: "Sohag", latitude: 26.5569, longitude: 31.6948 },
+  qena: { name: "قنا", englishName: "Qena", latitude: 26.1551, longitude: 32.7160 },
+  luxor: { name: "الأقصر", englishName: "Luxor", latitude: 25.6872, longitude: 32.6396 },
+  aswan: { name: "أسوان", englishName: "Aswan", latitude: 24.0889, longitude: 32.8998 },
+  hurghada: { name: "البحر الأحمر", englishName: "Hurghada", latitude: 27.2579, longitude: 33.8116 },
+  "new-valley": { name: "الوادي الجديد", englishName: "Al Wadi al Jadid", latitude: 25.4514, longitude: 30.5461 },
+  matrouh: { name: "مطروح", englishName: "Marsa Matrouh", latitude: 31.3543, longitude: 27.2373 },
+  "north-sinai": { name: "شمال سيناء", englishName: "Arish", latitude: 31.1312, longitude: 33.7989 },
+  "south-sinai": { name: "جنوب سيناء", englishName: "Sharm El Sheikh", latitude: 27.9158, longitude: 34.3300 },
 }
 
 interface PrayerTimesProps {
@@ -34,11 +61,30 @@ interface PrayerTimesProps {
 // نستخدم أسماء مختلفة داخليًا لتفادي تحذير "unused props"
 export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps) {
   const [currentTime, setCurrentTime] = React.useState(new Date())
-  const [selectedCity, setSelectedCity] = React.useState<City>("new-valley")
+
+  // قراءة المحافظة المحفوظة من localStorage أو استخدام الافتراضية
+  const [selectedCity, setSelectedCity] = React.useState<City>(() => {
+    if (typeof window !== 'undefined') {
+      const savedCity = localStorage.getItem('selectedPrayerCity')
+      if (savedCity && savedCity in egyptCities) {
+        return savedCity as City
+      }
+    }
+    return "new-valley" // القيمة الافتراضية
+  })
+
   const [prayerTimesData, setPrayerTimesData] = React.useState<PrayerTimesData | null>(null)
   const [qiblaDirection, setQiblaDirection] = React.useState<number>(0)
   const [loading, setLoading] = React.useState(true)
   const [isClient, setIsClient] = React.useState(false)
+
+  // حفظ المحافظة المختارة في localStorage عند تغييرها
+  const handleCityChange = (newCity: City) => {
+    setSelectedCity(newCity)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedPrayerCity', newCity)
+    }
+  }
 
   // Fetch prayer times and Qibla from API
   React.useEffect(() => {
@@ -122,44 +168,44 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
     {
       name: "الفجر",
       time: times.fajr,
-      icon: "fa-cloud-moon",
-      color: "#6366f1",
-      gradient: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+      icon: "fa-star-and-crescent", // Fajr - dawn with stars
+      color: "#4c1d95",
+      gradient: "linear-gradient(135deg, #1e1b4b, #4c1d95)", // ليل يقترب للصبح - بنفسجي داكن
     },
     {
       name: "الشروق",
       time: times.sunrise,
-      icon: "fa-sun",
-      color: "#f59e0b",
-      gradient: "linear-gradient(135deg, #f59e0b, #f97316)",
+      icon: "fa-sun", // Sunrise - sun rising
+      color: "#f97316",
+      gradient: "linear-gradient(135deg, #f97316, #fb923c)", // برتقالي - شروق الشمس
     },
     {
       name: "الظهر",
       time: times.dhuhr,
-      icon: "fa-sun",
-      color: "#eab308",
-      gradient: "linear-gradient(135deg, #eab308, #facc15)",
+      icon: "fa-sun", // Dhuhr - noon sun at peak
+      color: "#fbbf24",
+      gradient: "linear-gradient(135deg, #fbbf24, #fcd34d)", // أصفر ذهبي - شمس الظهيرة
     },
     {
       name: "العصر",
       time: times.asr,
-      icon: "fa-cloud-sun",
-      color: "#f97316",
-      gradient: "linear-gradient(135deg, #f97316, #fb923c)",
+      icon: "fa-cloud-sun", // Asr - afternoon sun with clouds
+      color: "#ea580c",
+      gradient: "linear-gradient(135deg, #ea580c, #f97316)", // برتقالي داكن - يقارب الغروب
     },
     {
       name: "المغرب",
       time: times.maghrib,
-      icon: "fa-sun",
-      color: "#ec4899",
-      gradient: "linear-gradient(135deg, #ec4899, #f472b6)",
+      icon: "fa-cloud-moon", // Maghrib - sunset with moon appearing
+      color: "#dc2626",
+      gradient: "linear-gradient(135deg, #dc2626, #f97316)", // أحمر-برتقالي - غروب
     },
     {
       name: "العشاء",
       time: times.isha,
-      icon: "fa-moon",
-      color: "#8b5cf6",
-      gradient: "linear-gradient(135deg, #8b5cf6, #a78bfa)",
+      icon: "fa-moon", // Isha - night moon
+      color: "#312e81",
+      gradient: "linear-gradient(135deg, #1e3a8a, #312e81)", // أزرق داكن - ليلاً
     },
   ]
 
@@ -233,18 +279,36 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                     <select
                       className="form-select form-select-lg bg-opacity-25 text-gray border-white border-2 fw-bold"
                       value={selectedCity}
-                      onChange={(e) => setSelectedCity(e.target.value as City)}
+                      onChange={(e) => handleCityChange(e.target.value as City)}
                       style={{ backdropFilter: "blur(10px)" }}
                     >
-                      <option value="new-valley" className="text-dark">
-                        الوادي الجديد
-                      </option>
-                      <option value="cairo" className="text-dark">
-                        القاهرة
-                      </option>
-                      <option value="assiut" className="text-dark">
-                        أسيوط
-                      </option>
+                      <option value="new-valley" className="text-dark">الوادي الجديد</option>
+                      <option value="cairo" className="text-dark">القاهرة</option>
+                      <option value="giza" className="text-dark">الجيزة</option>
+                      <option value="alexandria" className="text-dark">الإسكندرية</option>
+                      <option value="port-said" className="text-dark">بورسعيد</option>
+                      <option value="suez" className="text-dark">السويس</option>
+                      <option value="ismailia" className="text-dark">الإسماعيلية</option>
+                      <option value="damietta" className="text-dark">دمياط</option>
+                      <option value="damanhur" className="text-dark">البحيرة</option>
+                      <option value="tanta" className="text-dark">الغربية</option>
+                      <option value="mansoura" className="text-dark">الدقهلية</option>
+                      <option value="zagazig" className="text-dark">الشرقية</option>
+                      <option value="shebin" className="text-dark">المنوفية</option>
+                      <option value="banha" className="text-dark">القليوبية</option>
+                      <option value="kafr-el-sheikh" className="text-dark">كفر الشيخ</option>
+                      <option value="fayoum" className="text-dark">الفيوم</option>
+                      <option value="beni-suef" className="text-dark">بني سويف</option>
+                      <option value="minya" className="text-dark">المنيا</option>
+                      <option value="assiut" className="text-dark">أسيوط</option>
+                      <option value="sohag" className="text-dark">سوهاج</option>
+                      <option value="qena" className="text-dark">قنا</option>
+                      <option value="luxor" className="text-dark">الأقصر</option>
+                      <option value="aswan" className="text-dark">أسوان</option>
+                      <option value="hurghada" className="text-dark">البحر الأحمر</option>
+                      <option value="matrouh" className="text-dark">مطروح</option>
+                      <option value="north-sinai" className="text-dark">شمال سيناء</option>
+                      <option value="south-sinai" className="text-dark">جنوب سيناء</option>
                     </select>
                   </div>
                   <div className="col-md-4 text-center text-md-end">
@@ -356,18 +420,20 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                   >
                     <div className="p-1" style={{ background: prayer.gradient }}></div>
                     <div className="card-body p-4 text-center">
-                      <div
-                        className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                        style={{
-                          width: "70px",
-                          height: "70px",
-                          background: prayer.gradient,
-                        }}
-                      >
-                        <i className={`fas ${prayer.icon} text-white fs-2`}></i>
+                      <div className="mb-3">
+                        <i
+                          className={`fas ${prayer.icon}`}
+                          style={{
+                            background: prayer.gradient,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            fontSize: '4rem'
+                          }}
+                        ></i>
                       </div>
                       <h4 className="h5 fw-bold mb-2">{prayer.name}</h4>
-                      <div className="display-6 fw-bold font-monospace" style={{ color: prayer.color }}>
+                      <div className="display-6 fw-bold font-monospace">
                         {prayer.time}
                       </div>
                       {index === nextPrayerIndex && (

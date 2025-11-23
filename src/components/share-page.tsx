@@ -3,7 +3,7 @@
 import * as React from "react"
 
 export function SharePage() {
-    const shareUrl = "https://tmanina.github.io/tmanina"
+    const shareUrl = "https://tmanina.github.io"
     const shareText = "تطبيق طمأنينة - رفيقك في رحلة التقرب إلى الله"
 
     const handleCopyLink = () => {
