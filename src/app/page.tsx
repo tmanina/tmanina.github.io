@@ -23,7 +23,7 @@ export default function Home() {
   React.useEffect(() => {
     const safetyTimer = setTimeout(() => {
       setShowSplash(false)
-    }, 3000) // 3 seconds max
+    }, 2000) // 2 seconds max
     return () => clearTimeout(safetyTimer)
   }, [])
 

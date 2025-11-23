@@ -82,7 +82,7 @@ export function InstallPrompt() {
             {showPrompt && !isIOS && (
                 <div
                     className="position-fixed start-0 end-0 p-3 animate__animated animate__slideInUp"
-                    style={{ zIndex: 9998, bottom: '60px' }}
+                    style={{ zIndex: 9998, bottom: isMobile ? '90px' : '20px' }}
                 >
                     <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
                         <div className="gradient-bg text-white p-4">
@@ -119,7 +119,7 @@ export function InstallPrompt() {
             {isIOS && showPrompt && (
                 <div
                     className="position-fixed start-0 end-0 p-2 animate__animated animate__slideInUp"
-                    style={{ zIndex: 9998, bottom: '60px' }}
+                    style={{ zIndex: 9998, bottom: '90px' }}
                 >
                     <div className="card border-0 shadow-lg rounded-3">
                         <div className="card-body p-3 text-center bg-body">
