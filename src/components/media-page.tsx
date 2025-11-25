@@ -104,6 +104,10 @@ export function MediaPage() {
                     background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
                 }
                 
+                .media-card-podcast .card-header {
+                    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+                }
+                
                 .media-icon {
                     width: 80px;
                     height: 80px;
@@ -168,6 +172,11 @@ export function MediaPage() {
                 
                 .media-card-video .view-btn {
                     color: #4b5563;
+                    opacity: 0.7;
+                }
+                
+                .media-card-podcast .view-btn {
+                    color: #9333ea;
                     opacity: 0.7;
                 }
                 
@@ -318,6 +327,25 @@ export function MediaPage() {
                                     <button className="btn view-btn" type="button">
                                         <i className="fas fa-play me-2"></i>
                                         استماع الآن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* بودكاست - قريباً */}
+                        <div className="col-12 col-md-6 col-xl-3">
+                            <div className="card media-card media-card-podcast shadow disabled">
+                                <div className="card-header text-center position-relative">
+                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
+                                    <span className="coming-soon-badge">قريباً</span>
+                                    <div className="media-icon">
+                                        <i className="fas fa-podcast"></i>
+                                    </div>
+                                    <h3 className="media-title">بودكاست</h3>
+                                    <p className="media-subtitle mb-4">برامج وحلقات إسلامية</p>
+                                    <button className="btn view-btn" type="button" disabled>
+                                        <i className="fas fa-folder me-2"></i>
+                                        قريباً
                                     </button>
                                 </div>
                             </div>
