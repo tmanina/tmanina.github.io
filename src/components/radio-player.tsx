@@ -67,7 +67,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             id: "distinguished",
             name: "تلاوات متميزة",
             icon: "fa-star",
-            gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
+            gradient: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
             description: "تلاوات خاشعة مميزة"
         },
         {
@@ -242,7 +242,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .radio-header {
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                     color: white;
                     padding: 2.5rem 2rem;
                     border-radius: 20px;
@@ -285,7 +285,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .breadcrumb-link:hover {
-                    color: #ec4899;
+                    color: #3b82f6;
                 }
 
                 .breadcrumb-separator {
@@ -393,7 +393,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .search-input:focus {
-                    border-color: #ec4899;
+                    border-color: #3b82f6;
                     box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
                     outline: none;
                 }
@@ -418,11 +418,11 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 .radio-card:hover {
                     transform: translateY(-5px);
                     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-                    border-color: #ec4899;
+                    border-color: #3b82f6;
                 }
 
                 .radio-card.playing {
-                    border-color: #ec4899;
+                    border-color: #3b82f6;
                     background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
                 }
 
@@ -436,7 +436,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 .radio-icon {
                     width: 50px;
                     height: 50px;
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                     border-radius: 12px;
                     display: flex;
                     align-items: center;
@@ -483,7 +483,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .play-btn {
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                     color: white;
                 }
 
@@ -498,7 +498,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     left: 0;
                     right: 0;
                     background: white;
-                    border-top: 2px solid #ec4899;
+                    border-top: 2px solid #3b82f6;
                     padding: 1.25rem 2rem;
                     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
                     z-index: 1000;
@@ -528,7 +528,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 .playing-icon {
                     width: 50px;
                     height: 50px;
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                     border-radius: 12px;
                     display: flex;
                     align-items: center;
@@ -562,7 +562,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     height: 50px;
                     border-radius: 50%;
                     border: none;
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                     color: white;
                     font-size: 1.2rem;
                     display: flex;
@@ -597,7 +597,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     width: 16px;
                     height: 16px;
                     border-radius: 50%;
-                    background: #ec4899;
+                    background: #3b82f6;
                     cursor: pointer;
                 }
 
@@ -605,7 +605,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     width: 16px;
                     height: 16px;
                     border-radius: 50%;
-                    background: #ec4899;
+                    background: #3b82f6;
                     cursor: pointer;
                     border: none;
                 }
@@ -620,7 +620,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     width: 60px;
                     height: 60px;
                     border: 4px solid #fce7f3;
-                    border-top-color: #ec4899;
+                    border-top-color: #3b82f6;
                     border-radius: 50%;
                     animation: spin 1s linear infinite;
                     margin: 0 auto 1.5rem;
@@ -637,7 +637,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .retry-btn {
-                    background: #ec4899;
+                    background: #3b82f6;
                     color: white;
                     border: none;
                     padding: 0.85rem 2rem;
@@ -649,7 +649,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 }
 
                 .retry-btn:hover {
-                    background: #db2777;
+                    background: #2563eb;
                     transform: translateY(-2px);
                 }
 

@@ -172,11 +172,11 @@ export function MediaPage() {
                 }
                 
                 .media-card-radio .card-header {
-                    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                 }
                 
                 .media-card-radio .view-btn {
-                    color: #db2777;
+                    color: #2563eb;
                 }
                 
                 .coming-soon-badge {
