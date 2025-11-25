@@ -33,7 +33,7 @@ jobs:
 
       - name: Deploy to staging repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT_TOKEN: ${{ secrets.STAGING_PAT }}
         run: |
           cd out
           git init
@@ -41,4 +41,4 @@ jobs:
           git config user.email "actions@github.com"
           git add -A
           git commit -m "Deploy from staging branch - $(date)"
-          git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/tmanina/tmanina_staging.github.io.git HEAD:main
+          git push -f https://x-access-token:${PAT_TOKEN}@github.com/tmanina/tmanina_staging.github.io.git HEAD:main
