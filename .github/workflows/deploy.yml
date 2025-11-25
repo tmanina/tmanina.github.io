@@ -1,9 +1,9 @@
-name: Deploy Next.js to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # كل ما تدفع على main هيعمل نشر
+      - main
   workflow_dispatch:
 
 permissions:

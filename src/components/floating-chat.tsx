@@ -299,7 +299,7 @@ export function FloatingChat() {
           className="position-fixed end-0 m-3 animate-fade-in"
           style={{
             zIndex: 1040,
-            bottom: "108px", // Increased by 20px (was 88px)
+            bottom: window.innerWidth <= 992 ? "113px" : "108px", // 5px more on mobile
             maxWidth: "380px",
             width: "calc(100vw - 2rem)",
           }}

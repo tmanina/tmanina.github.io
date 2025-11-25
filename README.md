@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tmanina - Islamic Web Application
+
+A comprehensive Islamic web application built with Next.js, featuring Quran reading, prayer times, Islamic calendar, Adhkar, and more.
+
+## Features
+
+- 📖 Quran Reader with Mushaf-style layout
+- 🎧 Audio Quran with multiple reciters
+- 📻 Islamic Radio stations
+- 🕌 Prayer times and Qibla direction
+- 📅 Islamic Calendar
+- 🤲 Daily Adhkar (morning & evening)
+- 📚 Hadith Encyclopedia
+- 🌙 Dark mode support
+- 📱 Progressive Web App (PWA)
 
 ## Getting Started
 
-First, run the development server:
+### Development
+
+Run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Build the application for production:
+
+```bash
+npm run build:gh
+```
+
+This creates an optimized static export in the `out/` directory.
+
+## Deployment
+
+We use a **dual-environment deployment strategy**:
+
+- **Staging**: Test changes at https://tmanina.github.io/tmanina_staging (from `staging` branch)
+- **Production**: Live site (from `main` branch)
+
+### Quick Deployment Guide
+
+**To deploy to staging:**
+```bash
+git checkout staging
+git add .
+git commit -m "Your changes"
+git push origin staging
+```
+
+**To deploy to production:**
+```bash
+git checkout main
+git merge staging
+git push origin main
+```
+
+For detailed deployment instructions, troubleshooting, and best practices, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## Project Structure
+
+- `/src` - Application source code
+  - `/app` - Next.js app router pages
+  - `/components` - React components
+  - `/lib` - Utility functions and helpers
+- `/public` - Static assets
+- `/.github/workflows` - GitHub Actions deployment workflows
+
+## Technologies
+
+- **Framework**: Next.js 13.5.4 (Static Export)
+- **UI**: React 18 with Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Prayer Times**: Adhan library
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev)
+- [Tailwind CSS](https://tailwindcss.com/docs)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create a feature branch from `staging`
+2. Make your changes
+3. Test thoroughly in local development
+4. Push to staging and test on the staging site
+5. Once verified, merge to main for production deployment
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is private and maintained by tmanina.

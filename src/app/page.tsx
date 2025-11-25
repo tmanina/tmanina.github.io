@@ -53,6 +53,16 @@ export default function Home() {
     }
   }
 
+  // Helper to change tab
+  const setActiveTab = (tab: string) => {
+    // If going to home, clear params to keep URL clean
+    if (tab === "home") {
+      router.push("/")
+    } else {
+      router.push(`?view=${tab}`)
+    }
+  }
+
   // آيات عشوائية
   const randomAyahs = [
     { ayah: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", source: "(الرعد: 28)" },
