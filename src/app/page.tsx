@@ -11,13 +11,47 @@ import { TasbihCircle } from "@/components/tasbih-circle"
 import { About } from "@/components/about"
 import { AdhkarList } from "@/components/adhkar-list"
 import { SharePage } from "@/components/share-page"
+import { MediaPage } from "@/components/media-page"
 import { InstallPrompt } from "@/components/install-prompt"
 import { SplashScreen } from "@/components/splash-screen"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Home() {
   const [showSplash, setShowSplash] = React.useState(true)
-  const [activeTab, setActiveTab] = React.useState("home")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const activeTab = searchParams.get("view") || "home"
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
+  // 2-day temporary "new" badge for المكتبة button
+  const [showLibraryBadge, setShowLibraryBadge] = React.useState(false)
+  React.useEffect(() => {
+    const key = 'libraryNewBadgeTimestamp'
+    const stored = localStorage.getItem(key)
+    const now = Date.now()
+    if (!stored) {
+      localStorage.setItem(key, now.toString())
+      setShowLibraryBadge(true)
+      return
+    }
+    const saved = parseInt(stored, 10)
+    const diffDays = (now - saved) / (1000 * 60 * 60 * 24)
+    if (diffDays < 2) {
+      setShowLibraryBadge(true)
+    } else {
+      setShowLibraryBadge(false)
+      localStorage.removeItem(key)
+    }
+  }, [])
+
+  // Helper to change tab
+  const setActiveTab = (tab: string) => {
+    // If going to home, clear params to keep URL clean
+    if (tab === "home") {
+      router.push("/")
+    } else {
+      router.push(`?view=${tab}`)
+    }
+  }
 
   // آيات عشوائية
   const randomAyahs = [
@@ -194,6 +228,20 @@ export default function Home() {
                 border-left: 0.3em solid transparent;
               }
             }
+
+            /* New badge for library button */
+            .library-new-badge {
+              position: absolute;
+              top: 0.5rem;
+              right: 0.5rem;
+              background: #ff4757;
+              color: white;
+              font-size: 0.7rem;
+              font-weight: 600;
+              padding: 0.2rem 0.5rem;
+              border-radius: 0.4rem;
+              z-index: 10;
+            }
           `}</style>
 
           <ul className="nav nav-pills nav-fill bg-body shadow-sm p-2 gap-1 flex-nowrap main-tabs mb-4" id="mainTabs" role="tablist">
@@ -359,15 +407,8 @@ export default function Home() {
                         <button
                           className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
                           onClick={() => {
-                            setActiveTab("adhkar-list")
-                            // Small delay to allow tab switch then click card
-                            setTimeout(() => {
-                              const morningCard = document.querySelector('.adhkar-card-morning') as HTMLElement
-                              if (morningCard) {
-                                morningCard.click()
-                                window.scrollTo({ top: 0, behavior: 'smooth' })
-                              }
-                            }, 100)
+                            // Navigate to adhkar list with morning selected
+                            router.push('?view=adhkar-list&id=morning')
                           }}
                           type="button"
                         >
@@ -383,14 +424,8 @@ export default function Home() {
                         <button
                           className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
                           onClick={() => {
-                            setActiveTab("adhkar-list")
-                            setTimeout(() => {
-                              const eveningCard = document.querySelector('.adhkar-card-evening') as HTMLElement
-                              if (eveningCard) {
-                                eveningCard.click()
-                                window.scrollTo({ top: 0, behavior: 'smooth' })
-                              }
-                            }, 100)
+                            // Navigate to adhkar list with evening selected
+                            router.push('?view=adhkar-list&id=evening')
                           }}
                           type="button"
                         >
@@ -415,16 +450,17 @@ export default function Home() {
                         </button>
                       </div>
 
-                      {/* قريباً */}
+                      {/* مكتبة الوسائط */}
                       <div className="col-6 col-md-3">
                         <button
-                          className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn disabled"
+                          className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
+                          onClick={() => setActiveTab("media")}
                           type="button"
-                          style={{ opacity: 0.7, cursor: 'default' }}
                         >
+                          {showLibraryBadge && (<span className="library-new-badge">جديد</span>)}
                           <div className="text-center">
-                            <i className="fas fa-hourglass-half fs-1 text-secondary mb-3 d-block"></i>
-                            <h5 className="fw-bold mb-0 text-secondary">قريباً</h5>
+                            <i className="fas fa-photo-video fs-1 gradient-text mb-3 d-block"></i>
+                            <h5 className="fw-bold mb-0">المكتبة</h5>
                           </div>
                         </button>
                       </div>
@@ -482,6 +518,12 @@ export default function Home() {
             {activeTab === "about" && (
               <div className="animate__animated animate__fadeIn">
                 <About />
+              </div>
+            )}
+
+            {activeTab === "media" && (
+              <div className="animate__animated animate__fadeIn">
+                <MediaPage />
               </div>
             )}
           </div>
