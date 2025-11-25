@@ -6,27 +6,40 @@ import { morningAdhkarConfig } from "./adhkar/morning-adhkar-data"
 import { eveningAdhkarConfig } from "./adhkar/evening-adhkar-data"
 import { prayerAdhkarConfig } from "./adhkar/prayer-adhkar-data"
 import { sleepAdhkarConfig } from "./adhkar/sleep-adhkar-data"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export function AdhkarList() {
-    const [selectedAdhkar, setSelectedAdhkar] = React.useState<string | null>(null)
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const selectedAdhkar = searchParams.get("id")
     const [startTime, setStartTime] = React.useState<number | null>(null)
 
     const handleCardClick = (adhkarType: string) => {
-        setSelectedAdhkar(adhkarType)
+        router.push(`?view=adhkar-list&id=${adhkarType}`)
         setStartTime(Date.now())
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const handleBackToCards = () => {
-        setSelectedAdhkar(null)
+        router.push('?view=adhkar-list')
         setStartTime(null)
     }
 
     // Track time spent on adhkar page
     React.useEffect(() => {
-        if (!selectedAdhkar || !startTime) return
+        if (!selectedAdhkar) {
+            setStartTime(null)
+            return
+        }
+
+        // If we have a selected adhkar but no start time (e.g. direct link), set it
+        if (!startTime) {
+            setStartTime(Date.now())
+        }
 
         const checkTimer = setInterval(() => {
+            if (!startTime) return
+
             const elapsedTime = Date.now() - startTime
             const oneMinute = 60 * 1000 // 60 seconds
 

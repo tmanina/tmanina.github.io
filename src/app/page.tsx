@@ -11,13 +11,27 @@ import { TasbihCircle } from "@/components/tasbih-circle"
 import { About } from "@/components/about"
 import { AdhkarList } from "@/components/adhkar-list"
 import { SharePage } from "@/components/share-page"
+import { MediaPage } from "@/components/media-page"
 import { InstallPrompt } from "@/components/install-prompt"
 import { SplashScreen } from "@/components/splash-screen"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Home() {
   const [showSplash, setShowSplash] = React.useState(true)
-  const [activeTab, setActiveTab] = React.useState("home")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const activeTab = searchParams.get("view") || "home"
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
+
+  // Helper to change tab
+  const setActiveTab = (tab: string) => {
+    // If going to home, clear params to keep URL clean
+    if (tab === "home") {
+      router.push("/")
+    } else {
+      router.push(`?view=${tab}`)
+    }
+  }
 
   // آيات عشوائية
   const randomAyahs = [
@@ -359,15 +373,8 @@ export default function Home() {
                         <button
                           className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
                           onClick={() => {
-                            setActiveTab("adhkar-list")
-                            // Small delay to allow tab switch then click card
-                            setTimeout(() => {
-                              const morningCard = document.querySelector('.adhkar-card-morning') as HTMLElement
-                              if (morningCard) {
-                                morningCard.click()
-                                window.scrollTo({ top: 0, behavior: 'smooth' })
-                              }
-                            }, 100)
+                            // Navigate to adhkar list with morning selected
+                            router.push('?view=adhkar-list&id=morning')
                           }}
                           type="button"
                         >
@@ -383,14 +390,8 @@ export default function Home() {
                         <button
                           className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
                           onClick={() => {
-                            setActiveTab("adhkar-list")
-                            setTimeout(() => {
-                              const eveningCard = document.querySelector('.adhkar-card-evening') as HTMLElement
-                              if (eveningCard) {
-                                eveningCard.click()
-                                window.scrollTo({ top: 0, behavior: 'smooth' })
-                              }
-                            }, 100)
+                            // Navigate to adhkar list with evening selected
+                            router.push('?view=adhkar-list&id=evening')
                           }}
                           type="button"
                         >
@@ -415,16 +416,16 @@ export default function Home() {
                         </button>
                       </div>
 
-                      {/* قريباً */}
+                      {/* مكتبة الوسائط */}
                       <div className="col-6 col-md-3">
                         <button
-                          className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn disabled"
+                          className="btn btn-lg w-100 h-100 p-4 rounded-4 border-0 shadow-sm bg-body-secondary position-relative overflow-hidden nav-card-btn"
+                          onClick={() => setActiveTab("media")}
                           type="button"
-                          style={{ opacity: 0.7, cursor: 'default' }}
                         >
                           <div className="text-center">
-                            <i className="fas fa-hourglass-half fs-1 text-secondary mb-3 d-block"></i>
-                            <h5 className="fw-bold mb-0 text-secondary">قريباً</h5>
+                            <i className="fas fa-photo-video fs-1 gradient-text mb-3 d-block"></i>
+                            <h5 className="fw-bold mb-0">المكتبة</h5>
                           </div>
                         </button>
                       </div>
@@ -482,6 +483,12 @@ export default function Home() {
             {activeTab === "about" && (
               <div className="animate__animated animate__fadeIn">
                 <About />
+              </div>
+            )}
+
+            {activeTab === "media" && (
+              <div className="animate__animated animate__fadeIn">
+                <MediaPage />
               </div>
             )}
           </div>
