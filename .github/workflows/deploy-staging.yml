@@ -1,9 +1,9 @@
-name: Deploy to Production (GitHub Pages)
+name: Deploy to Staging (tmanina_staging)
 
 on:
   push:
     branches:
-      - main  # Production deployment - deploys when pushing to main branch
+      - staging  # Deploy when pushing to staging branch
   workflow_dispatch:  # Allow manual deployment from Actions tab
 
 permissions:
@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "production-pages"
+  group: "staging-pages"
   cancel-in-progress: true
 
 jobs:
@@ -33,6 +33,8 @@ jobs:
 
       - name: Build and Export
         run: npm run build:gh
+        env:
+          NODE_ENV: staging
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -43,10 +45,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: production
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: staging
+      url: https://tmanina.github.io/tmanina_staging
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Staging)
         id: deployment
         uses: actions/deploy-pages@v4
