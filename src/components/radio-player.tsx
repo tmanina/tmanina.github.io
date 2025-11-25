@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 
 interface Radio {
     id: number
@@ -22,10 +23,13 @@ interface RadioPlayerProps {
 }
 
 export function RadioPlayer({ onBack }: RadioPlayerProps) {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const selectedCategory = searchParams.get("category")
+
     const [radios, setRadios] = React.useState<Radio[]>([])
     const [loading, setLoading] = React.useState(true)
     const [error, setError] = React.useState<string | null>(null)
-    const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null)
     const [playingRadio, setPlayingRadio] = React.useState<Radio | null>(null)
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [volume, setVolume] = React.useState(0.7)
@@ -123,6 +127,56 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             audioRef.current.volume = volume
         }
     }, [volume])
+
+    // Setup Media Session API for background playback and notifications
+    React.useEffect(() => {
+        if ('mediaSession' in navigator && playingRadio && isPlaying) {
+            // Get the category name for the current radio
+            const categoryId = categorizeRadio(playingRadio)
+            const category = categories.find(c => c.id === categoryId)
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: playingRadio.name,
+                artist: 'إذاعة القرآن الكريم',
+                album: category?.name || 'مكتبة الإذاعات',
+                artwork: [
+                    { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+                    { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+                ]
+            })
+
+            // Play Handler
+            navigator.mediaSession.setActionHandler('play', () => {
+                if (audioRef.current) {
+                    audioRef.current.play().catch(() => setIsPlaying(false))
+                    setIsPlaying(true)
+                }
+            })
+
+            // Pause Handler
+            navigator.mediaSession.setActionHandler('pause', () => {
+                if (audioRef.current) {
+                    audioRef.current.pause()
+                    setIsPlaying(false)
+                }
+            })
+
+            // Stop Handler
+            navigator.mediaSession.setActionHandler('stop', () => {
+                stopRadio()
+            })
+        }
+
+        // Cleanup on unmount or when radio stops
+        return () => {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = null
+                navigator.mediaSession.setActionHandler('play', null)
+                navigator.mediaSession.setActionHandler('pause', null)
+                navigator.mediaSession.setActionHandler('stop', null)
+            }
+        }
+    }, [playingRadio, isPlaying])
 
     const fetchRadios = async () => {
         try {
@@ -223,12 +277,12 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     }
 
     const handleCategorySelect = (categoryId: string) => {
-        setSelectedCategory(categoryId)
+        router.push(`?view=media&id=radio&category=${categoryId}`)
         setSearchQuery("")
     }
 
     const handleBackToCategories = () => {
-        setSelectedCategory(null)
+        router.push(`?view=media&id=radio`)
         setSearchQuery("")
     }
 
@@ -705,7 +759,13 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             `}</style>
 
             {/* Hidden audio element */}
-            <audio ref={audioRef} onEnded={stopRadio} />
+            <audio
+                ref={audioRef}
+                onEnded={stopRadio}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onError={() => setIsPlaying(false)}
+            />
 
             {/* Header */}
             <div className="radio-header">
