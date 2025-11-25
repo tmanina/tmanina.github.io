@@ -1,4 +1,4 @@
-name: Deploy to Staging (tmanina_staging)
+name: Deploy to Staging (tmanina_staging.github.io)
 
 on:
   push:
@@ -6,21 +6,16 @@ on:
       - staging  # Deploy when pushing to staging branch
   workflow_dispatch:  # Allow manual deployment from Actions tab
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
-  group: "staging-pages"
+  group: "staging-deployment"
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source repository
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -36,19 +31,14 @@ jobs:
         env:
           NODE_ENV: staging
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: https://tmanina.github.io/tmanina_staging
-
-    steps:
-      - name: Deploy to GitHub Pages (Staging)
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to staging repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd out
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Deploy from staging branch - $(date)"
+          git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/tmanina/tmanina_staging.github.io.git main
