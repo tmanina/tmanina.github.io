@@ -725,12 +725,12 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     }
 
                     .progress-bar {
-                        height: 6px;
-                        padding: 10px 0;
+                        height: 10px;
+                        padding: 0;
                     }
 
                     .progress-bar-inner {
-                        height: 6px;
+                        height: 100%;
                     }
 
                     .progress-fill::after {

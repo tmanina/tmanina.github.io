@@ -8,6 +8,7 @@ interface Radio {
     name: string
     url: string
     recent_date: string
+    img?: string
 }
 
 interface Category {
@@ -181,10 +182,22 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const fetchRadios = async () => {
         try {
             setLoading(true)
+
+            // Manual radios
+            const manualRadios: Radio[] = [
+                {
+                    id: 90000,
+                    name: "إذاعة القرأن الكريم من القاهرة",
+                    url: "https://n0e.radiojar.com/8s5u5tpdtwzuv?rj-ttl=5&rj-tok=AAABjW7yROAA0TUU8cXhXIAi6g",
+                    recent_date: new Date().toISOString(),
+                    img: "https://apkdownmod.com/thumbnail?src=images/appsicon/2020/08/app-image-5f42ba68a61b1.jpg"
+                }
+            ]
+
             const response = await fetch("https://mp3quran.net/api/v3/radios")
             if (!response.ok) throw new Error("فشل تحميل الإذاعات")
             const data = await response.json()
-            setRadios(data.radios || [])
+            setRadios([...manualRadios, ...(data.radios || [])])
         } catch (err) {
             setError(err instanceof Error ? err.message : "حدث خطأ ما")
         } finally {
@@ -248,6 +261,12 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const filteredRadios = getCategoryRadios().filter(radio =>
         radio.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    const getCategoryIcon = (radio: Radio): string => {
+        const categoryId = categorizeRadio(radio)
+        const category = categories.find(c => c.id === categoryId)
+        return category ? category.icon : "fa-broadcast-tower"
+    }
 
     const playRadio = (radio: Radio) => {
         if (playingRadio?.id === radio.id) {
@@ -505,6 +524,13 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     color: white;
                     font-size: 1.3rem;
                     flex-shrink: 0;
+                    overflow: hidden;
+                }
+
+                .radio-icon img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
                 }
 
                 .radio-card.playing .radio-icon {
@@ -915,7 +941,11 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     <div className="player-content">
                         <div className="now-playing">
                             <div className="playing-icon">
-                                <i className="fas fa-broadcast-tower"></i>
+                                {playingRadio.img ? (
+                                    <img src={playingRadio.img} alt={playingRadio.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
+                                ) : (
+                                    <i className={`fas ${getCategoryIcon(playingRadio)}`}></i>
+                                )}
                             </div>
                             <div className="playing-info">
                                 <h4>{playingRadio.name}</h4>
