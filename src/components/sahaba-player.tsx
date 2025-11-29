@@ -1,0 +1,815 @@
+"use client"
+
+import * as React from "react"
+
+interface Sahaba {
+    id: number
+    name: string
+    url: string
+}
+
+interface SahabaPlayerProps {
+    onBack?: () => void
+}
+
+export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
+    const [playingSahaba, setPlayingSahaba] = React.useState<Sahaba | null>(null)
+    const [isPlaying, setIsPlaying] = React.useState(false)
+    const [volume, setVolume] = React.useState(0.7)
+    const [searchQuery, setSearchQuery] = React.useState("")
+    const [currentTime, setCurrentTime] = React.useState(0)
+    const [duration, setDuration] = React.useState(0)
+    const [isDragging, setIsDragging] = React.useState(false)
+
+    const audioRef = React.useRef<HTMLAudioElement>(null)
+
+    // List of Sahaba stories
+    const sahabaList: Sahaba[] = [
+        { id: 1, name: "الصحابي مصعب بن عمير", url: "https://list.qurango.net/sahabah/mosab.mp3" },
+        { id: 2, name: "الصحابي عبدالله بن عتيك", url: "https://list.qurango.net/sahabah/abdullah-bin-ateek.mp3" },
+        { id: 3, name: "خليفة رسول الله عليه السلام أبو بكر الصديق", url: "https://list.qurango.net/sahabah/Abu-Baker.mp3" },
+        { id: 4, name: "أمير المؤمنين عمر بن الخطاب", url: "https://list.qurango.net/sahabah/omar.mp3" },
+        { id: 5, name: "التابعي عطاء بن أبي رباح", url: "https://list.qurango.net/sahabah/ata.mp3" },
+        { id: 6, name: "التابعي عامر بن عبدالله التميمي", url: "https://list.qurango.net/sahabah/amer-tamimi.mp3" },
+        { id: 7, name: "التابعي عروة بن الزبير", url: "https://list.qurango.net/sahabah/auroh-zbir.mp3" },
+        { id: 8, name: "التابعي الربيع بن خثيم", url: "https://list.qurango.net/sahabah/arabi-katham.mp3" },
+        { id: 9, name: "الصحابي أنس بن مالك الأنصاري", url: "https://list.qurango.net/sahabah/anas-malik.mp3" },
+        { id: 10, name: "الصحابي عبدالله بن جحش", url: "https://list.qurango.net/sahabah/abdullah-bin-gahsh.mp3" },
+        { id: 11, name: "الصحابي العلاء بن الحضرمي - الجزء الأول", url: "https://list.qurango.net/sahabah/alala-hadrami-1.mp3" },
+        { id: 12, name: "الصحابي العلاء بن الحضرمي - الجزء الثاني", url: "https://list.qurango.net/sahabah/alala-hadrami-2.mp3" },
+        { id: 13, name: "الصحابي العلاء بن الحضرمي - الجزء الثالث", url: "https://list.qurango.net/sahabah/alala-hadrami-3.mp3" },
+        { id: 14, name: "الصحابي المغيرة بن شعبة", url: "https://list.qurango.net/sahabah/almugerh.mp3" },
+        { id: 15, name: "الصحابي معاذ بن عمرو بن الجموح وأخوه معوّذ", url: "https://list.qurango.net/sahabah/muath-gamoh-b.mp3" },
+        { id: 16, name: "الصحابي المقداد بن عمرو", url: "https://list.qurango.net/sahabah/mqdad.mp3" },
+        { id: 17, name: "الصحابي عمرو بن أمية الضمري", url: "https://list.qurango.net/sahabah/amru-aomih.mp3" },
+        { id: 18, name: "الصحابي أبو عبيدة بن الجراح", url: "https://list.qurango.net/sahabah/abu-aobidah.mp3" },
+        { id: 19, name: "الصحابي عبدالله بن مسعود", url: "https://list.qurango.net/sahabah/abdullah-masaud.mp3" },
+        { id: 20, name: "الصحابي سلمان الفارسي", url: "https://list.qurango.net/sahabah/salman-farisi.mp3" },
+        { id: 21, name: "الصحابي عكرمة بن أبي جهل", url: "https://list.qurango.net/sahabah/ekremah.mp3" },
+        { id: 22, name: "الصحابي زيد الخير", url: "https://list.qurango.net/sahabah/zid.mp3" },
+        { id: 23, name: "الصحابي عدي بن حاتم الطائي", url: "https://list.qurango.net/sahabah/auday-taei.mp3" },
+        { id: 24, name: "الصحابي أبو ذر الغفاري", url: "https://list.qurango.net/sahabah/abu-thar.mp3" },
+        { id: 25, name: "الصحابي عبدالله بن أم مكتوم", url: "https://list.qurango.net/sahabah/abdullah-maktom.mp3" },
+        { id: 26, name: "الصحابي مجزأة بن ثور السدوسي", url: "https://list.qurango.net/sahabah/mujzah.mp3" },
+        { id: 27, name: "الصحابي سعيد بن عامر الجمحي", url: "https://list.qurango.net/sahabah/saed-jmahe.mp3" },
+        { id: 28, name: "الصحابي أسيد بن الحضير", url: "https://list.qurango.net/sahabah/ausaid.mp3" },
+        { id: 29, name: "الصحابي عبدالله بن عباس", url: "https://list.qurango.net/sahabah/abdullah-abas.mp3" },
+        { id: 30, name: "الصحابي النعمان بن مقرن المزني", url: "https://list.qurango.net/sahabah/alnuaman.mp3" },
+        { id: 31, name: "الصحابي صهيب الرومي", url: "https://list.qurango.net/sahabah/alromi.mp3" },
+        { id: 32, name: "الصحابي أبو الدرداء", url: "https://list.qurango.net/sahabah/Abu-drda.mp3" },
+        { id: 33, name: "الصحابي زيد بن حارثة", url: "https://list.qurango.net/sahabah/zaid-harithah.mp3" },
+        { id: 34, name: "الصحابي أسامة بن زيد", url: "https://list.qurango.net/sahabah/osama-zid.mp3" },
+        { id: 35, name: "الصحابي سعيد بن زيد", url: "https://list.qurango.net/sahabah/saead-zid.mp3" },
+        { id: 36, name: "الصحابي عمير بن سعد في صغره", url: "https://list.qurango.net/sahabah/omair-saed.mp3" },
+        { id: 37, name: "الصحابي عمير بن سعد في كبره", url: "https://list.qurango.net/sahabah/omair-saed-2.mp3" },
+        { id: 38, name: "الصحابي الطفيل بن عمرو الدوسي", url: "https://list.qurango.net/sahabah/tofail.mp3" },
+        { id: 39, name: "الصحابي عبدالرحمن بن عوف", url: "https://list.qurango.net/sahabah/Bin-aouf.mp3" },
+        { id: 40, name: "الصحابي جعفر بن أبي طالب", url: "https://list.qurango.net/sahabah/jafar-taleb.mp3" },
+        { id: 41, name: "الصحابي أبو سفيان بن الحارث", url: "https://list.qurango.net/sahabah/abu-sofian-harith.mp3" },
+        { id: 42, name: "الصحابي سعد بن أبي وقاص", url: "https://list.qurango.net/sahabah/saed-waqas.mp3" },
+        { id: 43, name: "الصحابي حذيفة بن اليمان", url: "https://list.qurango.net/sahabah/huthaifa-yaman.mp3" },
+        { id: 44, name: "الصحابي عقبة بن عامر الجهني", url: "https://list.qurango.net/sahabah/auqbah-jhani.mp3" },
+        { id: 45, name: "الصحابي بلال بن رباح", url: "https://list.qurango.net/sahabah/bilal.mp3" },
+        { id: 46, name: "الصحابي حبيب بن زيد الأنصاري", url: "https://list.qurango.net/sahabah/zid-ansari.mp3" },
+        { id: 47, name: "الصحابي أبو طلحة الأنصاري", url: "https://list.qurango.net/sahabah/abu-talhah.mp3" },
+        { id: 48, name: "الصحابي وحشي بن حرب", url: "https://list.qurango.net/sahabah/wahshy.mp3" },
+        { id: 49, name: "الصحابي عبدالله بن حذافة السهمي", url: "https://list.qurango.net/sahabah/abdullah-sahme.mp3" },
+        { id: 50, name: "الصحابي حكيم بن حزام", url: "https://list.qurango.net/sahabah/hakim.mp3" },
+        { id: 51, name: "الصحابي عباد بن بشر", url: "https://list.qurango.net/sahabah/abad-bsher.mp3" },
+        { id: 52, name: "الصحابي زيد بن ثابت الأنصاري", url: "https://list.qurango.net/sahabah/zid-thabit.mp3" },
+        { id: 53, name: "الصحابي ربيعة بن كعب", url: "https://list.qurango.net/sahabah/rabiah-kab.mp3" },
+        { id: 54, name: "الصحابي ذو البجادين", url: "https://list.qurango.net/sahabah/tho-bagadain.mp3" },
+        { id: 55, name: "الصحابي أبو العاص بن الربيع", url: "https://list.qurango.net/sahabah/abu-alas-rabie.mp3" },
+        { id: 56, name: "الصحابي عاصم بن ثابت", url: "https://list.qurango.net/sahabah/asem-thabit.mp3" },
+        { id: 57, name: "الصحابي عتبة بن غزوان", url: "https://list.qurango.net/sahabah/autbah-gazwan.mp3" },
+        { id: 58, name: "الصحابي نعيم بن مسعود", url: "https://list.qurango.net/sahabah/naem-masaud.mp3" },
+        { id: 59, name: "الصحابي خباب بن الأرت", url: "https://list.qurango.net/sahabah/kabab-arat.mp3" },
+        { id: 60, name: "الصحابي الربيع بن زياد الحارثي", url: "https://list.qurango.net/sahabah/alrabea-ziad.mp3" },
+        { id: 61, name: "الصحابي عمير بن وهب", url: "https://list.qurango.net/sahabah/aumair-wahb.mp3" },
+        { id: 62, name: "الصحابي عبدالله بن سلام", url: "https://list.qurango.net/sahabah/abdullah-salam.mp3" },
+        { id: 63, name: "الصحابي خالد بن سعيد بن العاص", url: "https://list.qurango.net/sahabah/khaled-saed.mp3" },
+        { id: 64, name: "الصحابي سراقة بن مالك", url: "https://list.qurango.net/sahabah/surqah-malik.mp3" },
+        { id: 65, name: "الصحابي فيروز الديلمي", url: "https://list.qurango.net/sahabah/fayroz-delyme.mp3" },
+        { id: 66, name: "الصحابي ثابت بن قيس الأنصاري", url: "https://list.qurango.net/sahabah/thabit-qys.mp3" },
+        { id: 67, name: "الصحابي طلحة بن عبيدالله التيمي", url: "https://list.qurango.net/sahabah/talhah-abdullah.mp3" },
+        { id: 68, name: "الصحابي أبو هريرة الدوسي", url: "https://list.qurango.net/sahabah/abu-horairah.mp3" },
+        { id: 69, name: "الصحابي سلمة بن قيس الأشجعي", url: "https://list.qurango.net/sahabah/salamh-ays.mp3" },
+        { id: 70, name: "الصحابي معاذ بن جبل", url: "https://list.qurango.net/sahabah/muoath-jabl.mp3" },
+        { id: 71, name: "الصحابي البراء بن مالك الأنصاري", url: "https://list.qurango.net/sahabah/albara-malik.mp3" },
+        { id: 72, name: "آل ياسر رضي الله عنهم", url: "https://list.qurango.net/sahabah/alyaser.mp3" },
+        { id: 73, name: "الصحابي سهيل بن عمرو", url: "https://list.qurango.net/sahabah/suahil-amro.mp3" },
+        { id: 74, name: "الصحابي جابر بن عبدالله الأنصاري", url: "https://list.qurango.net/sahabah/jaber-abullah.mp3" },
+        { id: 75, name: "الصحابي سالم مولى أبي حذيفة", url: "https://list.qurango.net/sahabah/salem-mola.mp3" },
+        { id: 76, name: "ذو النورين عثمان بن عفان", url: "https://list.qurango.net/sahabah/outhman-affan.mp3" },
+        { id: 77, name: "الصحابي عمرو بن العاص", url: "https://list.qurango.net/sahabah/amro-alas.mp3" },
+        { id: 78, name: "الصحابي أبو لبابة", url: "https://list.qurango.net/sahabah/abu-lobabah.mp3" },
+        { id: 79, name: "الصحابي جرير بن عبدالله البجلي", url: "https://list.qurango.net/sahabah/jarir-abdullah.mp3" },
+        { id: 80, name: "الصحابي أبي بن كعب الأنصاري", url: "https://list.qurango.net/sahabah/aby-kab.mp3" },
+        { id: 81, name: "الصحابي ثمامة بن أثال", url: "https://list.qurango.net/sahabah/thomamah.mp3" },
+        { id: 82, name: "الصحابي ميسرة بن مسروق العبسي", url: "https://list.qurango.net/sahabah/mysarah.mp3" },
+        { id: 83, name: "الصحابي حمزة بن عبدالمطلب", url: "https://list.qurango.net/sahabah/hamzah-abdulmotaleb.mp3" },
+        { id: 84, name: "الصحابي أبو عقيل الأنيقي", url: "https://list.qurango.net/sahabah/abu-aqel.mp3" },
+        { id: 85, name: "الصحابي سعيد بن العاص", url: "https://list.qurango.net/sahabah/saed-alas.mp3" },
+        { id: 86, name: "الصحابي جليبيب", url: "https://list.qurango.net/sahabah/jolebeb.mp3" },
+        { id: 87, name: "الصحابي سعد بن معاذ", url: "https://list.qurango.net/sahabah/saed-mouath.mp3" },
+        { id: 88, name: "الصحابي شداد بن أوس الأنصاري", url: "https://list.qurango.net/sahabah/shadad.mp3" },
+        { id: 89, name: "الصحابي عبدالله بن الزبير", url: "https://list.qurango.net/sahabah/abdullah-zubair.mp3" },
+        { id: 90, name: "الصحابي القعقاع بن عمرو", url: "https://list.qurango.net/sahabah/alqaqa.mp3" },
+        { id: 91, name: "الصحابي أبو أيوب الأنصاري", url: "https://list.qurango.net/sahabah/abu-ayob.mp3" },
+        { id: 92, name: "الصحابي أبو عبيد بن مسعود الثقفي", url: "https://list.qurango.net/sahabah/abu-aubaidah-masaud.mp3" },
+        { id: 93, name: "الصحابي الزبير بن العوام", url: "https://list.qurango.net/sahabah/zubair-auoam.mp3" },
+        { id: 94, name: "الصحابي سماك بن خرشة", url: "https://list.qurango.net/sahabah/samak.mp3" },
+        { id: 95, name: "الصحابي خالد بن الوليد", url: "https://list.qurango.net/sahabah/khaled-alwaleed.mp3" },
+        { id: 96, name: "الصحابي المثنى بن حارثة الشيباني", url: "https://list.qurango.net/sahabah/almothana.mp3" },
+        { id: 97, name: "الصحابي سلمة بن الأكوع", url: "https://list.qurango.net/sahabah/salamah.mp3" },
+        { id: 98, name: "الصحابي أبو بصير عتبة بن أسيد", url: "https://list.qurango.net/sahabah/abu-baser.mp3" },
+        { id: 99, name: "الصحابي زيد بن سعنة", url: "https://list.qurango.net/sahabah/zaid-sanah.mp3" },
+        { id: 100, name: "الصحابي عبدالله بن عمر بن الخطاب", url: "https://list.qurango.net/sahabah/abdullah-omar.mp3" },
+        { id: 101, name: "الصحابي عمرو بن الجموح", url: "https://list.qurango.net/sahabah/amro-jamoh.mp3" },
+        { id: 102, name: "الصحابي طليحة بن خويلد الأسدي", url: "https://list.qurango.net/sahabah/tolaiahh.mp3" },
+        { id: 103, name: "الصحابي عبادة بن الصامت", url: "https://list.qurango.net/sahabah/aubadah.mp3" },
+        { id: 104, name: "الصحابي يزيد بن أبي سفيان", url: "https://list.qurango.net/sahabah/yazed-sofian.mp3" },
+        { id: 105, name: "الصحابي العباس بن عبدالمطلب", url: "https://list.qurango.net/sahabah/alabas.mp3" },
+        { id: 106, name: "الصحابي أنس بن النضر النجاري", url: "https://list.qurango.net/sahabah/anas-alnjary.mp3" },
+        { id: 107, name: "الصحابي رافع بن عمير الطائي", url: "https://list.qurango.net/sahabah/rafa-taei.mp3" },
+        { id: 108, name: "الصحابي عثمان بن مظعون", url: "https://list.qurango.net/sahabah/outhman-mathon.mp3" },
+        { id: 109, name: "الصحابي كعب بن مالك", url: "https://list.qurango.net/sahabah/kab-malik.mp3" },
+        { id: 110, name: "الصحابي تميم الداري", url: "https://list.qurango.net/sahabah/tamim-dary.mp3" },
+        { id: 111, name: "يوم الرجيع", url: "https://list.qurango.net/sahabah/yaom-arajea.mp3" },
+        { id: 112, name: "الصحابية حليمة السعدية", url: "https://list.qurango.net/sahabah/halemah.mp3" },
+        { id: 113, name: "الصحابية صفية بنت عبدالمطلب", url: "https://list.qurango.net/sahabah/safeah.mp3" },
+        { id: 114, name: "الصحابية فاطمة الزهراء", url: "https://list.qurango.net/sahabah/fatemah.mp3" },
+        { id: 115, name: "الصحابية أسماء بنت أبي بكر", url: "https://list.qurango.net/sahabah/asma.mp3" },
+        { id: 116, name: "الصحابية نسيبة المازنية", url: "https://list.qurango.net/sahabah/nasebah.mp3" },
+        { id: 117, name: "الصحابية رملة بنت أبي سفيان", url: "https://list.qurango.net/sahabah/ramlah.mp3" },
+        { id: 118, name: "الصحابية الغميصاء بنت ملحان", url: "https://list.qurango.net/sahabah/goaysa.mp3" },
+        { id: 119, name: "الصحابية أم سلمة", url: "https://list.qurango.net/sahabah/um-salamah.mp3" }
+    ]
+
+    React.useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume
+        }
+    }, [volume])
+
+    // Setup Media Session API for background playback
+    React.useEffect(() => {
+        if ('mediaSession' in navigator && playingSahaba && isPlaying) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: playingSahaba.name,
+                artist: 'حياه الصحابة',
+                album: 'قصص الصحابة رضوان الله عليهم',
+                artwork: [
+                    { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+                    { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+                ]
+            })
+
+            navigator.mediaSession.setActionHandler('play', () => {
+                if (audioRef.current) {
+                    audioRef.current.play().catch(() => setIsPlaying(false))
+                    setIsPlaying(true)
+                }
+            })
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                if (audioRef.current) {
+                    audioRef.current.pause()
+                    setIsPlaying(false)
+                }
+            })
+
+            navigator.mediaSession.setActionHandler('stop', () => {
+                stopAudio()
+            })
+        }
+
+        return () => {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = null
+                navigator.mediaSession.setActionHandler('play', null)
+                navigator.mediaSession.setActionHandler('pause', null)
+                navigator.mediaSession.setActionHandler('stop', null)
+            }
+        }
+    }, [playingSahaba, isPlaying])
+
+    const filteredSahaba = sahabaList.filter(sahaba =>
+        sahaba.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    const playAudio = (sahaba: Sahaba) => {
+        if (playingSahaba?.id === sahaba.id) {
+            togglePlayPause()
+        } else {
+            setPlayingSahaba(sahaba)
+            setIsPlaying(true)
+            if (audioRef.current) {
+                audioRef.current.src = sahaba.url
+                audioRef.current.play().catch(() => setIsPlaying(false))
+            }
+        }
+    }
+
+    const togglePlayPause = () => {
+        if (!audioRef.current) return
+
+        if (isPlaying) {
+            audioRef.current.pause()
+            setIsPlaying(false)
+        } else {
+            audioRef.current.play().catch(() => setIsPlaying(false))
+            setIsPlaying(true)
+        }
+    }
+
+    const stopAudio = () => {
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.src = ""
+        }
+        setPlayingSahaba(null)
+        setIsPlaying(false)
+        setCurrentTime(0)
+        setDuration(0)
+    }
+
+    // Format time in MM:SS
+    const formatTime = (seconds: number): string => {
+        if (isNaN(seconds)) return "00:00"
+        const mins = Math.floor(seconds / 60)
+        const secs = Math.floor(seconds % 60)
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
+
+    // Handle seeking
+    const handleSeek = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
+        if (!audioRef.current || duration === 0) return
+
+        const bar = document.querySelector('.progress-bar-inner') as HTMLElement
+        if (!bar) return
+
+        const rect = bar.getBoundingClientRect()
+        let clientX
+
+        if ('touches' in e) {
+            clientX = e.touches[0].clientX
+        } else {
+            clientX = (e as MouseEvent).clientX
+        }
+
+        // For RTL: calculate from right side
+        const clickX = rect.right - clientX
+        const percentage = Math.max(0, Math.min(1, clickX / rect.width))
+        const newTime = percentage * duration
+
+        setCurrentTime(newTime)
+
+        // Only update audio time if not dragging (or on drag end)
+        if (!isDragging) {
+            audioRef.current.currentTime = newTime
+        }
+    }
+
+    const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+        setIsDragging(true)
+        handleSeek(e)
+    }
+
+    const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+        if (isDragging) {
+            handleSeek(e)
+        }
+    }
+
+    const handleDragEnd = (e: React.MouseEvent | React.TouchEvent) => {
+        if (isDragging) {
+            setIsDragging(false)
+            if (audioRef.current) {
+                audioRef.current.currentTime = currentTime
+            }
+        }
+    }
+
+    // Add global event listeners for drag end/move
+    React.useEffect(() => {
+        const handleGlobalMouseMove = (e: MouseEvent) => {
+            if (isDragging) {
+                handleSeek(e)
+            }
+        }
+
+        const handleGlobalMouseUp = (e: MouseEvent) => {
+            if (isDragging) {
+                setIsDragging(false)
+                if (audioRef.current) {
+                    audioRef.current.currentTime = currentTime
+                }
+            }
+        }
+
+        const handleGlobalTouchMove = (e: TouchEvent) => {
+            if (isDragging) {
+                handleSeek(e)
+            }
+        }
+
+        const handleGlobalTouchEnd = (e: TouchEvent) => {
+            if (isDragging) {
+                setIsDragging(false)
+                if (audioRef.current) {
+                    audioRef.current.currentTime = currentTime
+                }
+            }
+        }
+
+        if (isDragging) {
+            document.addEventListener('mousemove', handleGlobalMouseMove)
+            document.addEventListener('mouseup', handleGlobalMouseUp)
+            document.addEventListener('touchmove', handleGlobalTouchMove)
+            document.addEventListener('touchend', handleGlobalTouchEnd)
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleGlobalMouseMove)
+            document.removeEventListener('mouseup', handleGlobalMouseUp)
+            document.removeEventListener('touchmove', handleGlobalTouchMove)
+            document.removeEventListener('touchend', handleGlobalTouchEnd)
+        }
+    }, [isDragging, currentTime, duration])
+
+    return (
+        <div className="sahaba-player">
+            <style jsx>{`
+                .sahaba-player {
+                    padding: 1rem 0;
+                }
+
+                .sahaba-header {
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                    color: white;
+                    padding: 2.5rem 2rem;
+                    border-radius: 20px;
+                    margin-bottom: 2rem;
+                    box-shadow: 0 10px 30px rgba(253, 186, 116, 0.3);
+                }
+
+                .sahaba-title {
+                    font-size: 2rem;
+                    font-weight: 700;
+                    margin: 0 0 0.5rem 0;
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .sahaba-subtitle {
+                    font-size: 1rem;
+                    opacity: 0.95;
+                    margin: 0;
+                }
+
+                .search-box {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 1.5rem;
+                    margin-bottom: 2rem;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                }
+
+                .search-input {
+                    width: 100%;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 50px;
+                    padding: 0.85rem 1.5rem;
+                    font-size: 1rem;
+                    transition: all 0.3s ease;
+                }
+
+                .search-input:focus {
+                    border-color: #fb923c;
+                    box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.1);
+                    outline: none;
+                }
+
+                .sahaba-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 1.5rem;
+                    margin-bottom: 2rem;
+                }
+
+                .sahaba-card {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 1.5rem;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    border: 2px solid transparent;
+                }
+
+                .sahaba-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+                    border-color: #fb923c;
+                }
+
+                .sahaba-card.playing {
+                    border-color: #fb923c;
+                    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+                }
+
+                .sahaba-card-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                }
+
+                .sahaba-icon {
+                    width: 50px;
+                    height: 50px;
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.3rem;
+                    flex-shrink: 0;
+                }
+
+                .sahaba-card.playing .sahaba-icon {
+                    animation: pulse 2s ease-in-out infinite;
+                }
+
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+
+                .sahaba-name {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: #1f2937;
+                    margin: 0;
+                    line-height: 1.4;
+                }
+
+                .sahaba-actions {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+
+                .sahaba-btn {
+                    flex: 1;
+                    padding: 0.75rem;
+                    border-radius: 10px;
+                    border: none;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    cursor: pointer;
+                }
+
+                .play-btn {
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                    color: white;
+                }
+
+                .play-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.4);
+                }
+
+                .player-bar {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background: white;
+                    border-top: 2px solid #fb923c;
+                    padding: 1.25rem 2rem;
+                    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+                    z-index: 1000;
+                    animation: slideUp 0.3s ease-out;
+                }
+
+                @media (max-width: 991px) {
+                    .player-bar {
+                        bottom: 80px; /* Height of bottom navigation */
+                    }
+                }
+
+                @keyframes slideUp {
+                    from { transform: translateY(100%); }
+                    to { transform: translateY(0); }
+                }
+
+                .player-content {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.5rem;
+                }
+
+                .now-playing {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .playing-icon {
+                    width: 50px;
+                    height: 50px;
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.3rem;
+                    animation: pulse 2s ease-in-out infinite;
+                }
+
+                .playing-info h4 {
+                    margin: 0;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #1f2937;
+                }
+
+                .playing-info p {
+                    margin: 0.25rem 0 0 0;
+                    font-size: 0.85rem;
+                    color: #6b7280;
+                }
+
+                .player-controls {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .control-btn {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    border: none;
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                    color: white;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .control-btn:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.4);
+                }
+
+                .volume-control {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+
+                .volume-slider {
+                    width: 100px;
+                    height: 6px;
+                    border-radius: 3px;
+                    background: #e5e7eb;
+                    outline: none;
+                    -webkit-appearance: none;
+                }
+
+                .volume-slider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: #fb923c;
+                    cursor: pointer;
+                }
+
+                .volume-slider::-moz-range-thumb {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: #fb923c;
+                    cursor: pointer;
+                    border: none;
+                }
+
+                @media (max-width: 768px) {
+                    .sahaba-grid {
+                        grid-template-columns: 1fr;
+                        padding-bottom: 300px;
+                    }
+
+                    .volume-control {
+                        display: none;
+                    }
+
+                    .progress-container {
+                        order: -1;
+                        margin-bottom: 1rem;
+                    }
+                }
+
+                .progress-container {
+                    flex: 1;
+                    max-width: 400px;
+                }
+
+                .progress-bar {
+                    width: 100%;
+                    height: 10px;
+                    background: white;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 10px;
+                    overflow: visible;
+                    cursor: pointer;
+                    position: relative;
+                    padding: 0;
+                }
+
+                .progress-bar-inner {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                    position: relative;
+                    overflow: visible;
+                }
+
+                .progress-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #fdba74 0%, #fb923c 100%);
+                    border-radius: 10px;
+                    transition: width 0.1s linear;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+
+                .progress-fill::after {
+                    content: '';
+                    position: absolute;
+                    left: -7px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 16px;
+                    height: 16px;
+                    background: white;
+                    border: 3px solid #fb923c;
+                    border-radius: 50%;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    z-index: 10;
+                }
+
+                .time-display {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 0.5rem;
+                    font-size: 0.875rem;
+                    color: #6b7280;
+                    font-family: 'Traditional Arabic', 'Amiri', serif;
+                }
+            `}</style>
+
+            {/* Header */}
+            <div className="sahaba-header">
+                <h2 className="sahaba-title">
+                    <i className="fas fa-users"></i>
+                    حياه الصحابة
+                </h2>
+                <p className="sahaba-subtitle">قصص ومواقف من حياة الصحابة رضوان الله عليهم</p>
+            </div>
+
+            {/* Search Box */}
+            <div className="search-box">
+                <input
+                    type="text"
+                    className="search-input"
+                    placeholder="ابحث عن صحابي..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+
+            {/* Sahaba Grid */}
+            <div className="sahaba-grid">
+                {filteredSahaba.map((sahaba) => (
+                    <div
+                        key={sahaba.id}
+                        className={`sahaba-card ${playingSahaba?.id === sahaba.id ? 'playing' : ''}`}
+                        onClick={() => playAudio(sahaba)}
+                    >
+                        <div className="sahaba-card-header">
+                            <div className="sahaba-icon">
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <h3 className="sahaba-name">{sahaba.name}</h3>
+                        </div>
+                        <div className="sahaba-actions">
+                            <button className="sahaba-btn play-btn" type="button">
+                                <i className={`fas ${playingSahaba?.id === sahaba.id && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                                {playingSahaba?.id === sahaba.id && isPlaying ? 'إيقاف مؤقت' : 'استماع'}
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Player Bar */}
+            {playingSahaba && (
+                <div className="player-bar">
+                    <div className="player-content">
+                        <div className="now-playing">
+                            <div className="playing-icon">
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <div className="playing-info">
+                                <h4>{playingSahaba.name}</h4>
+                                <p>حياه الصحابة</p>
+                            </div>
+                        </div>
+                        <div className="player-controls">
+                            <button
+                                className="control-btn"
+                                onClick={togglePlayPause}
+                                type="button"
+                            >
+                                <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                            </button>
+                            <button
+                                className="control-btn"
+                                onClick={stopAudio}
+                                type="button"
+                            >
+                                <i className="fas fa-stop"></i>
+                            </button>
+                            <div className="volume-control">
+                                <i className="fas fa-volume-up" style={{ color: '#6b7280' }}></i>
+                                <input
+                                    type="range"
+                                    className="volume-slider"
+                                    min="0"
+                                    max="1"
+                                    step="0.1"
+                                    value={volume}
+                                    onChange={(e) => setVolume(parseFloat(e.target.value))}
+                                />
+                            </div>
+                        </div>
+                        <div className="progress-container">
+                            <div
+                                className="progress-bar"
+                                onMouseDown={handleDragStart}
+                                onTouchStart={handleDragStart}
+                                onMouseMove={handleDragMove}
+                                onTouchMove={handleDragMove}
+                                onMouseUp={handleDragEnd}
+                                onTouchEnd={handleDragEnd}
+                            >
+                                <div className="progress-bar-inner">
+                                    <div
+                                        className="progress-fill"
+                                        style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="time-display">
+                                <span>{formatTime(currentTime)}</span>
+                                <span>{formatTime(duration)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Audio Element */}
+            <audio
+                ref={audioRef}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onTimeUpdate={(e) => {
+                    if (!isDragging) {
+                        setCurrentTime(e.currentTarget.currentTime)
+                    }
+                }}
+                onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+            />
+        </div>
+    )
+}

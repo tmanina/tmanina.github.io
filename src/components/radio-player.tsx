@@ -195,6 +195,13 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const categorizeRadio = (radio: Radio): string => {
         const name = radio.name.toLowerCase()
 
+        // Skip Sahaba-related radios (they have their own section now)
+        // Only check for specific Sahaba/Tabi'in indicators, not individual names
+        // to avoid filtering out reciters who happen to have similar names
+        if (name.includes("صحابة") || name.includes("الصحابي") || name.includes("التابعي")) {
+            return "excluded"
+        }
+
         // Translations
         if (name.includes("ترجمة")) return "translations"
 
@@ -202,7 +209,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
         if (name.includes("تفسير") || name.includes("المختصر في تفسير")) return "tafsir"
 
         // Seerah & Stories
-        if (name.includes("السيرة") || name.includes("قصص الأنبياء") || name.includes("في ظلال السيرة") || name.includes("صور من حياة الصحابة")) return "seerah"
+        if (name.includes("السيرة") || name.includes("قصص الأنبياء") || name.includes("في ظلال السيرة")) return "seerah"
 
         // Ruqyah
         if (name.includes("الرقية")) return "ruqyah"

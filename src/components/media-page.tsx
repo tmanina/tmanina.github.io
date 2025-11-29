@@ -6,6 +6,7 @@ import { HadithLibrary } from "./hadith-library"
 import { RuqyahPlayer } from "./ruqyah-player"
 import { QuranReader } from "./quran-reader"
 import { RadioPlayer } from "./radio-player"
+import { SahabaPlayer } from "./sahaba-player"
 import { useRouter, useSearchParams } from "next/navigation"
 
 export function MediaPage() {
@@ -188,6 +189,14 @@ export function MediaPage() {
                     color: #2563eb;
                 }
                 
+                .media-card-sahaba .card-header {
+                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+                }
+                
+                .media-card-sahaba .view-btn {
+                    color: #fb923c;
+                }
+                
                 .coming-soon-badge {
                     position: absolute;
                     top: 1rem;
@@ -332,6 +341,27 @@ export function MediaPage() {
                             </div>
                         </div>
 
+                        {/* صور من حياة الصحابة */}
+                        <div className="col-12 col-md-6 col-xl-3">
+                            <div
+                                className="card media-card media-card-sahaba shadow"
+                                onClick={() => handleSectionChange('sahaba')}
+                            >
+                                <div className="card-header text-center">
+                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
+                                    <div className="media-icon">
+                                        <i className="fas fa-users"></i>
+                                    </div>
+                                    <h3 className="media-title">حياه الصحابة</h3>
+                                    <p className="media-subtitle mb-4">قصص ومواقف من حياة الصحابة</p>
+                                    <button className="btn view-btn" type="button">
+                                        <i className="fas fa-play me-2"></i>
+                                        استماع الآن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* بودكاست - قريباً */}
                         <div className="col-12 col-md-6 col-xl-3">
                             <div className="card media-card media-card-podcast shadow disabled">
@@ -402,6 +432,10 @@ export function MediaPage() {
 
                     {activeSection === 'radio' && (
                         <RadioPlayer onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'sahaba' && (
+                        <SahabaPlayer onBack={() => handleSectionChange(null)} />
                     )}
 
                 </div>
