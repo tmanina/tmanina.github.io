@@ -798,6 +798,8 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onError={() => setIsPlaying(false)}
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
             />
 
             {/* Header */}
