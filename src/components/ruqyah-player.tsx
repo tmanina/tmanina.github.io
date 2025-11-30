@@ -50,6 +50,30 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
             description: "رقية متخصصة للسحر والمس",
             url: "https://soundcloud.com/0c6x6akylngp/mgkslttunqb0",
             reciter: "رقية شرعية"
+        },
+        {
+            title: "رقية شرعية للأطفال - نوم هادئ",
+            description: "رقية للأطفال ومغص الرضع بصوت عذب لنوم هادئ",
+            url: "https://soundcloud.com/mola-11/192-kbps-mp3",
+            reciter: "تلاوة خاشعة"
+        },
+        {
+            title: "رقية شرعية للأطفال - مشاري العفاسي",
+            description: "رقية للنوم بهدوء وطمأنينة للأطفال",
+            url: "https://soundcloud.com/mahmoud-elnemer7/quran22",
+            reciter: "مشاري العفاسي"
+        },
+        {
+            title: "رقية شرعية للأطفال والنوم - ياسر الدوسري",
+            description: "رقية شاملة للسحر والحسد ولنوم الأطفال",
+            url: "https://soundcloud.com/menna-khater-679139209/9tqjlzzvl3ud",
+            reciter: "ياسر الدوسري"
+        },
+        {
+            title: "رقية شرعية كاملة - للحسد والسحر",
+            description: "رقية لعلاج الحسد والسحر والقلق والهم",
+            url: "https://soundcloud.com/nona-al-425829369/luwbsdto9jjl",
+            reciter: "تلاوة مختارة"
         }
     ]
 

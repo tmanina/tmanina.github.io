@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import "./sahaba-player.css";
 
 interface Sahaba {
     id: number
@@ -20,6 +21,13 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
     const [currentTime, setCurrentTime] = React.useState(0)
     const [duration, setDuration] = React.useState(0)
     const [isDragging, setIsDragging] = React.useState(false)
+    const [playbackRate, setPlaybackRate] = React.useState(1)
+    const [favorites, setFavorites] = React.useState<number[]>([])
+    const [showFavoritesOnly, setShowFavoritesOnly] = React.useState(false)
+    const [showSpeedDropdown, setShowSpeedDropdown] = React.useState(false)
+    const [showTimerDropdown, setShowTimerDropdown] = React.useState(false)
+    const [sleepTimer, setSleepTimer] = React.useState<number | null>(null)
+    const [timerEndTime, setTimerEndTime] = React.useState<number | null>(null)
 
     const audioRef = React.useRef<HTMLAudioElement>(null)
 
@@ -146,6 +154,14 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
         { id: 119, name: "الصحابية أم سلمة", url: "https://list.qurango.net/sahabah/um-salamah.mp3" }
     ]
 
+    // Load favorites from localStorage on mount
+    React.useEffect(() => {
+        const savedFavorites = localStorage.getItem('sahaba-favorites')
+        if (savedFavorites) {
+            setFavorites(JSON.parse(savedFavorites))
+        }
+    }, [])
+
     React.useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume
@@ -194,9 +210,21 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
         }
     }, [playingSahaba, isPlaying])
 
-    const filteredSahaba = sahabaList.filter(sahaba =>
-        sahaba.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    const filteredSahaba = sahabaList.filter(sahaba => {
+        const matchesSearch = sahaba.name.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesFavorites = !showFavoritesOnly || favorites.includes(sahaba.id)
+        return matchesSearch && matchesFavorites
+    })
+
+    // Toggle favorite
+    const toggleFavorite = (sahabaId: number, e: React.MouseEvent) => {
+        e.stopPropagation() // Prevent card click
+        const newFavorites = favorites.includes(sahabaId)
+            ? favorites.filter(id => id !== sahabaId)
+            : [...favorites, sahabaId]
+        setFavorites(newFavorites)
+        localStorage.setItem('sahaba-favorites', JSON.stringify(newFavorites))
+    }
 
     const playAudio = (sahaba: Sahaba) => {
         if (playingSahaba?.id === sahaba.id) {
@@ -241,6 +269,92 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
         const secs = Math.floor(seconds % 60)
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
     }
+
+    // Skip forward 10 seconds
+    const skipForward = () => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, duration)
+        }
+    }
+
+    // Skip backward 10 seconds
+    const skipBackward = () => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0)
+        }
+    }
+
+    // Play next story
+    const playNext = () => {
+        if (!playingSahaba) return
+        const currentIndex = sahabaList.findIndex(s => s.id === playingSahaba.id)
+        if (currentIndex < sahabaList.length - 1) {
+            playAudio(sahabaList[currentIndex + 1])
+        }
+    }
+
+    // Play previous story
+    const playPrevious = () => {
+        if (!playingSahaba) return
+        const currentIndex = sahabaList.findIndex(s => s.id === playingSahaba.id)
+        if (currentIndex > 0) {
+            playAudio(sahabaList[currentIndex - 1])
+        }
+    }
+
+    // Check if can go to next/previous
+    const canGoNext = (): boolean => {
+        if (!playingSahaba) return false
+        const currentIndex = sahabaList.findIndex(s => s.id === playingSahaba.id)
+        return currentIndex < sahabaList.length - 1
+    }
+
+    const canGoPrevious = (): boolean => {
+        if (!playingSahaba) return false
+        const currentIndex = sahabaList.findIndex(s => s.id === playingSahaba.id)
+        return currentIndex > 0
+    }
+
+    // Change playback speed
+    const selectPlaybackSpeed = (speed: number) => {
+        setPlaybackRate(speed)
+        if (audioRef.current) {
+            audioRef.current.playbackRate = speed
+        }
+        setShowSpeedDropdown(false)
+    }
+
+    // Sleep timer functions
+    const setSleepTimerMinutes = (minutes: number | null) => {
+        if (minutes === null) {
+            setSleepTimer(null)
+            setTimerEndTime(null)
+        } else {
+            setSleepTimer(minutes)
+            setTimerEndTime(Date.now() + minutes * 60 * 1000)
+        }
+        setShowTimerDropdown(false)
+    }
+
+    // Check timer expiration
+    React.useEffect(() => {
+        if (timerEndTime && Date.now() >= timerEndTime) {
+            stopAudio()
+            setSleepTimer(null)
+            setTimerEndTime(null)
+        }
+
+        if (timerEndTime) {
+            const interval = setInterval(() => {
+                if (Date.now() >= timerEndTime) {
+                    stopAudio()
+                    setSleepTimer(null)
+                    setTimerEndTime(null)
+                }
+            }, 1000)
+            return () => clearInterval(interval)
+        }
+    }, [timerEndTime])
 
     // Handle seeking
     const handleSeek = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
@@ -340,360 +454,28 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
 
     return (
         <div className="sahaba-player">
-            <style jsx>{`
-                .sahaba-player {
-                    padding: 1rem 0;
-                }
-
-                .sahaba-header {
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                    color: white;
-                    padding: 2.5rem 2rem;
-                    border-radius: 20px;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 10px 30px rgba(253, 186, 116, 0.3);
-                }
-
-                .sahaba-title {
-                    font-size: 2rem;
-                    font-weight: 700;
-                    margin: 0 0 0.5rem 0;
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .sahaba-subtitle {
-                    font-size: 1rem;
-                    opacity: 0.95;
-                    margin: 0;
-                }
-
-                .search-box {
-                    background: white;
-                    border-radius: 15px;
-                    padding: 1.5rem;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                }
-
-                .search-input {
-                    width: 100%;
-                    border: 2px solid #e5e7eb;
-                    border-radius: 50px;
-                    padding: 0.85rem 1.5rem;
-                    font-size: 1rem;
-                    transition: all 0.3s ease;
-                }
-
-                .search-input:focus {
-                    border-color: #fb923c;
-                    box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.1);
-                    outline: none;
-                }
-
-                .sahaba-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                    gap: 1.5rem;
-                    margin-bottom: 2rem;
-                }
-
-                .sahaba-card {
-                    background: white;
-                    border-radius: 15px;
-                    padding: 1.5rem;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    border: 2px solid transparent;
-                }
-
-                .sahaba-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-                    border-color: #fb923c;
-                }
-
-                .sahaba-card.playing {
-                    border-color: #fb923c;
-                    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-                }
-
-                .sahaba-card-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    margin-bottom: 1rem;
-                }
-
-                .sahaba-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.3rem;
-                    flex-shrink: 0;
-                }
-
-                .sahaba-card.playing .sahaba-icon {
-                    animation: pulse 2s ease-in-out infinite;
-                }
-
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                }
-
-                .sahaba-name {
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #1f2937;
-                    margin: 0;
-                    line-height: 1.4;
-                }
-
-                .sahaba-actions {
-                    display: flex;
-                    gap: 0.5rem;
-                }
-
-                .sahaba-btn {
-                    flex: 1;
-                    padding: 0.75rem;
-                    border-radius: 10px;
-                    border: none;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    cursor: pointer;
-                }
-
-                .play-btn {
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                    color: white;
-                }
-
-                .play-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.4);
-                }
-
-                .player-bar {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    background: white;
-                    border-top: 2px solid #fb923c;
-                    padding: 1.25rem 2rem;
-                    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-                    z-index: 1000;
-                    animation: slideUp 0.3s ease-out;
-                }
-
-                @media (max-width: 991px) {
-                    .player-bar {
-                        bottom: 80px; /* Height of bottom navigation */
-                    }
-                }
-
-                @keyframes slideUp {
-                    from { transform: translateY(100%); }
-                    to { transform: translateY(0); }
-                }
-
-                .player-content {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    display: flex;
-                    align-items: center;
-                    gap: 1.5rem;
-                }
-
-                .now-playing {
-                    flex: 1;
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .playing-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.3rem;
-                    animation: pulse 2s ease-in-out infinite;
-                }
-
-                .playing-info h4 {
-                    margin: 0;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: #1f2937;
-                }
-
-                .playing-info p {
-                    margin: 0.25rem 0 0 0;
-                    font-size: 0.85rem;
-                    color: #6b7280;
-                }
-
-                .player-controls {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .control-btn {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    border: none;
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                    color: white;
-                    font-size: 1.2rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .control-btn:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.4);
-                }
-
-                .volume-control {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                }
-
-                .volume-slider {
-                    width: 100px;
-                    height: 6px;
-                    border-radius: 3px;
-                    background: #e5e7eb;
-                    outline: none;
-                    -webkit-appearance: none;
-                }
-
-                .volume-slider::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 50%;
-                    background: #fb923c;
-                    cursor: pointer;
-                }
-
-                .volume-slider::-moz-range-thumb {
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 50%;
-                    background: #fb923c;
-                    cursor: pointer;
-                    border: none;
-                }
-
-                @media (max-width: 768px) {
-                    .sahaba-grid {
-                        grid-template-columns: 1fr;
-                        padding-bottom: 300px;
-                    }
-
-                    .volume-control {
-                        display: none;
-                    }
-
-                    .progress-container {
-                        order: -1;
-                        margin-bottom: 1rem;
-                    }
-                }
-
-                .progress-container {
-                    flex: 1;
-                    max-width: 400px;
-                }
-
-                .progress-bar {
-                    width: 100%;
-                    height: 10px;
-                    background: white;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 10px;
-                    overflow: visible;
-                    cursor: pointer;
-                    position: relative;
-                    padding: 0;
-                }
-
-                .progress-bar-inner {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 8px;
-                    position: relative;
-                    overflow: visible;
-                }
-
-                .progress-fill {
-                    height: 100%;
-                    background: linear-gradient(90deg, #fdba74 0%, #fb923c 100%);
-                    border-radius: 10px;
-                    transition: width 0.1s linear;
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                }
-
-                .progress-fill::after {
-                    content: '';
-                    position: absolute;
-                    left: -7px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    width: 16px;
-                    height: 16px;
-                    background: white;
-                    border: 3px solid #fb923c;
-                    border-radius: 50%;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-                    z-index: 10;
-                }
-
-                .time-display {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 0.5rem;
-                    font-size: 0.875rem;
-                    color: #6b7280;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-            `}</style>
-
             {/* Header */}
             <div className="sahaba-header">
-                <h2 className="sahaba-title">
-                    <i className="fas fa-users"></i>
-                    حياه الصحابة
-                </h2>
-                <p className="sahaba-subtitle">قصص ومواقف من حياة الصحابة رضوان الله عليهم</p>
+                <div className="sahaba-header-content">
+                    <div>
+                        <h2 className="sahaba-title">
+                            <i className="fas fa-users"></i>
+                            حياه الصحابة
+                        </h2>
+                        <p className="sahaba-subtitle">قصص ومواقف من حياة الصحابة رضوان الله عليهم</p>
+                    </div>
+                    <button
+                        className={`favorites-toggle-btn ${showFavoritesOnly ? 'active' : ''}`}
+                        onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                        type="button"
+                    >
+                        <i className={showFavoritesOnly ? "fas fa-heart" : "far fa-heart"}></i>
+                        المفضلة
+                        {favorites.length > 0 && (
+                            <span className="favorites-count">{favorites.length}</span>
+                        )}
+                    </button>
+                </div>
             </div>
 
             {/* Search Box */}
@@ -719,7 +501,17 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                             <div className="sahaba-icon">
                                 <i className="fas fa-user"></i>
                             </div>
-                            <h3 className="sahaba-name">{sahaba.name}</h3>
+                            <div className="sahaba-name-wrapper">
+                                <h3 className="sahaba-name">{sahaba.name}</h3>
+                                <button
+                                    className={`favorite-btn ${favorites.includes(sahaba.id) ? 'active' : ''}`}
+                                    onClick={(e) => toggleFavorite(sahaba.id, e)}
+                                    type="button"
+                                    aria-label="إضافة إلى المفضلة"
+                                >
+                                    <i className={favorites.includes(sahaba.id) ? "fas fa-heart" : "far fa-heart"}></i>
+                                </button>
+                            </div>
                         </div>
                         <div className="sahaba-actions">
                             <button className="sahaba-btn play-btn" type="button">
@@ -735,63 +527,144 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
             {playingSahaba && (
                 <div className="player-bar">
                     <div className="player-content">
-                        <div className="now-playing">
-                            <div className="playing-icon">
-                                <i className="fas fa-user"></i>
-                            </div>
-                            <div className="playing-info">
-                                <h4>{playingSahaba.name}</h4>
-                                <p>حياه الصحابة</p>
-                            </div>
-                        </div>
-                        <div className="player-controls">
-                            <button
-                                className="control-btn"
-                                onClick={togglePlayPause}
-                                type="button"
-                            >
-                                <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
-                            </button>
-                            <button
-                                className="control-btn"
-                                onClick={stopAudio}
-                                type="button"
-                            >
-                                <i className="fas fa-stop"></i>
-                            </button>
-                            <div className="volume-control">
-                                <i className="fas fa-volume-up" style={{ color: '#6b7280' }}></i>
-                                <input
-                                    type="range"
-                                    className="volume-slider"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                    value={volume}
-                                    onChange={(e) => setVolume(parseFloat(e.target.value))}
-                                />
+                        {/* Track Info */}
+                        <div className="track-info">
+                            <div className="track-details">
+                                <h3 className="track-name">{playingSahaba.name}</h3>
+                                <button
+                                    className={`action-btn heart-btn ${favorites.includes(playingSahaba.id) ? 'active' : ''}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        toggleFavorite(playingSahaba.id, e)
+                                    }}
+                                    aria-label="Favorite"
+                                >
+                                    <i className={favorites.includes(playingSahaba.id) ? "fas fa-heart" : "far fa-heart"}></i>
+                                </button>
                             </div>
                         </div>
-                        <div className="progress-container">
-                            <div
-                                className="progress-bar"
-                                onMouseDown={handleDragStart}
-                                onTouchStart={handleDragStart}
-                                onMouseMove={handleDragMove}
-                                onTouchMove={handleDragMove}
-                                onMouseUp={handleDragEnd}
-                                onTouchEnd={handleDragEnd}
-                            >
-                                <div className="progress-bar-inner">
-                                    <div
-                                        className="progress-fill"
-                                        style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-                                    />
+
+                        {/* Progress & Controls Wrapper */}
+                        <div className="controls-wrapper">
+                            {/* Progress Bar */}
+                            <div className="progress-section">
+                                <span className="time-text">{formatTime(currentTime)}</span>
+                                <div
+                                    className="progress-bar"
+                                    onMouseDown={handleDragStart}
+                                    onTouchStart={handleDragStart}
+                                    onClick={handleSeek}
+                                >
+                                    <div className="progress-bar-inner">
+                                        <div
+                                            className="progress-fill"
+                                            style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+                                        ></div>
+                                    </div>
                                 </div>
+                                <span className="time-text">{formatTime(duration)}</span>
                             </div>
-                            <div className="time-display">
-                                <span>{formatTime(currentTime)}</span>
-                                <span>{formatTime(duration)}</span>
+
+                            {/* Main Controls */}
+                            <div className="main-controls">
+                                {/* Timer Dropdown */}
+                                <div className="timer-dropdown-wrapper">
+                                    <button
+                                        className={`action-btn secondary-btn ${sleepTimer ? 'timer-active' : ''}`}
+                                        onClick={() => setShowTimerDropdown(!showTimerDropdown)}
+                                        aria-label="المُؤقت"
+                                    >
+                                        <i className="far fa-clock"></i>
+                                    </button>
+                                    {showTimerDropdown && (
+                                        <div className="timer-dropdown">
+                                            <div className="timer-dropdown-header">المُؤقت</div>
+                                            <button
+                                                className={`timer-option ${sleepTimer === null ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(null)}
+                                                type="button"
+                                            >
+                                                00:00
+                                                {sleepTimer === null && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 15 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(15)}
+                                                type="button"
+                                            >
+                                                15 دقيقة
+                                                {sleepTimer === 15 && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 30 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(30)}
+                                                type="button"
+                                            >
+                                                30 دقيقة
+                                                {sleepTimer === 30 && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 60 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(60)}
+                                                type="button"
+                                            >
+                                                60 دقيقة
+                                                {sleepTimer === 60 && <i className="fas fa-check"></i>}
+                                            </button>
+                                            {sleepTimer !== null && (
+                                                <button
+                                                    className="timer-option cancel-timer"
+                                                    onClick={() => setSleepTimerMinutes(null)}
+                                                    type="button"
+                                                >
+                                                    <i className="fas fa-times"></i>
+                                                    إلغاء المُؤقت
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Skip Backward */}
+                                <button className="action-btn secondary-btn" onClick={skipBackward} aria-label="Rewind 10s">
+                                    <i className="fas fa-undo-alt"></i>
+                                    <span className="tiny-text">10</span>
+                                </button>
+
+                                {/* Previous */}
+                                <button
+                                    className="action-btn secondary-btn"
+                                    onClick={playPrevious}
+                                    disabled={!canGoPrevious()}
+                                    aria-label="Previous"
+                                >
+                                    <i className="fas fa-step-forward fa-rotate-180"></i>
+                                </button>
+
+                                {/* Play/Pause */}
+                                <button className="play-pause-btn" onClick={togglePlayPause}>
+                                    {isPlaying ? (
+                                        <i className="fas fa-pause"></i>
+                                    ) : (
+                                        <i className="fas fa-play"></i>
+                                    )}
+                                </button>
+
+                                {/* Next */}
+                                <button
+                                    className="action-btn secondary-btn"
+                                    onClick={playNext}
+                                    disabled={!canGoNext()}
+                                    aria-label="Next"
+                                >
+                                    <i className="fas fa-step-backward fa-rotate-180"></i>
+                                </button>
+
+                                {/* Skip Forward */}
+                                <button className="action-btn secondary-btn" onClick={skipForward} aria-label="Skip 10s">
+                                    <i className="fas fa-redo-alt"></i>
+                                    <span className="tiny-text">10</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -813,3 +686,6 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
         </div>
     )
 }
+
+export default SahabaPlayer
+

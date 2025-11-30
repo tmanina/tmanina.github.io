@@ -40,6 +40,12 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
     const [currentTime, setCurrentTime] = React.useState(0)
     const [duration, setDuration] = React.useState(0)
     const [isDragging, setIsDragging] = React.useState(false)
+    const [favoriteReciters, setFavoriteReciters] = React.useState<number[]>([])
+    const [favoriteSurahs, setFavoriteSurahs] = React.useState<number[]>([])
+    const [showFavoritesOnly, setShowFavoritesOnly] = React.useState(false)
+    const [showTimerDropdown, setShowTimerDropdown] = React.useState(false)
+    const [sleepTimer, setSleepTimer] = React.useState<number | null>(null)
+    const [timerEndTime, setTimerEndTime] = React.useState<number | null>(null)
     const audioRef = React.useRef<HTMLAudioElement>(null)
 
     // Surah names in Arabic
@@ -73,17 +79,28 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
         loadReciters()
     }, [])
 
-    // Filter reciters based on search query
+    // Load favorites from localStorage
     React.useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredReciters(reciters)
-        } else {
-            const filtered = reciters
-                .filter(reciter => reciter.name.includes(searchQuery))
-                .sort((a, b) => a.name.localeCompare(b.name, 'ar'))
-            setFilteredReciters(filtered)
+        const savedReciters = localStorage.getItem('quran-favorite-reciters')
+        const savedSurahs = localStorage.getItem('quran-favorite-surahs')
+        if (savedReciters) setFavoriteReciters(JSON.parse(savedReciters))
+        if (savedSurahs) setFavoriteSurahs(JSON.parse(savedSurahs))
+    }, [])
+
+    // Filter reciters based on search query and favorites
+    React.useEffect(() => {
+        let filtered = reciters
+
+        if (searchQuery.trim() !== "") {
+            filtered = filtered.filter(reciter => reciter.name.includes(searchQuery))
         }
-    }, [searchQuery, reciters])
+
+        if (showFavoritesOnly) {
+            filtered = filtered.filter(reciter => favoriteReciters.includes(reciter.id))
+        }
+
+        setFilteredReciters(filtered.sort((a, b) => a.name.localeCompare(b.name, 'ar')))
+    }, [searchQuery, reciters, showFavoritesOnly, favoriteReciters])
 
     const loadReciters = async () => {
         try {
@@ -290,6 +307,69 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
         return currentIndex > 0
     }
 
+    // Toggle favorite reciter
+    const toggleFavoriteReciter = (reciterId: number, e: React.MouseEvent) => {
+        e.stopPropagation()
+        const newFavorites = favoriteReciters.includes(reciterId)
+            ? favoriteReciters.filter(id => id !== reciterId)
+            : [...favoriteReciters, reciterId]
+        setFavoriteReciters(newFavorites)
+        localStorage.setItem('quran-favorite-reciters', JSON.stringify(newFavorites))
+    }
+
+    // Toggle favorite surah
+    const toggleFavoriteSurah = (surahId: number, e: React.MouseEvent) => {
+        e.stopPropagation()
+        const newFavorites = favoriteSurahs.includes(surahId)
+            ? favoriteSurahs.filter(id => id !== surahId)
+            : [...favoriteSurahs, surahId]
+        setFavoriteSurahs(newFavorites)
+        localStorage.setItem('quran-favorite-surahs', JSON.stringify(newFavorites))
+    }
+
+    // Sleep timer functions
+    const setSleepTimerMinutes = (minutes: number | null) => {
+        if (minutes === null) {
+            setSleepTimer(null)
+            setTimerEndTime(null)
+        } else {
+            setSleepTimer(minutes)
+            setTimerEndTime(Date.now() + minutes * 60 * 1000)
+        }
+        setShowTimerDropdown(false)
+    }
+
+    // Stop audio
+    const stopAudio = () => {
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.src = ""
+        }
+        setIsPlaying(false)
+        setCurrentTime(0)
+        setDuration(0)
+    }
+
+    // Check timer expiration
+    React.useEffect(() => {
+        if (timerEndTime && Date.now() >= timerEndTime) {
+            stopAudio()
+            setSleepTimer(null)
+            setTimerEndTime(null)
+        }
+
+        if (timerEndTime) {
+            const interval = setInterval(() => {
+                if (Date.now() >= timerEndTime) {
+                    stopAudio()
+                    setSleepTimer(null)
+                    setTimerEndTime(null)
+                }
+            }, 1000)
+            return () => clearInterval(interval)
+        }
+    }, [timerEndTime])
+
     // Setup Media Session API for lock screen controls
     React.useEffect(() => {
         if ('mediaSession' in navigator && selectedSurah && selectedReciter && audioUrl) {
@@ -352,6 +432,65 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     color: white;
                     margin-bottom: 2rem;
                     box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+                }
+
+                .header-content {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                }
+
+                .header-text {
+                    flex: 1;
+                }
+
+                .favorites-toggle-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    color: white;
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 50px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    transition: all 0.3s ease;
+                    white-space: nowrap;
+                }
+
+                .favorites-toggle-btn:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    border-color: rgba(255, 255, 255, 0.5);
+                    transform: translateY(-2px);
+                }
+
+                .favorites-toggle-btn.active {
+                    background: white;
+                    color: #10b981;
+                    border-color: white;
+                }
+
+                .favorites-count {
+                    background: #10b981;
+                    color: white;
+                    border-radius: 50%;
+                    width: 24px;
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                }
+
+                .favorites-toggle-btn.active .favorites-count {
+                    background: white;
+                    color: #10b981;
+                    border: 2px solid #10b981;
                 }
 
                 .search-container {
@@ -471,6 +610,45 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     font-family: 'Traditional Arabic', 'Amiri', serif;
                 }
 
+                .reciter-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .reciter-info {
+                    flex: 1;
+                }
+
+                .favorite-btn {
+                    background: none;
+                    border: none;
+                    color: #d1d5db;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    padding: 0.5rem;
+                    border-radius: 50%;
+                    transition: all 0.3s ease;
+                }
+
+                .favorite-btn:hover {
+                    background: rgba(16, 185, 129, 0.1);
+                    color: #10b981;
+                    transform: scale(1.1);
+                }
+
+                .favorite-btn.active {
+                    color: #10b981;
+                    animation: heartBeat 0.3s ease-in-out;
+                }
+
+                @keyframes heartBeat {
+                    0%, 100% { transform: scale(1); }
+                    25% { transform: scale(1.3); }
+                    50% { transform: scale(1.1); }
+                    75% { transform: scale(1.2); }
+                }
+
                 .surahs-list {
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -487,9 +665,9 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s;
-                    text-align: center;
                     font-family: 'Traditional Arabic', 'Amiri', serif;
                     font-size: 1.1rem;
+                    text-align: center;
                 }
 
                 .surah-button:hover {
@@ -503,6 +681,83 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     background: #10b981;
                     border-color: #10b981;
                     color: white;
+                }
+
+                .timer-dropdown-wrapper {
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .timer-active {
+                    color: #10b981 !important;
+                    background: rgba(16, 185, 129, 0.1) !important;
+                }
+
+                .timer-dropdown {
+                    position: absolute;
+                    bottom: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin-bottom: 10px;
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                    padding: 0.5rem;
+                    min-width: 180px;
+                    z-index: 1001;
+                    animation: dropdownSlideUp 0.2s ease-out;
+                }
+
+                @keyframes dropdownSlideUp {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-50%) translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0);
+                    }
+                }
+
+                .timer-dropdown-header {
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    color: #6b7280;
+                    padding: 0.5rem 0.75rem;
+                    border-bottom: 1px solid #e5e7eb;
+                    margin-bottom: 0.25rem;
+                    font-family: 'Traditional Arabic', 'Amiri', serif;
+                }
+
+                .timer-option {
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    background: none;
+                    border: none;
+                    border-radius: 8px;
+                    text-align: right;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: #1f2937;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-family: 'Traditional Arabic', 'Amiri', serif;
+                }
+
+                .timer-option:hover {
+                    background: #f3f4f6;
+                }
+
+                .timer-option.active {
+                    background: #10b981;
+                    color: white;
+                }
+
+                .timer-option i {
+                    font-size: 0.875rem;
                 }
 
                 .audio-player {
@@ -685,6 +940,37 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                 }
 
                 @media (max-width: 768px) {
+                    .header-content {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .header-text {
+                        text-align: center;
+                    }
+
+                    .favorites-toggle-btn {
+                        width: 100%;
+                        justify-content: center;
+                    }
+
+                    .timer-dropdown {
+                        left: auto;
+                        right: 0;
+                        transform: none;
+                    }
+
+                    @keyframes dropdownSlideUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(10px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+
                     .reciters-grid,
                     .surahs-list {
                         grid-template-columns: 1fr;
@@ -762,23 +1048,40 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
             {/* Header */}
             <div className="quran-header text-center">
-                <i className="fas fa-volume-up fs-1 mb-2 opacity-75"></i>
-                <h1 className="fw-bold mb-1">
-                    {showPlayer && selectedSurah
-                        ? `سورة ${surahNames[selectedSurah]}`
-                        : selectedReciter
-                            ? selectedReciter.name
-                            : 'القرآن الكريم - صوتي'
-                    }
-                </h1>
-                <p className="opacity-90">
-                    {showPlayer && selectedSurah
-                        ? `بصوت: ${selectedReciter?.name}`
-                        : selectedReciter
-                            ? 'اختر السورة للاستماع'
-                            : 'اختر القارئ المفضل لك'
-                    }
-                </p>
+                <div className="header-content">
+                    <div className="header-text">
+                        <i className="fas fa-volume-up fs-1 mb-2 opacity-75"></i>
+                        <h1 className="fw-bold mb-1">
+                            {showPlayer && selectedSurah
+                                ? `سورة ${surahNames[selectedSurah]}`
+                                : selectedReciter
+                                    ? selectedReciter.name
+                                    : 'القرآن الكريم - صوتي'
+                            }
+                        </h1>
+                        <p className="opacity-90">
+                            {showPlayer && selectedSurah
+                                ? `بصوت: ${selectedReciter?.name}`
+                                : selectedReciter
+                                    ? 'اختر السورة للاستماع'
+                                    : 'اختر القارئ المفضل لك'
+                            }
+                        </p>
+                    </div>
+                    {!showPlayer && (
+                        <button
+                            className={`favorites-toggle-btn ${showFavoritesOnly ? 'active' : ''}`}
+                            onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                            type="button"
+                        >
+                            <i className={showFavoritesOnly ? "fas fa-heart" : "far fa-heart"}></i>
+                            المفضلة
+                            {favoriteReciters.length > 0 && (
+                                <span className="favorites-count">{favoriteReciters.length}</span>
+                            )}
+                        </button>
+                    )}
+                </div>
 
                 {/* Search Bar - Only show when viewing reciters list */}
                 {!selectedReciter && !showPlayer && (
@@ -822,6 +1125,54 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                         <div className="controls-container">
                             {/* Main Playback Controls */}
                             <div className="main-controls">
+                                {/* Timer Dropdown */}
+                                <div className="timer-dropdown-wrapper">
+                                    <button
+                                        className={`control-btn ${sleepTimer ? 'timer-active' : ''}`}
+                                        onClick={() => setShowTimerDropdown(!showTimerDropdown)}
+                                        title="المُؤقت"
+                                    >
+                                        <i className="far fa-clock"></i>
+                                    </button>
+                                    {showTimerDropdown && (
+                                        <div className="timer-dropdown">
+                                            <div className="timer-dropdown-header">المُؤقت</div>
+                                            <button
+                                                className={`timer-option ${sleepTimer === null ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(null)}
+                                                type="button"
+                                            >
+                                                00:00
+                                                {sleepTimer === null && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 15 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(15)}
+                                                type="button"
+                                            >
+                                                15 دقيقة
+                                                {sleepTimer === 15 && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 30 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(30)}
+                                                type="button"
+                                            >
+                                                30 دقيقة
+                                                {sleepTimer === 30 && <i className="fas fa-check"></i>}
+                                            </button>
+                                            <button
+                                                className={`timer-option ${sleepTimer === 60 ? 'active' : ''}`}
+                                                onClick={() => setSleepTimerMinutes(60)}
+                                                type="button"
+                                            >
+                                                60 دقيقة
+                                                {sleepTimer === 60 && <i className="fas fa-check"></i>}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
                                 {/* Previous Track Button */}
                                 <button
                                     className="control-btn"
@@ -922,10 +1273,22 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                             className="reciter-card"
                             onClick={() => handleReciterSelect(reciter)}
                         >
-                            <div className="reciter-icon">
-                                <i className="fas fa-microphone"></i>
+                            <div className="reciter-header">
+                                <div className="reciter-icon">
+                                    <i className="fas fa-microphone"></i>
+                                </div>
+                                <div className="reciter-info">
+                                    <div className="reciter-name">{reciter.name}</div>
+                                </div>
+                                <button
+                                    className={`favorite-btn ${favoriteReciters.includes(reciter.id) ? 'active' : ''}`}
+                                    onClick={(e) => toggleFavoriteReciter(reciter.id, e)}
+                                    type="button"
+                                    aria-label="إضافة إلى المفضلة"
+                                >
+                                    <i className={favoriteReciters.includes(reciter.id) ? "fas fa-heart" : "far fa-heart"}></i>
+                                </button>
                             </div>
-                            <div className="reciter-name">{reciter.name}</div>
                         </div>
                     ))}
                 </div>

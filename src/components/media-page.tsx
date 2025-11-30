@@ -7,6 +7,7 @@ import { RuqyahPlayer } from "./ruqyah-player"
 import { QuranReader } from "./quran-reader"
 import { RadioPlayer } from "./radio-player"
 import { SahabaPlayer } from "./sahaba-player"
+import { LivePlayer } from "./live-player"
 import { useRouter, useSearchParams } from "next/navigation"
 
 export function MediaPage() {
@@ -195,6 +196,14 @@ export function MediaPage() {
                 
                 .media-card-sahaba .view-btn {
                     color: #fb923c;
+                }
+                
+                .media-card-live .card-header {
+                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                }
+                
+                .media-card-live .view-btn {
+                    color: #dc2626;
                 }
                 
                 .coming-soon-badge {
@@ -399,6 +408,27 @@ export function MediaPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* بث مباشر */}
+                        <div className="col-12 col-md-6 col-xl-3">
+                            <div
+                                className="card media-card media-card-live shadow"
+                                onClick={() => handleSectionChange('live')}
+                            >
+                                <div className="card-header text-center">
+                                    <div className="media-icon">
+                                        <i className="fas fa-video"></i>
+                                    </div>
+                                    <h3 className="media-title">بث مباشر</h3>
+                                </div>
+                                <div className="card-body text-center">
+                                    <p className="media-description">الحرم المكي - بث مباشر</p>
+                                    <button className="view-btn" type="button">
+                                        مشاهدة <i className="fas fa-play-circle ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </>
             ) : (
@@ -436,6 +466,10 @@ export function MediaPage() {
 
                     {activeSection === 'sahaba' && (
                         <SahabaPlayer onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'live' && (
+                        <LivePlayer onBack={() => handleSectionChange(null)} />
                     )}
 
                 </div>
