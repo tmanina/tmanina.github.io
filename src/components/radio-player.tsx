@@ -188,7 +188,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 {
                     id: 90000,
                     name: "إذاعة القرأن الكريم من القاهرة",
-                    url: "https://n0e.radiojar.com/8s5u5tpdtwzuv?rj-ttl=5&rj-tok=AAABjW7yROAA0TUU8cXhXIAi6g",
+                    url: "https://stream.radiojar.com/8s5u5tpdtwzuv",
                     recent_date: new Date().toISOString(),
                     img: "https://apkdownmod.com/thumbnail?src=images/appsicon/2020/08/app-image-5f42ba68a61b1.jpg"
                 }
