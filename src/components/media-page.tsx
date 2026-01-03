@@ -4,10 +4,14 @@ import * as React from "react"
 import { AudioQuran } from "./audio-quran"
 import { HadithLibrary } from "./hadith-library"
 import { RuqyahPlayer } from "./ruqyah-player"
-import { QuranReader } from "./quran-reader"
+// import { QuranReader } from "./quran-reader" // Hidden until update
+import { VectorMushaf } from "./vector-mushaf"
 import { RadioPlayer } from "./radio-player"
 import { SahabaPlayer } from "./sahaba-player"
 import { LivePlayer } from "./live-player"
+import { PodcastPlayer } from "./podcast-player"
+import SurahReader from "./surah-reader"
+import SurahList from "./surah-list"
 import { useRouter, useSearchParams } from "next/navigation"
 
 export function MediaPage() {
@@ -206,6 +210,22 @@ export function MediaPage() {
                     color: #dc2626;
                 }
                 
+                .media-card-surah .card-header {
+                    background: linear-gradient(135deg, #c9a961 0%, #8b6914 100%);
+                }
+                
+                .media-card-surah .view-btn {
+                    color: #8b6914;
+                }
+                
+                .media-card-mushaf .card-header {
+                    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                }
+                
+                .media-card-mushaf .view-btn {
+                    color: #047857;
+                }
+                
                 .coming-soon-badge {
                     position: absolute;
                     top: 1rem;
@@ -308,8 +328,8 @@ export function MediaPage() {
                             </div>
                         </div>
 
-                        {/* القرآن الكريم */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        {/* القرآن الكريم - Hidden until update */}
+                        {/* <div className="col-12 col-md-6 col-xl-3">
                             <div
                                 className="card media-card media-card-quran shadow"
                                 onClick={() => handleSectionChange('quran')}
@@ -319,11 +339,53 @@ export function MediaPage() {
                                     <div className="media-icon">
                                         <i className="fas fa-quran"></i>
                                     </div>
-                                    <h3 className="media-title">القرآن الكريم</h3>
-                                    <p className="media-subtitle mb-4">المصحف الشريف كاملاً</p>
+                                    <h3 className="media-title">المصحف الشريف</h3>
+                                    <p className="media-subtitle mb-4">قراءة بنظام الصفحات</p>
                                     <button className="btn view-btn" type="button">
                                         <i className="fas fa-folder-open me-2"></i>
                                         عرض المحتوى
+                                    </button>
+                                </div>
+                            </div>
+                        </div> */}
+
+                        {/* قراءة السور */}
+                        <div className="col-12 col-md-6 col-xl-3">
+                            <div
+                                className="card media-card media-card-surah shadow"
+                                onClick={() => handleSectionChange('surah-reader')}
+                            >
+                                <div className="card-header text-center">
+                                    <span className="new-badge">جديد</span>
+                                    <div className="media-icon">
+                                        <i className="fas fa-book-open"></i>
+                                    </div>
+                                    <h3 className="media-title">قراءة السور</h3>
+                                    <p className="media-subtitle mb-4">السور كاملة للقراءة</p>
+                                    <button className="btn view-btn" type="button">
+                                        <i className="fas fa-book-reader me-2"></i>
+                                        قراءة القرآن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* المصحف الرقمي - صور */}
+                        <div className="col-12 col-md-6 col-xl-3">
+                            <div
+                                className="card media-card media-card-mushaf shadow"
+                                onClick={() => handleSectionChange('mushaf')}
+                            >
+                                <div className="card-header text-center">
+                                    <span className="new-badge">جديد</span>
+                                    <div className="media-icon">
+                                        <i className="fas fa-image"></i>
+                                    </div>
+                                    <h3 className="media-title">المصحف الرقمي</h3>
+                                    <p className="media-subtitle mb-4">صور 100% مطابقة للمطبوع</p>
+                                    <button className="btn view-btn" type="button">
+                                        <i className="fas fa-eye me-2"></i>
+                                        عرض المصحف
                                     </button>
                                 </div>
                             </div>
@@ -371,20 +433,22 @@ export function MediaPage() {
                             </div>
                         </div>
 
-                        {/* بودكاست - قريباً */}
+                        {/* بودكاست */}
                         <div className="col-12 col-md-6 col-xl-3">
-                            <div className="card media-card media-card-podcast shadow disabled">
+                            <div
+                                className="card media-card media-card-podcast shadow"
+                                onClick={() => handleSectionChange('podcast')}
+                            >
                                 <div className="card-header text-center position-relative">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <span className="coming-soon-badge">قريباً</span>
+                                    <span className="new-badge">جديد</span>
                                     <div className="media-icon">
                                         <i className="fas fa-podcast"></i>
                                     </div>
                                     <h3 className="media-title">بودكاست</h3>
-                                    <p className="media-subtitle mb-4">برامج وحلقات إسلامية</p>
-                                    <button className="btn view-btn" type="button" disabled>
-                                        <i className="fas fa-folder me-2"></i>
-                                        قريباً
+                                    <p className="media-subtitle mb-4">مناقشة و تبسيط كتب التراث الديني</p>
+                                    <button className="btn view-btn" type="button">
+                                        <i className="fas fa-play me-2"></i>
+                                        استماع الآن
                                     </button>
                                 </div>
                             </div>
@@ -456,9 +520,11 @@ export function MediaPage() {
                         <AudioQuran onBack={() => handleSectionChange(null)} />
                     )}
 
+                    {/* QuranReader hidden until update
                     {activeSection === 'quran' && (
                         <QuranReader onBack={() => handleSectionChange(null)} />
                     )}
+                    */}
 
                     {activeSection === 'radio' && (
                         <RadioPlayer onBack={() => handleSectionChange(null)} />
@@ -470,6 +536,22 @@ export function MediaPage() {
 
                     {activeSection === 'live' && (
                         <LivePlayer onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'surah-reader' && (
+                        <SurahReader />
+                    )}
+
+                    {activeSection === 'surah-list' && (
+                        <SurahList />
+                    )}
+
+                    {activeSection === 'mushaf' && (
+                        <VectorMushaf onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'podcast' && (
+                        <PodcastPlayer onBack={() => handleSectionChange(null)} />
                     )}
 
                 </div>

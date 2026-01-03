@@ -153,6 +153,9 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 ]
             })
 
+            // Set playback state
+            navigator.mediaSession.playbackState = 'playing'
+
             // Play Handler
             navigator.mediaSession.setActionHandler('play', () => {
                 if (audioRef.current) {
@@ -173,6 +176,8 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             navigator.mediaSession.setActionHandler('stop', () => {
                 stopRadio()
             })
+        } else if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = playingRadio ? 'paused' : 'none'
         }
 
         // Cleanup on unmount or when radio stops
@@ -184,6 +189,120 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 navigator.mediaSession.setActionHandler('stop', null)
             }
         }
+    }, [playingRadio, isPlaying])
+
+    // Keep audio playing in background - handle visibility change
+    React.useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && playingRadio && isPlaying) {
+                // Tab became visible - check if audio is still playing
+                if (audioRef.current && audioRef.current.paused) {
+                    console.log('Resuming audio after tab became visible')
+                    audioRef.current.play().catch((err) => {
+                        console.error('Failed to resume:', err)
+                        // Try to reload the stream
+                        if (audioRef.current && playingRadio) {
+                            audioRef.current.src = playingRadio.url
+                            audioRef.current.load()
+                            audioRef.current.play().catch(() => setIsPlaying(false))
+                        }
+                    })
+                }
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }, [playingRadio, isPlaying])
+
+    // Auto-reconnect on audio stall or error
+    React.useEffect(() => {
+        const audio = audioRef.current
+        if (!audio) return
+
+        let reconnectAttempts = 0
+        const maxReconnectAttempts = 5
+        let reconnectTimeout: NodeJS.Timeout | null = null
+
+        const handleStalled = () => {
+            console.log('Audio stalled, attempting to reconnect...')
+            if (playingRadio && isPlaying && reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++
+                // Try to reload the stream
+                reconnectTimeout = setTimeout(() => {
+                    if (audio && playingRadio) {
+                        const currentSrc = playingRadio.url
+                        audio.src = ''
+                        audio.load()
+                        audio.src = currentSrc
+                        audio.play().catch((err) => {
+                            console.error('Reconnect failed:', err)
+                        })
+                    }
+                }, 1000 * reconnectAttempts) // Exponential backoff
+            }
+        }
+
+        const handleError = () => {
+            console.log('Audio error, attempting to reconnect...')
+            if (playingRadio && isPlaying && reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++
+                reconnectTimeout = setTimeout(() => {
+                    if (audio && playingRadio) {
+                        audio.src = playingRadio.url
+                        audio.load()
+                        audio.play().catch((err) => {
+                            console.error('Error recovery failed:', err)
+                            setIsPlaying(false)
+                        })
+                    }
+                }, 2000 * reconnectAttempts)
+            } else if (reconnectAttempts >= maxReconnectAttempts) {
+                setIsPlaying(false)
+            }
+        }
+
+        const handlePlaying = () => {
+            // Reset reconnect attempts when playback starts
+            reconnectAttempts = 0
+        }
+
+        audio.addEventListener('stalled', handleStalled)
+        audio.addEventListener('error', handleError)
+        audio.addEventListener('playing', handlePlaying)
+
+        return () => {
+            if (reconnectTimeout) clearTimeout(reconnectTimeout)
+            audio.removeEventListener('stalled', handleStalled)
+            audio.removeEventListener('error', handleError)
+            audio.removeEventListener('playing', handlePlaying)
+        }
+    }, [playingRadio, isPlaying])
+
+    // Keep-alive ping - prevent browser from suspending audio
+    React.useEffect(() => {
+        if (!playingRadio || !isPlaying) return
+
+        // Create a periodic check every 30 seconds to keep the connection alive
+        const keepAliveInterval = setInterval(() => {
+            if (audioRef.current && isPlaying) {
+                // Check if audio is actually playing
+                if (audioRef.current.paused) {
+                    console.log('Keep-alive: Audio paused unexpectedly, resuming...')
+                    audioRef.current.play().catch((err) => {
+                        console.error('Keep-alive resume failed:', err)
+                        // Try to reload the stream
+                        if (playingRadio) {
+                            audioRef.current!.src = playingRadio.url
+                            audioRef.current!.load()
+                            audioRef.current!.play().catch(() => setIsPlaying(false))
+                        }
+                    })
+                }
+            }
+        }, 30000) // Check every 30 seconds
+
+        return () => clearInterval(keepAliveInterval)
     }, [playingRadio, isPlaying])
 
     const fetchRadios = async () => {

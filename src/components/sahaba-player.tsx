@@ -181,6 +181,8 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                 ]
             })
 
+            navigator.mediaSession.playbackState = 'playing'
+
             navigator.mediaSession.setActionHandler('play', () => {
                 if (audioRef.current) {
                     audioRef.current.play().catch(() => setIsPlaying(false))
@@ -198,6 +200,8 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
             navigator.mediaSession.setActionHandler('stop', () => {
                 stopAudio()
             })
+        } else if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = playingSahaba ? 'paused' : 'none'
         }
 
         return () => {
@@ -208,6 +212,85 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                 navigator.mediaSession.setActionHandler('stop', null)
             }
         }
+    }, [playingSahaba, isPlaying])
+
+    // Keep audio playing in background - handle visibility change
+    React.useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && playingSahaba && isPlaying) {
+                if (audioRef.current && audioRef.current.paused) {
+                    console.log('Resuming Sahaba audio after tab became visible')
+                    audioRef.current.play().catch((err) => {
+                        console.error('Failed to resume:', err)
+                        if (audioRef.current && playingSahaba) {
+                            const time = audioRef.current.currentTime
+                            audioRef.current.src = playingSahaba.url
+                            audioRef.current.currentTime = time
+                            audioRef.current.play().catch(() => setIsPlaying(false))
+                        }
+                    })
+                }
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }, [playingSahaba, isPlaying])
+
+    // Auto-reconnect on audio stall
+    React.useEffect(() => {
+        const audio = audioRef.current
+        if (!audio || !playingSahaba) return
+
+        let reconnectAttempts = 0
+
+        const handleStalled = () => {
+            console.log('Sahaba audio stalled')
+            if (isPlaying && reconnectAttempts < 3) {
+                reconnectAttempts++
+                setTimeout(() => {
+                    if (audio && playingSahaba) {
+                        const time = audio.currentTime
+                        audio.src = playingSahaba.url
+                        audio.currentTime = time
+                        audio.play().catch(console.error)
+                    }
+                }, 1000 * reconnectAttempts)
+            }
+        }
+
+        const handlePlaying = () => {
+            reconnectAttempts = 0
+        }
+
+        audio.addEventListener('stalled', handleStalled)
+        audio.addEventListener('playing', handlePlaying)
+
+        return () => {
+            audio.removeEventListener('stalled', handleStalled)
+            audio.removeEventListener('playing', handlePlaying)
+        }
+    }, [playingSahaba, isPlaying])
+
+    // Keep-alive ping
+    React.useEffect(() => {
+        if (!playingSahaba || !isPlaying) return
+
+        const keepAliveInterval = setInterval(() => {
+            if (audioRef.current && isPlaying && audioRef.current.paused) {
+                console.log('Sahaba keep-alive: Audio paused unexpectedly, resuming...')
+                audioRef.current.play().catch(() => {
+                    if (audioRef.current && playingSahaba) {
+                        const time = audioRef.current.currentTime
+                        audioRef.current.src = playingSahaba.url
+                        audioRef.current.currentTime = time
+                        audioRef.current.play().catch(() => setIsPlaying(false))
+                    }
+                })
+            }
+        }, 30000)
+
+        return () => clearInterval(keepAliveInterval)
     }, [playingSahaba, isPlaying])
 
     const filteredSahaba = sahabaList.filter(sahaba => {

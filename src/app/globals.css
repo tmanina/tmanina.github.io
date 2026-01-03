@@ -1,3 +1,15 @@
+/* Google Fonts - Amiri for Quran text */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+/* Local Quran Font - KFGQPC HAFS Uthmanic Script */
+@font-face {
+  font-family: 'KFGQPC HAFS Uthmanic Script';
+  src: url('/fonts/KFGQPC-Uthmanic-Script-HAFS.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Tailwind CSS directives */
 @tailwind base;
 @tailwind components;

@@ -418,6 +418,88 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
         }
     }, [selectedSurah, selectedReciter, audioUrl, selectedMoshaf, isPlaying])
 
+    // Keep audio playing in background - handle visibility change
+    React.useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && isPlaying && audioUrl) {
+                // Tab became visible - check if audio is still playing
+                if (audioRef.current && audioRef.current.paused) {
+                    console.log('Resuming Quran audio after tab became visible')
+                    audioRef.current.play().catch((err) => {
+                        console.error('Failed to resume Quran audio:', err)
+                        // Try to reload
+                        if (audioRef.current) {
+                            audioRef.current.src = audioUrl
+                            audioRef.current.load()
+                            audioRef.current.play().catch(() => setIsPlaying(false))
+                        }
+                    })
+                }
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }, [isPlaying, audioUrl])
+
+    // Auto-reconnect on audio stall or error
+    React.useEffect(() => {
+        const audio = audioRef.current
+        if (!audio || !audioUrl) return
+
+        let reconnectAttempts = 0
+        const maxReconnectAttempts = 3
+
+        const handleStalled = () => {
+            console.log('Quran audio stalled')
+            if (isPlaying && reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++
+                setTimeout(() => {
+                    if (audio && audioUrl) {
+                        const time = audio.currentTime
+                        audio.src = audioUrl
+                        audio.currentTime = time
+                        audio.play().catch(console.error)
+                    }
+                }, 1000 * reconnectAttempts)
+            }
+        }
+
+        const handlePlaying = () => {
+            reconnectAttempts = 0
+        }
+
+        audio.addEventListener('stalled', handleStalled)
+        audio.addEventListener('playing', handlePlaying)
+
+        return () => {
+            audio.removeEventListener('stalled', handleStalled)
+            audio.removeEventListener('playing', handlePlaying)
+        }
+    }, [audioUrl, isPlaying])
+
+    // Keep-alive ping - prevent browser from suspending audio
+    React.useEffect(() => {
+        if (!isPlaying || !audioUrl) return
+
+        const keepAliveInterval = setInterval(() => {
+            if (audioRef.current && isPlaying && audioRef.current.paused) {
+                console.log('Quran keep-alive: Audio paused unexpectedly, resuming...')
+                audioRef.current.play().catch(() => {
+                    // Try reload
+                    if (audioRef.current && audioUrl) {
+                        const time = audioRef.current.currentTime
+                        audioRef.current.src = audioUrl
+                        audioRef.current.currentTime = time
+                        audioRef.current.play().catch(() => setIsPlaying(false))
+                    }
+                })
+            }
+        }, 30000)
+
+        return () => clearInterval(keepAliveInterval)
+    }, [isPlaying, audioUrl])
+
     return (
         <div className="audio-quran animate__animated animate__fadeIn">
             <style jsx>{`

@@ -14,6 +14,7 @@ import { SharePage } from "@/components/share-page"
 import { MediaPage } from "@/components/media-page"
 import { InstallPrompt } from "@/components/install-prompt"
 import { SplashScreen } from "@/components/splash-screen"
+import { UpdateNotification } from "@/components/update-notification"
 import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Home() {
@@ -123,9 +124,14 @@ export default function Home() {
   return (
     <div className="min-vh-100 d-flex flex-column bg-body-tertiary">
       <Header />
+      <UpdateNotification />
 
       <main className="flex-grow-1">
-        <div className="container pt-4 pb-5" style={{ paddingBottom: '180px' }}>
+        <div className="container pt-4 pb-5" style={{
+          paddingBottom: '180px',
+          zIndex: activeTab === "media" && searchParams.get("id") === "quran" ? 12000 : 100,
+          position: 'relative'
+        }}>
           {/* Navigation Pills */}
           <style jsx>{`
             .main-tabs {

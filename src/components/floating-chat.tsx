@@ -16,13 +16,12 @@ interface ChatMessage {
   sources?: SourceLink[]
 }
 
-const systemPrompt =
-  "أنت مساعد ديني لتطبيق طمأنينة (tmanina) متخصص في الإجابة على الأسئلة الدينية الإسلامية. يجب أن تستند إجاباتك فقط إلى مواقع دينية موثوقة، مثل: الدرر السنية (dorar.net)، إسلام ويب (islamweb.net)، الإسلام سؤال وجواب (islamqa.info)، طريق الإسلام (ar.islamway.net)، شبكة الألوكة (alukah.net)، موقع ابن باز (binbaz.org.sa)، موقع ابن عثيمين (binothaimeen.net)، دار الإفتاء المصرية (dar-alifta.org)، الرئاسة العامة للبحوث العلمية والإفتاء (alifta.gov.sa)، ومصحف جامعة الملك سعود (quran.ksu.edu.sa). لا تستخدم ولا تذكر أي مصادر من مواقع عامة أو غير دينية. إذا لم تجد إجابة في هذه المواقع فقط فقل: (لا أعلم يقينًا، يُفضَّل سؤال أهل العلم مباشرة). اذكر مصادرك الدينية دائمًا إن أمكن، وكن مختصرًا ومحترمًا."
+// Direct API call for static export (no server-side API routes)
+const API_KEY = "AIzaSyDDbTifGGu79A3nwjoQ8qZLa3HIDzTNXco"
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`
 
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY ?? ""
-const apiUrl = apiKey
-  ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
-  : ""
+const SYSTEM_PROMPT =
+  "أنت مساعد ديني لتطبيق طمأنينة (tmanina) متخصص في الإجابة على الأسئلة الدينية الإسلامية. يجب أن تستند إجاباتك فقط إلى مواقع دينية موثوقة، مثل: الدرر السنية (dorar.net)، إسلام ويب (islamweb.net)، الإسلام سؤال وجواب (islamqa.info)، طريق الإسلام (ar.islamway.net)، شبكة الألوكة (alukah.net)، موقع ابن باز (binbaz.org.sa)، موقع ابن عثيمين (binothaimeen.net)، دار الإفتاء المصرية (dar-alifta.org)، الرئاسة العامة للبحوث العلمية والإفتاء (alifta.gov.sa)، ومصحف جامعة الملك سعود (quran.ksu.edu.sa). لا تستخدم ولا تذكر أي مصادر من مواقع عامة أو غير دينية. إذا لم تجد إجابة في هذه المواقع فقط فقل: (لا أعلم يقينًا، يُفضَّل سؤال أهل العلم مباشرة). اذكر مصادرك الدينية دائمًا إن أمكن، وكن مختصرًا ومحترمًا."
 
 const ALLOWED_DOMAINS = [
   // قديم
@@ -138,27 +137,22 @@ function formatMarkdownSafe(text: string) {
 }
 
 async function callGeminiAPI(prompt: string): Promise<{ text: string; sources: SourceLink[] }> {
-  if (!apiKey || !apiUrl) {
-    throw new Error(
-      "API key غير مضبوط. تأكد من إضافة NEXT_PUBLIC_GEMINI_API_KEY في ملف .env.local"
-    )
-  }
-
   const payload = {
     contents: [{ parts: [{ text: prompt }] }],
-    tools: [{ google_search: {} }],
     systemInstruction: {
-      parts: [{ text: systemPrompt }],
+      parts: [{ text: SYSTEM_PROMPT }],
     },
   }
 
   const apiCall = async () => {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error("Gemini API error:", response.status, errorData)
       throw new Error(`API call failed with status ${response.status}`)
     }
     return response.json()
