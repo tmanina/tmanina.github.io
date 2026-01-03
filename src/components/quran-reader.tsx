@@ -151,14 +151,13 @@ const MushafLine = React.memo(function MushafLine({
     // const hasV2 = Boolean(words?.[0]?.code_v2);
     // const glyphMode = hasV1 || hasV2;
 
-    // Debug: log first word's glyph data
-    if (words?.[0] && glyphMode) {
-        console.log('[QCF Debug] Word sample:', {
-            v1: words[0].code_v1?.substring(0, 20),
-            v2: words[0].code_v2?.substring(0, 20),
-            using: hasV1 ? 'v1' : 'v2'
-        });
-    }
+    // Debug: log first word's glyph data (disabled with glyphMode)
+    // if (words?.[0] && glyphMode) {
+    //     console.log('[QCF Debug] Word sample:', {
+    //         v1: words[0].code_v1?.substring(0, 20),
+    //         v2: words[0].code_v2?.substring(0, 20),
+    //     });
+    // }
 
     // Inline style for font-family (bypasses CSS variable issues)
     const fontStyle = glyphMode && fontFamily
