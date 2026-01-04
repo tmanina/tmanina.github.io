@@ -129,9 +129,9 @@ export function VectorMushaf({ onBack }: VectorMushafProps) {
         if (touchStart === null) return
         const diff = touchStart - e.changedTouches[0].clientX
         if (Math.abs(diff) > 50) {
-            // RTL: swipe left = next page, swipe right = prev page
-            if (diff > 0) nextPage()
-            else prevPage()
+            // Arabic reading: swipe left = prev page (go back), swipe right = next page (go forward)
+            if (diff > 0) prevPage()
+            else nextPage()
         }
         setTouchStart(null)
     }
