@@ -22,6 +22,7 @@ const systemPrompt =
 const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY ?? ""
 const groqApiUrl = "https://api.groq.com/openai/v1/chat/completions"
 
+
 const ALLOWED_DOMAINS = [
   // قديم
   "islamweb.net",
