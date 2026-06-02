@@ -33,6 +33,8 @@ jobs:
 
       - name: Build and Export
         run: npm run build:gh
+        env:
+          NEXT_PUBLIC_GROQ_API_KEY: ${{ secrets.NEXT_PUBLIC_GROQ_API_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
