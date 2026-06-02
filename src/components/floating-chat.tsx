@@ -16,12 +16,11 @@ interface ChatMessage {
   sources?: SourceLink[]
 }
 
-// Direct API call for static export (no server-side API routes)
-const API_KEY = "AIzaSyDDbTifGGu79A3nwjoQ8qZLa3HIDzTNXco"
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`
+const systemPrompt =
+  "أنت مساعد ديني لتطبيق طمأنينة (tmanina) متخصص في الإجابة على الأسئلة الدينية الإسلامية. يجب أن تستند إجاباتك فقط إلى مواقع دينية موثوقة، مثل: الدرر السنية (dorar.net)، إسلام ويب (islamweb.net)، الإسلام سؤال وجواب (islamqa.info)، طريق الإسلام (ar.islamway.net)، شبكة الألوكة (alukah.net)، موقع ابن باز (binbaz.org.sa)، موقع ابن عثيمين (binothaimeen.net)، دار الإفتاء المصرية (dar-alifta.org)، الرئاسة العامة للبحوث العلمية والإفتاء (alifta.gov.sa)، ومصحف جامعة الملك سعود (quran.ksu.edu.sa). لا تستخدم ولا تذكر أي مصادر من مواقع عامة أو غير دينية. إذا لم تجد إجابة في هذه المواقع فقط فقل: (لا أعلم يقينًا، يُفضَّل سؤال أهل العلم مباشرة). اذكر مصادرك الدينية دائمًا إن أمكن، وكن مختصرًا ومحترمًا."
 
-const SYSTEM_PROMPT =
-  "أنت مساعد ديني لتطبيق طمأنينة (tmanina) متخصص في الإجابة على الأسئلة الدينية الإسلامية. يجب أن تستند إجاباتك فقط إلى مواقع دينية موثوقة، مثل: الدرر السنية (dorar.net)، إسلام ويب (islamweb.net)، الإسلام سؤال وجواب (islamqa.info)، طريق الإسلام (ar.islamway.net)، شبكة الألوكة (alukah.net)، موقع ابن باز (binbaz.org.sa)، موقع ابن عثيمين (binothaimeen.net)، دار الإفتاء المصرية (dar-alifta.org)، الرئاسة العامة للبحوث العلمية والإفتاء (alifta.gov.sa)، ومصحف جامعة الملك سعود (quran.ksu.edu.sa). لا تستخدم ولا تذكر أي مصادر من مواقع عامة أو غير دينية. إذا لم تجد إجابة في هذه المواقع فقط فقل: (لا أعلم يقينًا، يُفضَّل سؤال أهل العلم مباشرة). اذكر مصادرك الدينية دائمًا إن أمكن، وكن مختصرًا ومحترمًا."
+const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY ?? ""
+const groqApiUrl = "https://api.groq.com/openai/v1/chat/completions"
 
 const ALLOWED_DOMAINS = [
   // قديم
@@ -110,6 +109,12 @@ function formatMarkdownSafe(text: string) {
 
   let html = escapeHtml(text)
 
+  // رابط Markdown: [اسم الرابط](الرابط)
+  html = html.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="link-primary link-underline-opacity-0 link-underline-opacity-75-hover">$1</a>'
+  )
+
   // عناوين: ### أو ## أو #
   html = html
     .replace(/^###\s+(.*)$/gm, "<strong>$1</strong>")
@@ -136,46 +141,56 @@ function formatMarkdownSafe(text: string) {
   return { __html: html }
 }
 
-async function callGeminiAPI(prompt: string): Promise<{ text: string; sources: SourceLink[] }> {
+async function callGroqAPI(prompt: string): Promise<{ text: string; sources: SourceLink[] }> {
+  if (!groqApiKey) {
+    throw new Error(
+      "API key غير مضبوط. تأكد من إضافة NEXT_PUBLIC_GROQ_API_KEY في ملف .env.local"
+    )
+  }
+
   const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    systemInstruction: {
-      parts: [{ text: SYSTEM_PROMPT }],
-    },
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "system",
+        content: systemPrompt,
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    temperature: 0.2,
   }
 
   const apiCall = async () => {
-    const response = await fetch(API_URL, {
+    const response = await fetch(groqApiUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${groqApiKey}`,
+      },
       body: JSON.stringify(payload),
     })
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      console.error("Gemini API error:", response.status, errorData)
       throw new Error(`API call failed with status ${response.status}`)
     }
     return response.json()
   }
 
   const result = await exponentialBackoff(apiCall, 3, 1000)
-
-  const candidate = result?.candidates?.[0]
-  const text: string | undefined = candidate?.content?.parts?.[0]?.text
+  const text: string = result?.choices?.[0]?.message?.content ?? ""
 
   let sources: SourceLink[] = []
-  const groundingMetadata = candidate?.groundingMetadata
-  if (groundingMetadata?.groundingAttributions) {
-    sources =
-      groundingMetadata.groundingAttributions
-        .map((attr: any) => ({
-          uri: attr.web?.uri as string | undefined,
-          title: attr.web?.title as string | undefined,
-        }))
-        .filter((s: SourceLink) => s.uri && s.title) as SourceLink[]
-
-    // فلترة المصادر على الدومينات المسموح بها فقط
-    sources = sources.filter((s) => isAllowedSource(s.uri))
+  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g
+  let match
+  // Extract and filter links to allowed domains
+  while ((match = linkRegex.exec(text)) !== null) {
+    const title = match[1]
+    const uri = match[2]
+    if (isAllowedSource(uri) && !sources.some((s) => s.uri === uri)) {
+      sources.push({ title, uri })
+    }
   }
 
   if (!text) {
@@ -251,10 +266,10 @@ export function FloatingChat() {
     setIsLoading(true)
 
     try {
-      const response = await callGeminiAPI(userMessage)
+      const response = await callGroqAPI(userMessage)
       addMessage("bot", response.text, response.sources)
     } catch (error) {
-      console.error("Error calling Gemini API:", error)
+      console.error("Error calling Groq API:", error)
       addMessage(
         "bot",
         "حدث خطأ أثناء محاولة جلب الإجابة. يرجى التحقق من اتصالك بالإنترنت أو المحاولة لاحقاً."
