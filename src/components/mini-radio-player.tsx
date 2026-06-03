@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
+import { useRadioContext } from "@/contexts/radio-context"
 
 const QURAN_CAIRO_RADIO = {
     id: 90000,
@@ -18,14 +19,20 @@ export function MiniRadioPlayer() {
 
     const audioRef = React.useRef<HTMLAudioElement>(null)
     const retryCountRef = React.useRef(0)
+    const { activeRadioId, activeIsPlaying, setActiveRadio } = useRadioContext()
+    const activeRadioIdRef = React.useRef(activeRadioId)
+    activeRadioIdRef.current = activeRadioId
     const searchParams = useSearchParams()
-    const activeView = searchParams.get("view")
-    const activeId = searchParams.get("id")
-    const isFullRadioPage = activeView === "media" && activeId === "radio"
 
     // Attempt auto-play on mount with multiple strategies
     React.useEffect(() => {
         if (!audioRef.current) return
+
+        // Don't auto-play if another radio is already playing somewhere
+        if (activeRadioIdRef.current !== null && activeRadioIdRef.current !== QURAN_CAIRO_RADIO.id) {
+            setIsBuffering(false)
+            return
+        }
 
         const audio = audioRef.current
         audio.volume = volume
@@ -39,6 +46,7 @@ export function MiniRadioPlayer() {
                     setIsPlaying(true)
                     setIsBuffering(false)
                     setHasInteracted(true)
+                    setActiveRadio(QURAN_CAIRO_RADIO.id, true)
                 })
                 .catch((err) => {
                     // Auto-play blocked - browser needs user interaction
@@ -58,6 +66,7 @@ export function MiniRadioPlayer() {
                     .then(() => {
                         setIsPlaying(true)
                         setHasInteracted(true)
+                        setActiveRadio(QURAN_CAIRO_RADIO.id, true)
                     })
                     .catch(() => {})
             }
@@ -82,26 +91,15 @@ export function MiniRadioPlayer() {
         }
     }, [volume])
 
-    // Auto-pause when navigating to the full RadioPlayer page (Media > Radio)
+    // Sync with RadioContext: pause if another component starts playing a different radio
     React.useEffect(() => {
-        if (isFullRadioPage && isPlaying && audioRef.current) {
-            audioRef.current.pause()
-            setIsPlaying(false)
-        }
-    }, [isFullRadioPage])
-
-    // Keep-alive ping to maintain connection
-    React.useEffect(() => {
-        if (!isPlaying) return
-
-        const keepAlive = setInterval(() => {
-            if (audioRef.current && audioRef.current.paused && isPlaying) {
-                audioRef.current.play().catch(() => setIsPlaying(false))
+        if (activeRadioId !== null && activeRadioId !== QURAN_CAIRO_RADIO.id && activeIsPlaying) {
+            if (audioRef.current && isPlaying) {
+                audioRef.current.pause()
+                setIsPlaying(false)
             }
-        }, 30000)
-
-        return () => clearInterval(keepAlive)
-    }, [isPlaying])
+        }
+    }, [activeRadioId, activeIsPlaying])
 
     const togglePlay = () => {
         if (!audioRef.current) return
@@ -109,7 +107,11 @@ export function MiniRadioPlayer() {
         if (isPlaying) {
             audioRef.current.pause()
             setIsPlaying(false)
+            setActiveRadio(QURAN_CAIRO_RADIO.id, false)
         } else {
+            // Announce to context that we're taking over
+            setActiveRadio(QURAN_CAIRO_RADIO.id, true)
+
             setAudioError(false)
             setIsBuffering(true)
             // If audio errored out, reload the source
@@ -134,11 +136,66 @@ export function MiniRadioPlayer() {
         }
     }
 
+    // Refs for Media Session handlers (defined after togglePlay to avoid TDZ)
+    const togglePlayRef = React.useRef(togglePlay)
+    togglePlayRef.current = togglePlay
+    const isPlayingRef = React.useRef(isPlaying)
+    isPlayingRef.current = isPlaying
+
+    // Media Session API - show playing info in mobile notification/lock screen
+    React.useEffect(() => {
+        if (!('mediaSession' in navigator)) return
+
+        // Always set metadata while MiniRadioPlayer is mounted (even when paused)
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: QURAN_CAIRO_RADIO.name,
+            artist: 'إذاعة القرآن الكريم',
+            album: 'راديو القرآن',
+            artwork: [
+                { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+                { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+            ]
+        })
+
+        navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused'
+
+        // Register handlers — they use refs to always have fresh state
+        navigator.mediaSession.setActionHandler('play', () => {
+            if (audioRef.current && !isPlayingRef.current) {
+                togglePlayRef.current()
+            }
+        })
+
+        navigator.mediaSession.setActionHandler('pause', () => {
+            if (audioRef.current && isPlayingRef.current) {
+                togglePlayRef.current()
+            }
+        })
+
+        navigator.mediaSession.setActionHandler('stop', () => {
+            if (audioRef.current) {
+                audioRef.current.pause()
+                setIsPlaying(false)
+                setActiveRadio(QURAN_CAIRO_RADIO.id, false)
+            }
+        })
+
+        return () => {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = null
+                navigator.mediaSession.setActionHandler('play', null)
+                navigator.mediaSession.setActionHandler('pause', null)
+                navigator.mediaSession.setActionHandler('stop', null)
+            }
+        }
+    }, [isPlaying])
+
     const handleAudioError = () => {
         console.error('Audio stream error')
         setIsPlaying(false)
         setIsBuffering(false)
         setAudioError(true)
+        setActiveRadio(null, false)
 
         // Auto-retry up to 3 times
         if (retryCountRef.current < 3) {
@@ -152,6 +209,7 @@ export function MiniRadioPlayer() {
                             setIsPlaying(true)
                             setAudioError(false)
                             setIsBuffering(false)
+                            setActiveRadio(QURAN_CAIRO_RADIO.id, true)
                         })
                         .catch(() => {})
                 }

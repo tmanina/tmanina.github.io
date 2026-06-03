@@ -14,6 +14,7 @@ import { SharePage } from "@/components/share-page"
 import { MediaPage } from "@/components/media-page"
 import { MiniRadioPlayer } from "@/components/mini-radio-player"
 import { InstallPrompt } from "@/components/install-prompt"
+import { RadioProvider } from "@/contexts/radio-context"
 import { SplashScreen } from "@/components/splash-screen"
 import { UpdateNotification } from "@/components/update-notification"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -374,6 +375,7 @@ export default function Home() {
             <MiniRadioPlayer />
           </div>
 
+          <RadioProvider>
           <div className="tab-content">
             {activeTab === "home" && (
               <div className="animate__animated animate__fadeIn">
@@ -539,6 +541,7 @@ export default function Home() {
               </div>
             )}
           </div>
+          </RadioProvider>
         </div>
       </main>
 

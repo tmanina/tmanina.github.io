@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useRadioContext } from "@/contexts/radio-context"
 
 interface Radio {
     id: number
@@ -26,6 +27,7 @@ interface RadioPlayerProps {
 export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const { activeRadioId, activeIsPlaying, setActiveRadio } = useRadioContext()
     const selectedCategory = searchParams.get("category")
 
     const [radios, setRadios] = React.useState<Radio[]>([])
@@ -37,6 +39,10 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const [searchQuery, setSearchQuery] = React.useState("")
 
     const audioRef = React.useRef<HTMLAudioElement>(null)
+    const playingRadioRef = React.useRef(playingRadio)
+    playingRadioRef.current = playingRadio
+    const isPlayingRef = React.useRef(isPlaying)
+    isPlayingRef.current = isPlaying
 
     // Category definitions
     const categories: Category[] = [
@@ -304,6 +310,18 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
 
         return () => clearInterval(keepAliveInterval)
     }, [playingRadio, isPlaying])
+
+    // Sync with RadioContext: stop if another component starts playing a different radio
+    React.useEffect(() => {
+        if (activeRadioId !== null && activeRadioId !== (playingRadioRef.current?.id ?? -1) && activeIsPlaying) {
+            if (audioRef.current && isPlayingRef.current) {
+                audioRef.current.pause()
+                audioRef.current.src = ""
+                setPlayingRadio(null)
+                setIsPlaying(false)
+            }
+        }
+    }, [activeRadioId, activeIsPlaying])
 
     const fetchRadios = async () => {
         try {
@@ -575,6 +593,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     }
 
     const playRadio = (radio: Radio) => {
+        setActiveRadio(radio.id, true)
         if (playingRadio?.id === radio.id) {
             togglePlayPause()
         } else {
@@ -593,7 +612,9 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
         if (isPlaying) {
             audioRef.current.pause()
             setIsPlaying(false)
+            if (playingRadio) setActiveRadio(playingRadio.id, false)
         } else {
+            if (playingRadio) setActiveRadio(playingRadio.id, true)
             audioRef.current.play().catch(() => setIsPlaying(false))
             setIsPlaying(true)
         }
@@ -606,6 +627,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
         }
         setPlayingRadio(null)
         setIsPlaying(false)
+        setActiveRadio(null, false)
     }
 
     const handleCategorySelect = (categoryId: string) => {
