@@ -12,6 +12,7 @@ import { About } from "@/components/about"
 import { AdhkarList } from "@/components/adhkar-list"
 import { SharePage } from "@/components/share-page"
 import { MediaPage } from "@/components/media-page"
+import { MiniRadioPlayer } from "@/components/mini-radio-player"
 import { InstallPrompt } from "@/components/install-prompt"
 import { SplashScreen } from "@/components/splash-screen"
 import { UpdateNotification } from "@/components/update-notification"
@@ -367,6 +368,11 @@ export default function Home() {
               </ul>
             </li>
           </ul>
+
+          {/* Persistent Mini Radio Player - stays playing across all tabs */}
+          <div className="mb-4">
+            <MiniRadioPlayer />
+          </div>
 
           <div className="tab-content">
             {activeTab === "home" && (
