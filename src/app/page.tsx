@@ -370,12 +370,12 @@ export default function Home() {
             </li>
           </ul>
 
+          <RadioProvider>
           {/* Persistent Mini Radio Player - stays playing across all tabs */}
           <div className="mb-4">
             <MiniRadioPlayer />
           </div>
 
-          <RadioProvider>
           <div className="tab-content">
             {activeTab === "home" && (
               <div className="animate__animated animate__fadeIn">
