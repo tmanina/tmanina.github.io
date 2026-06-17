@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import { Button } from "@/components/ui/button"
 
 type CalendarCell = {
   key: string
@@ -82,57 +83,51 @@ export function IslamicCalendar() {
   }).format(today)
 
   return (
-    <div className="islamic-calendar card border-0 shadow-sm">
-      <div className="card-header bg-transparent border-0 pt-3 pb-2">
-        <div className="d-flex align-items-center justify-content-between gap-2">
+    <div className="islamic-calendar shadow-sm">
+      <div className="pt-3 pb-2">
+        <div className="flex items-center justify-between gap-2">
           {/* Prev month */}
-          <button
-            type="button"
-            className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full w-8 h-8"
             onClick={() => changeMonth(-1)}
             aria-label="الشهر السابق"
           >
             <i className="fas fa-chevron-right" />
-          </button>
+          </Button>
 
-          {/* Month titles */}
-          {/* <div className="text-center flex-grow-1">
-            <div className="fw-bold fs-5 text-primary-emphasis">
-              {gregorianMonthYear}
-            </div>
-            <div className="small text-muted">{hijriMonthYear}</div>
-          </div> */}
-          {/* Today summary */}
-          <div className="mt-3 p-2 rounded-3 bg-body-tertiary d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 small">
-            <div className="fw-semibold text-primary-emphasis">
-              تاريخ اليوم (ميلادي): <span className="text-body">{todayGregorianFull}</span>
+          {/* Today summary */}            <div className="mt-3 p-2 rounded-lg bg-muted/50 flex flex-col md:flex-row md:items-center justify-between gap-2 text-sm">
+            <div className="font-semibold text-primary">
+              تاريخ اليوم (ميلادي): <span className="text-foreground">{todayGregorianFull}</span>
             </div>
             <br></br>
-            <div className="fw-semibold text-success-emphasis">
-              تاريخ اليوم (هجري): <span className="text-body">{todayHijriFull}</span>
+            <div className="font-semibold text-emerald-600">
+              تاريخ اليوم (هجري): <span className="text-foreground">{todayHijriFull}</span>
             </div>
           </div>
-          <div className="text-center flex-grow-1">
-            <div className="fw-bold fs-5 text-primary-emphasis">
+          <div className="text-center flex-1">
+            <div className="font-bold text-lg text-primary">
               {gregorianMonthYear}
             </div>
-            <div className="small text-muted">{hijriMonthYear}</div>
+            <div className="text-xs text-muted-foreground">{hijriMonthYear}</div>
           </div>
           {/* Next month */}
-          <button
-            type="button"
-            className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full w-8 h-8"
             onClick={() => changeMonth(1)}
             aria-label="الشهر التالي"
           >
             <i className="fas fa-chevron-left" />
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="card-body pt-2 pb-3">
+      <div className="pt-2 pb-3">
         {/* Week days row */}
-        <div className="calendar-grid mb-2 text-muted text-center fw-semibold" style={{ fontSize: '0.75rem' }}>
+        <div className="calendar-grid mb-2 text-muted-foreground text-center font-semibold" style={{ fontSize: '0.75rem' }}>
           {WEEK_DAYS.map((day) => (
             <div key={day} className="py-1" style={{ fontSize: 'clamp(0.65rem, 2vw, 0.85rem)' }}>
               {day}
@@ -148,8 +143,8 @@ export function IslamicCalendar() {
             }
 
             const baseClass =
-              "calendar-day border rounded-3 text-center py-2 px-1 position-relative"
-            const todayClass = cell.isToday ? " day-today" : " bg-body-tertiary-subtle"
+              "calendar-day border rounded-lg text-center py-2 px-1 relative"
+            const todayClass = cell.isToday ? " day-today" : " bg-muted/30"
 
             return (
               <button
@@ -157,12 +152,12 @@ export function IslamicCalendar() {
                 type="button"
                 className={baseClass + todayClass}
               >
-                <div className="fw-bold">{cell.day}</div>
-                <div className={`small ${cell.isToday ? "text-light" : "text-muted"}`}>
+                <div className="font-bold">{cell.day}</div>
+                <div className={`text-xs ${cell.isToday ? "text-white" : "text-muted-foreground"}`}>
                   {cell.hijri}
                 </div>
                 {cell.isToday && (
-                  <span className="today-badge badge rounded-pill bg-light text-primary-emphasis position-absolute top-0 start-50 translate-middle-x">
+                  <span className="today-badge rounded-full bg-white text-primary top-0 start-1/2 -translate-x-1/2 absolute px-2 py-0.5 text-xs font-medium">
 
                   </span>
                 )}

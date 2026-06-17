@@ -36,8 +36,10 @@ Explain the impact and obtain explicit user approval before:
 ## Work Rules
 
 - Inspect only impacted modules and nearby dependencies.
-- Preserve Arabic RTL behavior, responsive layouts, dark mode, and PWA behavior.
-- Reuse existing components, Bootstrap patterns, Tailwind utilities, and `@/*` imports.
+- Preserve Arabic RTL behavior, responsive layouts, dark mode, PWA behavior, and the notification standard (FloatingToast).
+- The project is fully migrated from Bootstrap to Tailwind CSS. Do not reintroduce Bootstrap classes.
+- Reuse existing components, Tailwind utilities, and `@/*` imports.
+- Use the `FloatingToast` component (from `@/components/floating-toast`) for all user-facing notifications; avoid `alert()` entirely.
 - Treat `public/data`, `public/fonts`, and `public/mushaf` as curated/static assets.
 - Do not edit generated directories (`.next`, `out`) or dependency files
   (`node_modules`) unless explicitly requested.

@@ -497,60 +497,56 @@
     color: #a855f7;
 }
 
-/* Dark Mode Support */
-[data-theme="dark"] .podcast-player,
+/* Dark Mode Support - Using theme CSS variables */
 .dark .podcast-player {
-    --text-color: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --card-bg: #1f2937;
+    --text-color: hsl(var(--foreground));
+    --text-secondary: hsl(var(--muted-foreground));
+    --card-bg: hsl(var(--card));
 }
 
-[data-theme="dark"] .episode-card,
 .dark .episode-card {
-    background: #1f2937;
-    border-color: #374151;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
 }
 
-[data-theme="dark"] .episode-card.playing,
 .dark .episode-card.playing {
-    border-color: #a855f7;
+    border-color: var(--gold, #d4a574);
 }
 
-[data-theme="dark"] .search-input,
 .dark .search-input {
-    background: #1f2937;
-    border-color: #374151;
-    color: #f3f4f6;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
 }
 
-[data-theme="dark"] .episode-header:hover,
+.dark .search-input:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+
 .dark .episode-header:hover {
-    background: rgba(168, 85, 247, 0.1);
+    background: rgba(212, 165, 116, 0.08);
 }
 
-[data-theme="dark"] .favorites-filter-btn,
 .dark .favorites-filter-btn {
-    background: #1f2937;
-    border-color: #374151;
-    color: #9ca3af;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--muted-foreground));
 }
 
-[data-theme="dark"] .favorites-filter-btn:hover,
 .dark .favorites-filter-btn:hover {
-    border-color: #ec4899;
-    color: #ec4899;
+    border-color: #d4a574;
+    color: #d4a574;
 }
 
-[data-theme="dark"] .episode-favorite-btn,
 .dark .episode-favorite-btn {
-    border-color: #374151;
-    color: #6b7280;
+    border-color: hsl(var(--border));
+    color: hsl(var(--muted-foreground));
 }
 
-[data-theme="dark"] .episode-favorite-btn:hover,
 .dark .episode-favorite-btn:hover {
-    border-color: #ec4899;
-    color: #ec4899;
+    border-color: #d4a574;
+    color: #d4a574;
 }
 
 /* Responsive */

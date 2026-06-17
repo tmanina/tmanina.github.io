@@ -147,249 +147,45 @@ export default function SurahList() {
     }
 
     return (
-        <div className="surah-list">
-            <style jsx>{`
-                .surah-list {
-                    background: linear-gradient(135deg, #f6f1e7 0%, #e8dfc8 100%);
-                    min-height: 100vh;
-                    padding: 20px;
-                }
-
-                .list-header {
-                    max-width: 1200px;
-                    margin: 0 auto 30px;
-                    background: #fff;
-                    border-radius: 16px;
-                    padding: 30px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                    border: 2px solid #c9a961;
-                }
-
-                .header-top {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 10px;
-                }
-
-                .list-title {
-                    font-size: 2rem;
-                    font-weight: 700;
-                    color: #2c1810;
-                    text-align: center;
-                    margin: 0;
-                }
-
-                .close-btn {
-                    background: transparent;
-                    border: 2px solid #c9a961;
-                    color: #c9a961;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    transition: all 0.3s;
-                    line-height: 1;
-                }
-                .close-btn:hover {
-                    background: #c9a961;
-                    color: #fff;
-                    transform: rotate(90deg);
-                }
-
-                .search-filters {
-                    display: flex;
-                    gap: 15px;
-                    flex-wrap: wrap;
-                    margin-top: 20px;
-                }
-
-                .search-box {
-                    flex: 1;
-                    min-width: 250px;
-                    padding: 12px 20px;
-                    border: 2px solid #c9a961;
-                    border-radius: 10px;
-                    font-size: 1rem;
-                    direction: rtl;
-                    transition: all 0.3s;
-                    color: #000000;
-                    font-weight: 500;
-                }
-                .search-box::placeholder {
-                    color: #999;
-                }
-                .search-box:focus {
-                    outline: none;
-                    border-color: #8b6914;
-                    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
-                }
-
-                .filter-buttons {
-                    display: flex;
-                    gap: 10px;
-                }
-
-                .filter-btn {
-                    padding: 12px 24px;
-                    border: 2px solid #c9a961;
-                    background: white;
-                    color: #8b6914;
-                    border-radius: 10px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    transition: all 0.3s;
-                }
-
-                .filter-btn.active {
-                    background: #c9a961;
-                    color: white;
-                }
-
-                .filter-btn:hover {
-                    background: #c9a961;
-                    color: white;
-                }
-
-                .surahs-grid {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                    gap: 20px;
-                }
-
-                .surah-card {
-                    background: #fff;
-                    border-radius: 12px;
-                    padding: 20px;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    border: 2px solid #e8dfc8;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-                }
-
-                .surah-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-                    border-color: #c9a961;
-                }
-
-                .surah-number {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    background: linear-gradient(135deg, #c9a961 0%, #8b6914 100%);
-                    color: white;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 700;
-                    font-size: 1.1rem;
-                    margin-bottom: 12px;
-                }
-
-                .surah-name {
-                    font-size: 1.4rem;
-                    font-weight: 700;
-                    color: #2c1810;
-                    margin-bottom: 5px;
-                    direction: rtl;
-                }
-
-                .surah-english {
-                    font-size: 0.9rem;
-                    color: #666;
-                    margin-bottom: 10px;
-                }
-
-                .surah-info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    border-top: 1px solid #e8dfc8;
-                }
-
-                .info-item {
-                    font-size: 0.85rem;
-                    color: #666;
-                }
-
-                .badge {
-                    display: inline-block;
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                }
-
-                .badge-makkah {
-                    background: #fef3c7;
-                    color: #92400e;
-                }
-
-                .badge-madinah {
-                    background: #dbeafe;
-                    color: #1e40af;
-                }
-
-                @media (max-width: 768px) {
-                    .search-filters {
-                        flex-direction: column;
-                    }
-                    .filter-buttons {
-                        justify-content: center;
-                    }
-                    .surahs-grid {
-                        grid-template-columns: 1fr;
-                    }
-                }
-            `}</style>
+        <div className="bg-gradient-to-br from-[#f6f1e7] to-[#e8dfc8] dark:from-background dark:to-background min-h-screen p-5">
 
             {/* Header */}
-            <div className="list-header">
-                <div className="header-top">
+            <div className="max-w-5xl mx-auto mb-8 bg-card dark:bg-card rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.1)] border-2 border-[#c9a961]">
+                <div className="flex justify-between items-center mb-2">
                     <div></div>
-                    <h1 className="list-title">📚 فهرس سور القرآن الكريم</h1>
-                    <button className="close-btn" onClick={() => router.push('?view=media')} title="رجوع">
+                    <h1 className="text-3xl font-bold text-[#2c1810] dark:text-foreground text-center m-0">📚 فهرس سور القرآن الكريم</h1>
+                    <button className="bg-transparent border-2 border-[#c9a961] text-[#c9a961] w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-2xl font-bold transition-all duration-300 leading-none hover:bg-[#c9a961] hover:text-white hover:rotate-90" onClick={() => router.push('?view=media')} title="رجوع">
                         ✕
                     </button>
                 </div>
-                <p style={{ textAlign: 'center', color: '#666', marginBottom: '20px' }}>
+                <p className="text-center text-gray-500 mb-5">
                     114 سورة - اختر السورة للقراءة الكاملة
                 </p>
 
-                <div className="search-filters">
+                <div className="flex gap-4 flex-wrap mt-5 max-md:flex-col">
                     <input
                         type="text"
-                        className="search-box"
+                        className="flex-1 min-w-[250px] px-5 py-3 border-2 border-[#c9a961] rounded-xl text-base rtl transition-all duration-300 text-foreground bg-background font-medium placeholder:text-muted-foreground focus:outline-none focus:border-[#8b6914] focus:ring-2 focus:ring-[#c9a961]/20"
                         placeholder="🔍 ابحث عن سورة (الاسم أو الرقم)..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         autoFocus
                     />
-                    <div className="filter-buttons">
+                    <div className="flex gap-2 max-md:justify-center">
                         <button
-                            className={`filter-btn ${filterType === 'all' ? 'active' : ''}`}
+                            className={`px-6 py-3 border-2 border-[#c9a961] rounded-xl cursor-pointer font-semibold transition-all duration-300 hover:bg-[#c9a961] hover:text-white ${filterType === 'all' ? 'bg-[#c9a961] text-white' : 'bg-card text-[#8b6914] dark:text-amber-300'}`}
                             onClick={() => setFilterType('all')}
                         >
                             الكل
                         </button>
                         <button
-                            className={`filter-btn ${filterType === 'مكية' ? 'active' : ''}`}
+                            className={`px-6 py-3 border-2 border-[#c9a961] rounded-xl cursor-pointer font-semibold transition-all duration-300 hover:bg-[#c9a961] hover:text-white ${filterType === 'مكية' ? 'bg-[#c9a961] text-white' : 'bg-card text-[#8b6914] dark:text-amber-300'}`}
                             onClick={() => setFilterType('مكية')}
                         >
                             المكية
                         </button>
                         <button
-                            className={`filter-btn ${filterType === 'مدنية' ? 'active' : ''}`}
+                            className={`px-6 py-3 border-2 border-[#c9a961] rounded-xl cursor-pointer font-semibold transition-all duration-300 hover:bg-[#c9a961] hover:text-white ${filterType === 'مدنية' ? 'bg-[#c9a961] text-white' : 'bg-card text-[#8b6914] dark:text-amber-300'}`}
                             onClick={() => setFilterType('مدنية')}
                         >
                             المدنية
@@ -399,28 +195,28 @@ export default function SurahList() {
             </div>
 
             {/* Surahs Grid */}
-            <div className="surahs-grid">
+            <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {filteredSurahs.map((surah) => (
                     <div
                         key={surah.number}
-                        className="surah-card"
+                        className="bg-card rounded-xl p-5 cursor-pointer transition-all duration-300 border-2 border-[#e8dfc8] dark:border-border shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:border-[#c9a961]"
                         onClick={() => navigateToSurah(surah.number)}
                     >
-                        <div className="surah-number">{surah.number}</div>
-                        <div className="surah-name">{surah.name}</div>
-                        <div className="surah-english">{surah.englishName}</div>
-                        <div className="surah-info">
-                            <span className={`badge ${surah.revelationType === 'مكية' ? 'badge-makkah' : 'badge-madinah'}`}>
+                        <div className="inline-flex w-10 h-10 bg-gradient-to-br from-[#c9a961] to-[#8b6914] text-white rounded-full items-center justify-center font-bold text-lg mb-3">{surah.number}</div>
+                        <div className="text-xl font-bold text-[#2c1810] dark:text-foreground mb-1" dir="rtl">{surah.name}</div>
+                        <div className="text-sm text-muted-foreground mb-2">{surah.englishName}</div>
+                        <div className="flex justify-between mt-3 pt-3 border-t border-[#e8dfc8] dark:border-border">
+                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${surah.revelationType === 'مكية' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300' : 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'}`}>
                                 {surah.revelationType}
                             </span>
-                            <span className="info-item">{surah.versesCount} آية</span>
+                            <span className="text-xs text-muted-foreground">{surah.versesCount} آية</span>
                         </div>
                     </div>
                 ))}
             </div>
 
             {filteredSurahs.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem', color: '#666' }}>
+                <div className="text-center py-12 text-lg text-gray-500">
                     لا توجد نتائج للبحث 🔍
                 </div>
             )}

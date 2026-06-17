@@ -6,11 +6,11 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-dark text-white-50 mt-auto py-3">
-      <div className="container-fluid">
+    <footer className="bg-neutral-900 text-white/50 mt-auto py-3 border-t border-white/10">
+      <div className="w-full">
         <div className="text-center">
           <small>
-            <i className="fas fa-copyright me-1"></i>
+            <i className="fas fa-copyright ms-1"></i>
             {year} Copyright to{" "}
             <strong className="text-white">M.S</strong>
 
@@ -22,17 +22,6 @@ export function Footer() {
           </small>
         </div>
       </div>
-
-      <style jsx>{`
-        html,
-        body {
-          height: 100%;
-        }
-        footer {
-          margin-top: auto;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-      `}</style>
     </footer>
   )
 }

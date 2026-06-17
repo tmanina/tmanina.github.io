@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { FloatingToast } from "@/components/floating-toast"
+import type { ToastVariant } from "@/components/floating-toast"
 
 type City = "cairo" | "giza" | "alexandria" | "port-said" | "suez" | "ismailia" | "damietta" |
   "damanhur" | "tanta" | "mansoura" | "zagazig" | "shebin" | "banha" | "kafr-el-sheikh" |
@@ -22,6 +24,9 @@ interface PrayerTimesData {
   maghrib: string
   isha: string
 }
+
+const PRAYER_CITY_STORAGE_KEY = "selectedPrayerCity"
+const DEFAULT_CITY: City = "cairo"
 
 const egyptCities: Record<City, CityInfo> = {
   cairo: { name: "القاهرة", englishName: "Cairo", latitude: 30.0444, longitude: 31.2357 },
@@ -53,37 +58,131 @@ const egyptCities: Record<City, CityInfo> = {
   "south-sinai": { name: "جنوب سيناء", englishName: "Sharm El Sheikh", latitude: 27.9158, longitude: 34.3300 },
 }
 
+const cityOptions = Object.entries(egyptCities) as Array<[City, CityInfo]>
+
 interface PrayerTimesProps {
   country: string
   city: string
 }
 
-// نستخدم أسماء مختلفة داخليًا لتفادي تحذير "unused props"
-export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps) {
+const normalizeCity = (value: string) => value.trim().toLowerCase().replace(/\s+/g, "-")
+
+const resolveCity = (city: string): City => {
+  const normalizedCity = normalizeCity(city)
+  const cityEntry = cityOptions.find(([cityKey, cityInfo]) => {
+    return cityKey === normalizedCity || normalizeCity(cityInfo.englishName) === normalizedCity
+  })
+
+  return cityEntry?.[0] ?? DEFAULT_CITY
+}
+
+const resolveApiCountry = (country: string) => {
+  return country.trim().toUpperCase() === "EG" ? "Egypt" : country
+}
+
+const getStoredCity = (): City | null => {
+  if (typeof window === "undefined") return null
+
+  try {
+    const savedCity = window.localStorage.getItem(PRAYER_CITY_STORAGE_KEY)
+    if (savedCity && savedCity in egyptCities) {
+      return savedCity as City
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+const saveCity = (city: City) => {
+  if (typeof window === "undefined") return
+
+  try {
+    window.localStorage.setItem(PRAYER_CITY_STORAGE_KEY, city)
+  } catch {
+    // localStorage may be unavailable in private browsing or restricted contexts.
+  }
+}
+
+const getDistanceInKm = (
+  first: Pick<CityInfo, "latitude" | "longitude">,
+  second: Pick<CityInfo, "latitude" | "longitude">
+) => {
+  const earthRadiusKm = 6371
+  const toRadians = (degrees: number) => (degrees * Math.PI) / 180
+  const latitudeDiff = toRadians(second.latitude - first.latitude)
+  const longitudeDiff = toRadians(second.longitude - first.longitude)
+  const firstLatitude = toRadians(first.latitude)
+  const secondLatitude = toRadians(second.latitude)
+
+  const distance =
+    Math.sin(latitudeDiff / 2) ** 2 +
+    Math.cos(firstLatitude) * Math.cos(secondLatitude) * Math.sin(longitudeDiff / 2) ** 2
+
+  return 2 * earthRadiusKm * Math.atan2(Math.sqrt(distance), Math.sqrt(1 - distance))
+}
+
+const findNearestCity = (latitude: number, longitude: number): City => {
+  return cityOptions.reduce<{ city: City; distance: number }>(
+    (nearest, [cityKey, cityInfo]) => {
+      const distance = getDistanceInKm(
+        { latitude, longitude },
+        { latitude: cityInfo.latitude, longitude: cityInfo.longitude }
+      )
+
+      return distance < nearest.distance ? { city: cityKey, distance } : nearest
+    },
+    { city: DEFAULT_CITY, distance: Number.POSITIVE_INFINITY }
+  ).city
+}
+
+export function PrayerTimes({ country, city }: PrayerTimesProps) {
   const [currentTime, setCurrentTime] = React.useState(new Date())
 
   // قراءة المحافظة المحفوظة من localStorage أو استخدام الافتراضية
   const [selectedCity, setSelectedCity] = React.useState<City>(() => {
-    if (typeof window !== 'undefined') {
-      const savedCity = localStorage.getItem('selectedPrayerCity')
-      if (savedCity && savedCity in egyptCities) {
-        return savedCity as City
-      }
-    }
-    return "new-valley" // القيمة الافتراضية
+    return getStoredCity() ?? resolveCity(city)
   })
 
   const [prayerTimesData, setPrayerTimesData] = React.useState<PrayerTimesData | null>(null)
   const [qiblaDirection, setQiblaDirection] = React.useState<number>(0)
   const [loading, setLoading] = React.useState(true)
+  const [detectingLocation, setDetectingLocation] = React.useState(false)
   const [isClient, setIsClient] = React.useState(false)
+  const [toast, setToast] = React.useState<{ message: string; variant: ToastVariant } | null>(null)
+  const apiCountry = React.useMemo(() => resolveApiCountry(country), [country])
+
+  const showToast = React.useCallback((message: string, variant: ToastVariant = "info") => {
+    setToast({ message, variant })
+  }, [])
 
   // حفظ المحافظة المختارة في localStorage عند تغييرها
   const handleCityChange = (newCity: City) => {
     setSelectedCity(newCity)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('selectedPrayerCity', newCity)
+    saveCity(newCity)
+  }
+
+  const handleUseCurrentLocation = () => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      showToast("متصفحك لا يدعم تحديد الموقع. اختر المحافظة يدويًا.", "warning")
+      return
     }
+
+    setDetectingLocation(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const nearestCity = findNearestCity(position.coords.latitude, position.coords.longitude)
+        handleCityChange(nearestCity)
+        showToast(`تم اختيار أقرب محافظة: ${egyptCities[nearestCity].name}`, "success")
+        setDetectingLocation(false)
+      },
+      () => {
+        showToast("تعذر تحديد موقعك. يمكنك اختيار المحافظة من القائمة.", "warning")
+        setDetectingLocation(false)
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 * 60 * 30 }
+    )
   }
 
   // Fetch prayer times and Qibla from API
@@ -97,8 +196,12 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
         const prayerResponse = await fetch(
           `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(
             cityInfo.englishName
-          )}&country=Egypt&method=5`
+          )}&country=${encodeURIComponent(apiCountry)}&method=5`
         )
+        if (!prayerResponse.ok) {
+          throw new Error("Prayer times request failed")
+        }
+
         const prayerData = await prayerResponse.json()
 
         if (prayerData.code === 200 && prayerData.data.timings) {
@@ -111,16 +214,24 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
             maghrib: timings.Maghrib,
             isha: timings.Isha,
           })
+        } else {
+          throw new Error("Prayer times response was malformed")
         }
 
         // Fetch Qibla Direction
         const qiblaResponse = await fetch(
           `https://api.aladhan.com/v1/qibla/${cityInfo.latitude}/${cityInfo.longitude}`
         )
+        if (!qiblaResponse.ok) {
+          throw new Error("Qibla request failed")
+        }
+
         const qiblaData = await qiblaResponse.json()
 
         if (qiblaData.code === 200 && qiblaData.data) {
           setQiblaDirection(Math.round(qiblaData.data.direction))
+        } else {
+          throw new Error("Qibla response was malformed")
         }
 
       } catch (error) {
@@ -135,13 +246,14 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
           isha: "19:15",
         })
         setQiblaDirection(136) // Default approx direction
+        showToast("تعذر تحديث مواقيت الصلاة الآن. تم عرض أوقات تقريبية مؤقتة.", "warning")
       } finally {
         setLoading(false)
       }
     }
 
     fetchData()
-  }, [selectedCity])
+  }, [apiCountry, selectedCity, showToast])
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -250,71 +362,60 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
   const timeRemaining = getTimeRemaining()
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-12 col-xl-10">
-        <div className="row g-4">
+    <div className="flex justify-center">
+      <div className="w-full max-w-5xl">
+        <div className="flex flex-col gap-4">
           {/* Current Time Card */}
-          <div className="col-12">
-            <div className="card border-0 shadow-lg rounded-4 overflow-hidden card-hover">
-              <div className="gradient-bg text-white p-4">
-                <div className="row align-items-center">
-                  <div className="col-md-4 text-center text-md-start mb-3 mb-md-0">
-                    <h2 className="h3 mb-2 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                      <i className="fas fa-mosque"></i>
+          <div>
+            <div className="shadow-lg rounded-xl overflow-hidden card-hover bg-card border border-border">
+              <div className="bg-gradient-to-br from-amber-50 via-white to-emerald-50 p-4 text-foreground dark:from-background dark:via-background dark:to-background">
+                <div className="md:flex items-center">
+                  <div className="md:w-1/3 text-center md:text-right mb-3 md:mb-0">
+                    <h2 className="mb-2 flex items-center justify-center gap-2 text-2xl font-extrabold leading-tight tracking-normal md:justify-start">
+                      <i className="fas fa-mosque text-amber-600 dark:text-amber-400"></i>
                       <span>مواقيت الصلاة</span>
                     </h2>
-                    <p className="mb-0 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                      <i className="fas fa-map-marker-alt"></i>
+                    <p className="mb-0 flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground md:justify-start">
+                      <i className="fas fa-map-marker-alt text-emerald-600 dark:text-emerald-400"></i>
                       <span>{cityData.name}, مصر</span>
                     </p>
                     {loading && (
-                      <p className="mb-0 mt-2 small">
-                        <i className="fas fa-spinner fa-spin me-1"></i>
+                      <p className="mb-0 mt-2 text-sm font-medium text-muted-foreground">
+                        <i className="fas fa-spinner fa-spin ms-1 text-amber-600 dark:text-amber-400"></i>
                         <span>جاري التحديث...</span>
                       </p>
                     )}
                   </div>
-                  <div className="col-md-4 text-center mb-3 mb-md-0">
+                  <div className="md:w-1/3 text-center mb-3 md:mb-0">
                     {/* City Selector */}
-                    <select
-                      className="form-select form-select-lg bg-opacity-25 text-gray border-white border-2 fw-bold"
-                      value={selectedCity}
-                      onChange={(e) => handleCityChange(e.target.value as City)}
-                      style={{ backdropFilter: "blur(10px)" }}
-                    >
-                      <option value="new-valley" className="text-dark">الوادي الجديد</option>
-                      <option value="cairo" className="text-dark">القاهرة</option>
-                      <option value="giza" className="text-dark">الجيزة</option>
-                      <option value="alexandria" className="text-dark">الإسكندرية</option>
-                      <option value="port-said" className="text-dark">بورسعيد</option>
-                      <option value="suez" className="text-dark">السويس</option>
-                      <option value="ismailia" className="text-dark">الإسماعيلية</option>
-                      <option value="damietta" className="text-dark">دمياط</option>
-                      <option value="damanhur" className="text-dark">البحيرة</option>
-                      <option value="tanta" className="text-dark">الغربية</option>
-                      <option value="mansoura" className="text-dark">الدقهلية</option>
-                      <option value="zagazig" className="text-dark">الشرقية</option>
-                      <option value="shebin" className="text-dark">المنوفية</option>
-                      <option value="banha" className="text-dark">القليوبية</option>
-                      <option value="kafr-el-sheikh" className="text-dark">كفر الشيخ</option>
-                      <option value="fayoum" className="text-dark">الفيوم</option>
-                      <option value="beni-suef" className="text-dark">بني سويف</option>
-                      <option value="minya" className="text-dark">المنيا</option>
-                      <option value="assiut" className="text-dark">أسيوط</option>
-                      <option value="sohag" className="text-dark">سوهاج</option>
-                      <option value="qena" className="text-dark">قنا</option>
-                      <option value="luxor" className="text-dark">الأقصر</option>
-                      <option value="aswan" className="text-dark">أسوان</option>
-                      <option value="hurghada" className="text-dark">البحر الأحمر</option>
-                      <option value="matrouh" className="text-dark">مطروح</option>
-                      <option value="north-sinai" className="text-dark">شمال سيناء</option>
-                      <option value="south-sinai" className="text-dark">جنوب سيناء</option>
-                    </select>
+                    <div className="flex flex-col gap-2">
+                      <select
+                        className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-bold text-foreground shadow-sm outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-500/25"
+                        value={selectedCity}
+                        onChange={(e) => handleCityChange(e.target.value as City)}
+                        aria-label="اختيار محافظة مواقيت الصلاة"
+                      >
+                        {cityOptions.map(([cityKey, cityInfo]) => (
+                          <option key={cityKey} value={cityKey} className="bg-background text-foreground">
+                            {cityInfo.name}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={handleUseCurrentLocation}
+                        disabled={detectingLocation}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-emerald-700/25 bg-emerald-700 px-3 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        <i className={`fas ${detectingLocation ? "fa-spinner fa-spin" : "fa-location-crosshairs"}`}></i>
+                        <span>{detectingLocation ? "جاري تحديد الموقع..." : "استخدم موقعي بإذن"}</span>
+                      </button>
+                    </div>
                   </div>
-                  <div className="col-md-4 text-center text-md-end">
+                  <div className="md:w-1/3 text-center md:text-left">
                     {isClient ? (
                       <>
-                        <div className="display-4 fw-bold font-monospace">
+                        <div className="font-mono text-4xl font-extrabold leading-none text-foreground">
                           {currentTime.toLocaleTimeString("en-US", {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -322,7 +423,7 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                             hour12: true,
                           })}
                         </div>
-                        <p className="mb-0 small">
+                        <p className="mb-0 mt-2 text-sm font-semibold text-muted-foreground">
                           {currentTime.toLocaleDateString("ar-SA-u-ca-gregory", {
                             weekday: "long",
                             day: "numeric",
@@ -332,7 +433,7 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                         </p>
                       </>
                     ) : (
-                      <div className="display-4 fw-bold font-monospace">00:00:00</div>
+                      <div className="font-mono text-4xl font-extrabold leading-none text-foreground">00:00:00</div>
                     )}
                   </div>
                 </div>
@@ -341,62 +442,62 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
           </div>
 
           {/* Next Prayer with Countdown */}
-          <div className="col-12">
-            <div className="card border-0 shadow-lg rounded-4 card-hover bg-body">
-              <div className="card-body p-4">
-                <div className="row align-items-center">
-                  <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <p className="text-body-secondary mb-2">الأذان القادم</p>
-                    <h3 className="h2 fw-bold mb-2" style={{ color: nextPrayer.color }}>
+          <div>
+            <div className="shadow-lg rounded-xl card-hover bg-card border border-border">
+              <div className="p-4">
+                <div className="md:flex items-center">
+                  <div className="md:w-1/2 text-center md:text-right mb-3 md:mb-0">
+                    <p className="text-muted-foreground mb-2">الأذان القادم</p>
+                    <h3 className="text-2xl font-bold mb-2" style={{ color: nextPrayer.color }}>
                       {nextPrayer.name}
                     </h3>
                     <div
-                      className="display-4 fw-bold text-white p-3 rounded-3 d-inline-block font-monospace"
+                      className="text-4xl font-bold text-white p-3 rounded-lg inline-block font-mono"
                       style={{ background: nextPrayer.gradient }}
                     >
                       {nextPrayer.time}
                     </div>
                   </div>
-                  <div className="col-md-6 text-center text-md-end">
-                    <p className="text-body-secondary mb-2">الوقت المتبقي</p>
+                  <div className="md:w-1/2 text-center md:text-left">
+                    <p className="text-muted-foreground mb-2">الوقت المتبقي</p>
                     {isClient ? (
-                      <div className="d-flex justify-content-center justify-content-md-end gap-2">
+                      <div className="flex justify-center md:justify-end gap-2">
                         <div className="text-center">
                           <div
-                            className="display-4 fw-bold text-white rounded-3 d-flex align-items-center justify-content-center font-monospace"
+                            className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
                             {String(timeRemaining.hours).padStart(2, "0")}
                           </div>
-                          <small className="text-body-secondary">ساعة</small>
+                          <small className="text-muted-foreground">ساعة</small>
                         </div>
-                        <div className="display-4 fw-bold" style={{ color: nextPrayer.color }}>
+                        <div className="text-4xl font-bold" style={{ color: nextPrayer.color }}>
                           :
                         </div>
                         <div className="text-center">
                           <div
-                            className="display-4 fw-bold text-white rounded-3 d-flex align-items-center justify-content-center font-monospace"
+                            className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
                             {String(timeRemaining.minutes).padStart(2, "0")}
                           </div>
-                          <small className="text-body-secondary">دقيقة</small>
+                          <small className="text-muted-foreground">دقيقة</small>
                         </div>
-                        <div className="display-4 fw-bold" style={{ color: nextPrayer.color }}>
+                        <div className="text-4xl font-bold" style={{ color: nextPrayer.color }}>
                           :
                         </div>
                         <div className="text-center">
                           <div
-                            className="display-4 fw-bold text-white rounded-3 d-flex align-items-center justify-content-center font-monospace"
+                            className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
                             {String(timeRemaining.seconds).padStart(2, "0")}
                           </div>
-                          <small className="text-body-secondary">ثانية</small>
+                          <small className="text-muted-foreground">ثانية</small>
                         </div>
                       </div>
                     ) : (
-                      <div className="h3">--:--:--</div>
+                      <div className="text-2xl">--:--:--</div>
                     )}
                   </div>
                 </div>
@@ -405,12 +506,12 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
           </div>
 
           {/* All Prayer Times */}
-          <div className="col-12">
-            <div className="row g-3">
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {prayerTimes.map((prayer, index) => (
-                <div key={prayer.name} className="col-12 col-sm-6 col-lg-4">
+                <div key={prayer.name}>
                   <div
-                    className={`card border-0 shadow card-hover h-100 bg-body ${index === nextPrayerIndex ? "border-3 border-success" : ""
+                    className={`shadow card-hover h-full bg-card border rounded-xl overflow-hidden ${index === nextPrayerIndex ? "" : "border-border"
                       }`}
                     style={
                       index === nextPrayerIndex
@@ -419,7 +520,7 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                     }
                   >
                     <div className="p-1" style={{ background: prayer.gradient }}></div>
-                    <div className="card-body p-4 text-center">
+                    <div className="p-4 text-center">
                       <div className="mb-3">
                         <i
                           className={`fas ${prayer.icon}`}
@@ -432,17 +533,17 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                           }}
                         ></i>
                       </div>
-                      <h4 className="h5 fw-bold mb-2">{prayer.name}</h4>
-                      <div className="display-6 fw-bold font-monospace">
+                      <h4 className="text-base font-bold mb-2">{prayer.name}</h4>
+                      <div className="text-2xl font-bold font-mono">
                         {prayer.time}
                       </div>
                       {index === nextPrayerIndex && (
                         <div className="mt-3">
                           <span
-                            className="badge rounded-pill px-3 py-2"
+                            className="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold text-white"
                             style={{ background: prayer.gradient }}
                           >
-                            <i className="fas fa-bell me-1"></i>
+                            <i className="fas fa-bell ms-1"></i>
                             الصلاة القادمة
                           </span>
                         </div>
@@ -455,17 +556,17 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
           </div>
 
           {/* Additional Info */}
-          <div className="col-12">
-            <div className="row g-3">
-              <div className="col-md-6">
-                <div className="card border-0 shadow card-hover h-100 bg-body">
-                  <div className="card-body p-4">
-                    <h5 className="d-flex align-items-center gap-2 mb-3">
-                      <i className="fas fa-calendar-alt text-teal-600"></i>
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <div className="shadow card-hover h-full bg-card border border-border rounded-xl">
+                  <div className="p-4">
+                    <h5 className="flex items-center gap-2 mb-3 font-semibold">
+                      <i className="fas fa-calendar-alt" style={{ color: 'var(--primary-gold)' }}></i>
                       <span>التاريخ الهجري</span>
                     </h5>
                     {isClient ? (
-                      <p className="h4 mb-0">
+                      <p className="text-lg mb-0">
                         {new Date().toLocaleDateString("ar-SA-u-ca-islamic", {
                           day: "numeric",
                           month: "long",
@@ -473,34 +574,35 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
                         })}
                       </p>
                     ) : (
-                      <p className="h4 mb-0">...</p>
+                      <p className="text-lg mb-0">...</p>
                     )}
                   </div>
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="card border-0 shadow card-hover h-100 bg-body">
-                  <div className="card-body p-4">
-                    <h5 className="d-flex align-items-center gap-2 mb-3">
-                      <i className="fas fa-compass text-teal-600"></i>
+              <div>
+                <div className="shadow card-hover h-full bg-card border border-border rounded-xl">
+                  <div className="p-4">
+                    <h5 className="flex items-center gap-2 mb-3 font-semibold">
+                      <i className="fas fa-compass" style={{ color: 'var(--primary-gold)' }}></i>
                       <span>اتجاه القبلة</span>
                     </h5>
-                    <div className="d-flex align-items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <div
-                        className="rounded-circle bg-body-secondary d-flex align-items-center justify-content-center"
+                        className="rounded-full bg-muted flex items-center justify-center"
                         style={{ width: "60px", height: "60px" }}
                       >
                         <i
-                          className="fas fa-location-arrow text-teal-600 fs-3"
+                          className="fas fa-location-arrow text-2xl"
                           style={{
-                            transform: `rotate(${qiblaDirection - 45}deg)`, // -45 because icon points NE by default
+                            color: 'var(--primary-gold)',
+                            transform: `rotate(${qiblaDirection - 45}deg)`,
                             transition: 'transform 1s ease-out'
                           }}
                         ></i>
                       </div>
                       <div>
-                        <p className="h4 mb-0 fw-bold">{qiblaDirection}°</p>
-                        <p className="text-body-secondary small mb-0">من الشمال</p>
+                        <p className="text-lg mb-0 font-bold">{qiblaDirection}°</p>
+                        <p className="text-muted-foreground text-sm mb-0">من الشمال</p>
                       </div>
                     </div>
                   </div>
@@ -510,6 +612,12 @@ export function PrayerTimes({ country: _country, city: _city }: PrayerTimesProps
           </div>
         </div>
       </div>
+      <FloatingToast
+        message={toast?.message || ""}
+        variant={toast?.variant || "info"}
+        isVisible={toast !== null}
+        onClose={() => setToast(null)}
+      />
     </div>
   )
 }

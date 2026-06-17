@@ -2,43 +2,51 @@
 
 import * as React from "react"
 import { useRadioContext } from "@/contexts/radio-context"
+import { FloatingToast } from "@/components/floating-toast"
+import type { ToastVariant } from "@/components/floating-toast"
 
 const RADIOS = [
     {
         id: 90000,
         name: "إذاعة القرأن الكريم من القاهرة",
+        shortName: "القاهرة",
         url: "https://stream.zeno.fm/ru2hqnplhk7uv",
     },
     {
         id: 90029,
         name: "المنشاوي - اذاعة القران الكريم",
+        shortName: "المنشاوي",
         url: "https://radio.alhuwayni.com/listen/alminshawi/radio.mp3",
+    },
+    {
+        id: 90030,
+        name: "الرقية الشرعية",
+        shortName: "الرقية الشرعية",
+        url: "https://qurango.net/radio/roqiah",
     },
 ]
 
 export function MiniRadioPlayer() {
     const [isPlaying, setIsPlaying] = React.useState(false)
-    const [hasInteracted, setHasInteracted] = React.useState(false)
     const [volume, setVolume] = React.useState(0.7)
     const [audioError, setAudioError] = React.useState(false)
-    const [isBuffering, setIsBuffering] = React.useState(true)
+    const [isBuffering, setIsBuffering] = React.useState(false)
     const [currentRadioIndex, setCurrentRadioIndex] = React.useState(0)
+    const [toast, setToast] = React.useState<{ message: string; variant: ToastVariant } | null>(null)
+    const handleCloseToast = React.useCallback(() => setToast(null), [])
 
     const currentRadio = RADIOS[currentRadioIndex]
     const audioRef = React.useRef<HTMLAudioElement>(null)
     const retryCountRef = React.useRef(0)
+    const prevRadioNameRef = React.useRef(currentRadio.name)
     const { activeRadioId, activeIsPlaying, setActiveRadio } = useRadioContext()
-    const activeRadioIdRef = React.useRef(activeRadioId)
-    activeRadioIdRef.current = activeRadioId
 
-    // Set audio source on mount only (no auto-play)
+    // Prepare the audio element on mount without opening the stream before interaction.
     React.useEffect(() => {
-        if (audioRef.current && !audioRef.current.src) {
+        if (audioRef.current) {
             audioRef.current.volume = volume
-            audioRef.current.src = currentRadio.url
-            audioRef.current.load()
         }
-    }, [])
+    }, [volume])
 
     // Handle volume changes
     React.useEffect(() => {
@@ -55,9 +63,9 @@ export function MiniRadioPlayer() {
                 setIsPlaying(false)
             }
         }
-    }, [activeRadioId, activeIsPlaying, currentRadio.id])
+    }, [activeRadioId, activeIsPlaying, currentRadio.id, isPlaying])
 
-    const togglePlay = () => {
+    const togglePlay = React.useCallback(() => {
         if (!audioRef.current) return
 
         if (isPlaying) {
@@ -70,8 +78,8 @@ export function MiniRadioPlayer() {
 
             setAudioError(false)
             setIsBuffering(true)
-            // If audio errored out, reload the source
-            if (audioError) {
+            // Open or reload the stream only after a user action.
+            if (audioError || !audioRef.current.src) {
                 audioRef.current.src = currentRadio.url
                 audioRef.current.load()
             }
@@ -79,7 +87,6 @@ export function MiniRadioPlayer() {
                 .then(() => {
                     setIsPlaying(true)
                     setIsBuffering(false)
-                    setHasInteracted(true)
                     setAudioError(false)
                     retryCountRef.current = 0
                 })
@@ -90,13 +97,56 @@ export function MiniRadioPlayer() {
                     setAudioError(true)
                 })
         }
-    }
+    }, [audioError, currentRadio.id, currentRadio.url, isPlaying, setActiveRadio])
+
+    const selectRadio = React.useCallback((index: number) => {
+        if (currentRadioIndex === index) return
+
+        const radio = RADIOS[index]
+        setCurrentRadioIndex(index)
+
+        if (!audioRef.current) return
+
+        audioRef.current.pause()
+        audioRef.current.src = radio.url
+        audioRef.current.load()
+        setActiveRadio(radio.id, true)
+        setIsBuffering(true)
+        setAudioError(false)
+        audioRef.current.play()
+            .then(() => {
+                setIsPlaying(true)
+                setIsBuffering(false)
+                setAudioError(false)
+                retryCountRef.current = 0
+            })
+            .catch(() => {
+                setIsPlaying(false)
+                setIsBuffering(false)
+            })
+    }, [currentRadioIndex, setActiveRadio])
+
+    const renderRadioButtons = () => (
+        RADIOS.map((radio, index) => (
+            <button
+                key={radio.id}
+                type="button"
+                className={`flex-1 border-0 bg-transparent text-white/50 text-xs font-semibold px-2 py-1 rounded-lg cursor-pointer transition-all duration-300 whitespace-nowrap hover:text-white/80 max-[400px]:text-[0.65rem] max-[400px]:px-[0.35rem] max-[400px]:py-[0.25rem] ${currentRadioIndex === index ? 'bg-amber-500/20 text-[#ffd700] shadow-[0_2px_8px_rgba(255,215,0,0.15)]' : ''}`}
+                onClick={() => selectRadio(index)}
+            >
+                {radio.shortName}
+            </button>
+        ))
+    )
 
     // Refs for Media Session handlers (defined after togglePlay to avoid TDZ)
     const togglePlayRef = React.useRef(togglePlay)
-    togglePlayRef.current = togglePlay
     const isPlayingRef = React.useRef(isPlaying)
-    isPlayingRef.current = isPlaying
+
+    React.useEffect(() => {
+        togglePlayRef.current = togglePlay
+        isPlayingRef.current = isPlaying
+    }, [togglePlay, isPlaying])
 
     // Media Session API - show playing info in mobile notification/lock screen
     React.useEffect(() => {
@@ -144,7 +194,7 @@ export function MiniRadioPlayer() {
                 navigator.mediaSession.setActionHandler('stop', null)
             }
         }
-    }, [isPlaying, currentRadio])
+    }, [isPlaying, currentRadio, setActiveRadio])
 
     const handleAudioError = () => {
         console.error('Audio stream error')
@@ -152,6 +202,11 @@ export function MiniRadioPlayer() {
         setIsBuffering(false)
         setAudioError(true)
         setActiveRadio(null, false)
+
+        setToast({
+            message: 'تعذر الاتصال بالراديو، جاري إعادة المحاولة...',
+            variant: 'error',
+        })
 
         // Auto-retry up to 3 times
         if (retryCountRef.current < 3) {
@@ -166,10 +221,24 @@ export function MiniRadioPlayer() {
                             setAudioError(false)
                             setIsBuffering(false)
                             setActiveRadio(currentRadio.id, true)
+                            setToast({
+                                message: 'تم إعادة الاتصال بنجاح ✅',
+                                variant: 'success',
+                            })
                         })
-                        .catch(() => {})
+                        .catch(() => {
+                            setToast({
+                                message: 'فشلت إعادة المحاولة، يرجى النقر للتشغيل',
+                                variant: 'warning',
+                            })
+                        })
                 }
             }, 2000 * retryCountRef.current)
+        } else {
+            setToast({
+                message: 'تعذر تشغيل الراديو بعد 3 محاولات',
+                variant: 'warning',
+            })
         }
     }
 
@@ -186,235 +255,32 @@ export function MiniRadioPlayer() {
         setIsBuffering(false)
         setIsPlaying(true)
         setAudioError(false)
+
+        // Show a notification when a new station starts playing
+        if (prevRadioNameRef.current !== currentRadio.name) {
+            prevRadioNameRef.current = currentRadio.name
+            setToast({
+                message: `جاري تشغيل ${currentRadio.name}`,
+                variant: 'info',
+            })
+        }
+    }
+
+    const handleEnded = () => {
+        setIsPlaying(false)
+        setToast({
+            message: 'انتهى البث المباشر للإذاعة',
+            variant: 'info',
+        })
     }
 
     return (
         <>
-            <style jsx>{`
-                .mini-radio-container {
-                    background: linear-gradient(135deg, #1a3a2a 0%, #2d5a4b 50%, #1a3a2a 100%);
-                    border-radius: 20px;
-                    padding: 1.25rem 1.5rem;
-                    position: relative;
-                    overflow: hidden;
-                    box-shadow: 0 8px 32px rgba(26, 58, 42, 0.3);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                }
-
-                .mini-radio-container::before {
-                    content: '';
-                    position: absolute;
-                    top: -50%;
-                    left: -50%;
-                    width: 200%;
-                    height: 200%;
-                    background: radial-gradient(
-                        circle at 30% 50%,
-                        rgba(255, 215, 0, 0.03) 0%,
-                        transparent 50%
-                    );
-                    pointer-events: none;
-                }
-
-                .radio-wave {
-                    position: absolute;
-                    top: 50%;
-                    left: 1.5rem;
-                    width: 40px;
-                    height: 40px;
-                    transform: translateY(-50%);
-                    pointer-events: none;
-                }
-
-                .radio-wave-bar {
-                    position: absolute;
-                    bottom: 0;
-                    width: 4px;
-                    background: linear-gradient(to top, #ffd700, #ffa500);
-                    border-radius: 2px;
-                    transition: height 0.3s ease;
-                }
-
-                .radio-wave.playing .radio-wave-bar {
-                    animation: wave 1.2s ease-in-out infinite;
-                }
-
-                .radio-wave-bar:nth-child(1) {
-                    left: 0;
-                    height: ${isPlaying ? '60%' : '30%'};
-                    animation-delay: 0s;
-                }
-
-                .radio-wave-bar:nth-child(2) {
-                    left: 8px;
-                    height: ${isPlaying ? '80%' : '30%'};
-                    animation-delay: 0.2s;
-                }
-
-                .radio-wave-bar:nth-child(3) {
-                    left: 16px;
-                    height: ${isPlaying ? '50%' : '30%'};
-                    animation-delay: 0.4s;
-                }
-
-                .radio-wave-bar:nth-child(4) {
-                    left: 24px;
-                    height: ${isPlaying ? '70%' : '30%'};
-                    animation-delay: 0.6s;
-                }
-
-                .radio-wave-bar:nth-child(5) {
-                    left: 32px;
-                    height: ${isPlaying ? '45%' : '30%'};
-                    animation-delay: 0.8s;
-                }
-
+            <style>{`
                 @keyframes wave {
                     0%, 100% { height: 30%; }
                     50% { height: 85%; }
                 }
-
-                .radio-wave.playing .radio-wave-bar {
-                    animation: wave 1.2s ease-in-out infinite;
-                }
-
-                .radio-info {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .radio-icon-wrap {
-                    width: 44px;
-                    height: 44px;
-                    background: rgba(255, 215, 0, 0.15);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    border: 1px solid rgba(255, 215, 0, 0.2);
-                }
-
-                .radio-icon-wrap i {
-                    color: #ffd700;
-                    font-size: 1.2rem;
-                }
-
-                .radio-text {
-                    flex: 1;
-                    min-width: 0;
-                }
-
-                .radio-label {
-                    font-size: 0.75rem;
-                    color: rgba(255, 255, 255, 0.6);
-                    margin-bottom: 0.15rem;
-                }
-
-                .radio-name {
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    color: white;
-                    margin: 0;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-
-                .radio-status {
-                    font-size: 0.7rem;
-                    color: rgba(255, 255, 255, 0.5);
-                    margin-top: 0.1rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.35rem;
-                }
-
-                .status-dot {
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    display: inline-block;
-                }
-
-                .status-dot.playing {
-                    background: #22c55e;
-                    animation: pulse-dot 1.5s ease-in-out infinite;
-                }
-
-                .status-dot.paused {
-                    background: #9ca3af;
-                }
-
-                .status-dot.error {
-                    background: #ef4444;
-                }
-
-                .status-dot.buffering {
-                    background: #f59e0b;
-                    animation: pulse-dot 0.8s ease-in-out infinite;
-                }
-
-                @keyframes pulse-dot {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.3; }
-                }
-
-                .radio-controls {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    flex-shrink: 0;
-                }
-
-                .play-btn-mini {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    border: none;
-                    background: linear-gradient(135deg, #ffd700, #f59e0b);
-                    color: #1a3a2a;
-                    font-size: 1rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    flex-shrink: 0;
-                    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-                }
-
-                .play-btn-mini:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-                }
-
-                .play-btn-mini:active {
-                    transform: scale(0.95);
-                }
-
-                .volume-wrap {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .volume-wrap i {
-                    color: rgba(255, 255, 255, 0.5);
-                    font-size: 0.85rem;
-                }
-
-                .volume-slider-mini {
-                    width: 70px;
-                    height: 4px;
-                    border-radius: 2px;
-                    background: rgba(255, 255, 255, 0.15);
-                    outline: none;
-                    -webkit-appearance: none;
-                    cursor: pointer;
-                }
-
                 .volume-slider-mini::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     width: 14px;
@@ -424,7 +290,6 @@ export function MiniRadioPlayer() {
                     cursor: pointer;
                     box-shadow: 0 2px 6px rgba(255, 215, 0, 0.4);
                 }
-
                 .volume-slider-mini::-moz-range-thumb {
                     width: 14px;
                     height: 14px;
@@ -432,80 +297,6 @@ export function MiniRadioPlayer() {
                     background: #ffd700;
                     cursor: pointer;
                     border: none;
-                }
-
-                .retry-indicator {
-                    font-size: 0.65rem;
-                    color: rgba(255, 255, 255, 0.4);
-                    margin-top: 0.15rem;
-                }
-
-                .station-switch {
-                    display: flex;
-                    gap: 0;
-                    background: rgba(255, 255, 255, 0.08);
-                    border-radius: 10px;
-                    padding: 2px;
-                    margin-bottom: 0.4rem;
-                    direction: ltr;
-                }
-
-                .station-switch button {
-                    flex: 1;
-                    border: none;
-                    background: transparent;
-                    color: rgba(255, 255, 255, 0.5);
-                    font-size: 0.7rem;
-                    font-weight: 600;
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                    white-space: nowrap;
-                }
-
-                .station-switch button.active {
-                    background: rgba(255, 215, 0, 0.2);
-                    color: #ffd700;
-                    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
-                }
-
-                .station-switch button:not(.active):hover {
-                    color: rgba(255, 255, 255, 0.8);
-                }
-
-                @media (max-width: 576px) {
-                    .mini-radio-container {
-                        padding: 1rem;
-                    }
-
-                    .volume-slider-mini {
-                        width: 50px;
-                    }
-
-                    .volume-wrap {
-                        display: none;
-                    }
-
-                    .radio-wave {
-                        display: none;
-                    }
-
-                    .radio-name {
-                        font-size: 0.85rem;
-                    }
-                }
-
-                @media (max-width: 400px) {
-                    .radio-controls {
-                        gap: 0.5rem;
-                    }
-
-                    .play-btn-mini {
-                        width: 36px;
-                        height: 36px;
-                        font-size: 0.85rem;
-                    }
                 }
             `}</style>
 
@@ -516,91 +307,81 @@ export function MiniRadioPlayer() {
                 onWaiting={handleWaiting}
                 onPlaying={handlePlaying}
                 onPause={() => setIsPlaying(false)}
+                onEnded={handleEnded}
                 crossOrigin="anonymous"
-                preload="auto"
+                preload="metadata"
             />
 
-            <div className="mini-radio-container">
-                <div className="d-flex align-items-center justify-content-between gap-3 position-relative">
+            <div className="bg-gradient-to-br from-[#1a3a2a] to-[#2d5a4b] rounded-2xl p-3 relative overflow-hidden shadow-[0_8px_32px_rgba(26,58,42,0.3)] border border-white/10 md:rounded-[20px] md:px-6 md:py-5">
+                {/* Gradient overlay */}
+                <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,215,0,0.03) 0%, transparent 50%)' }}></div>
+                {/* Mobile layout */}
+                <div className="md:hidden">
+                    <div className="flex w-full flex-col items-center gap-1 text-center sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:text-right">
+                        <div className="mb-0.5 flex w-full max-w-sm gap-1 bg-white/10 rounded-[10px] p-[3px] [direction:ltr]">
+                            {renderRadioButtons()}
+                        </div>
+                        <h4 className="m-0 max-w-full truncate text-sm font-bold text-white md:max-w-none md:text-base">{currentRadio.name}</h4>
+                        <div className="flex items-center justify-center gap-1.5 text-xs text-white/50 md:justify-start">
+                            <span className={`w-1.5 h-1.5 rounded-full inline-block ${audioError ? 'bg-red-500' : isBuffering ? 'bg-amber-500 animate-pulse' : isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
+                            {audioError
+                                ? 'تعذر الاتصال - اضغط لإعادة المحاولة'
+                                : isBuffering
+                                    ? 'جاري التحميل...'
+                                    : isPlaying
+                                        ? 'يتم البث الآن'
+                                        : 'محتاج تفاعل للتشغيل'
+                            }
+                        </div>
+                    </div>
+                    <div className="mt-2 flex shrink-0 items-center justify-center gap-3">
+                        <button
+                            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-gradient-to-br from-[#ffd700] to-[#f59e0b] text-[#1a3a2a] shadow-[0_4px_12px_rgba(255,215,0,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_6px_20px_rgba(255,215,0,0.5)] active:scale-95 max-[400px]:h-9 max-[400px]:w-9 max-[400px]:text-sm md:h-10 md:w-10"
+                            onClick={togglePlay}
+                            type="button"
+                            title={isPlaying ? 'إيقاف' : 'تشغيل'}
+                            aria-label={isPlaying ? 'إيقاف الراديو' : 'تشغيل الراديو'}
+                        >
+                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying ? 0 : '2px' }}></i>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Desktop layout */}
+                <div className="hidden md:flex md:items-center md:gap-4">
                     {/* Wave Visualization */}
-                    <div className={`radio-wave ${isPlaying ? 'playing' : ''}`}>
-                        <div className="radio-wave-bar"></div>
-                        <div className="radio-wave-bar"></div>
-                        <div className="radio-wave-bar"></div>
-                        <div className="radio-wave-bar"></div>
-                        <div className="radio-wave-bar"></div>
+                    <div className="absolute top-1/2 left-5 w-9 h-9 -translate-y-1/2 pointer-events-none">
+                        {[
+                            { left: 0, height: isPlaying ? '60%' : '30%', delay: 0 },
+                            { left: 8, height: isPlaying ? '80%' : '30%', delay: 0.2 },
+                            { left: 16, height: isPlaying ? '50%' : '30%', delay: 0.4 },
+                            { left: 24, height: isPlaying ? '70%' : '30%', delay: 0.6 },
+                            { left: 32, height: isPlaying ? '45%' : '30%', delay: 0.8 },
+                        ].map((bar, i) => (
+                            <div
+                                key={i}
+                                className="absolute bottom-0 w-[4px] bg-gradient-to-t from-[#ffd700] to-[#ffa500] rounded-[2px] transition-all duration-300"
+                                style={{
+                                    left: bar.left,
+                                    height: bar.height,
+                                    animation: isPlaying ? `wave 1.2s ease-in-out ${bar.delay}s infinite` : 'none',
+                                }}
+                            ></div>
+                        ))}
                     </div>
 
                     {/* Radio Info */}
-                    <div className="radio-info" style={{ marginRight: '3rem' }}>
-                        <div className="radio-icon-wrap">
-                            <i className="fas fa-broadcast-tower"></i>
+                    <div className="flex flex-col items-center text-center gap-1 w-full sm:flex-row sm:items-center sm:text-right sm:gap-4 sm:w-auto">
+                        <div className="hidden md:flex md:w-11 md:h-11 md:bg-amber-500/15 md:rounded-xl md:items-center md:justify-center md:shrink-0 md:border md:border-amber-500/20">
+                            <i className="fas fa-broadcast-tower text-[#ffd700] text-xl"></i>
                         </div>
-                        <div className="radio-text">
-                            <p className="radio-label">راديو القرآن</p>
-                            <div className="station-switch">
-                                <button
-                                    type="button"
-                                    className={currentRadioIndex === 0 ? 'active' : ''}
-                                    onClick={() => {
-                                        if (currentRadioIndex === 0) return
-                                        setCurrentRadioIndex(0)
-                                        const radio = RADIOS[0]
-                                        if (audioRef.current) {
-                                            audioRef.current.pause()
-                                            audioRef.current.src = radio.url
-                                            audioRef.current.load()
-                                            setActiveRadio(radio.id, true)
-                                            setIsBuffering(true)
-                                            setAudioError(false)
-                                            audioRef.current.play().then(() => {
-                                                setIsPlaying(true)
-                                                setIsBuffering(false)
-                                                setHasInteracted(true)
-                                                setAudioError(false)
-                                                retryCountRef.current = 0
-                                            }).catch(() => {
-                                                setIsPlaying(false)
-                                                setIsBuffering(false)
-                                            })
-                                        }
-                                    }}
-                                >
-                                    القاهرة
-                                </button>
-                                <button
-                                    type="button"
-                                    className={currentRadioIndex === 1 ? 'active' : ''}
-                                    onClick={() => {
-                                        if (currentRadioIndex === 1) return
-                                        setCurrentRadioIndex(1)
-                                        const radio = RADIOS[1]
-                                        if (audioRef.current) {
-                                            audioRef.current.pause()
-                                            audioRef.current.src = radio.url
-                                            audioRef.current.load()
-                                            setActiveRadio(radio.id, true)
-                                            setIsBuffering(true)
-                                            setAudioError(false)
-                                            audioRef.current.play().then(() => {
-                                                setIsPlaying(true)
-                                                setIsBuffering(false)
-                                                setHasInteracted(true)
-                                                setAudioError(false)
-                                                retryCountRef.current = 0
-                                            }).catch(() => {
-                                                setIsPlaying(false)
-                                                setIsBuffering(false)
-                                            })
-                                        }
-                                    }}
-                                >
-                                    المنشاوي
-                                </button>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex gap-1.5 bg-white/10 rounded-[10px] p-[3px] mb-1 sm:mb-0 [direction:ltr]">
+                                {renderRadioButtons()}
                             </div>
-                            <h4 className="radio-name">{currentRadio.name}</h4>
-                            <div className="radio-status">
-                                <span className={`status-dot ${audioError ? 'error' : isBuffering ? 'buffering' : isPlaying ? 'playing' : 'paused'}`}></span>
+                            <h4 className="text-sm md:text-base font-bold text-white m-0 truncate max-w-full md:max-w-none">{currentRadio.name}</h4>
+                            <div className="text-xs text-white/50 flex items-center justify-center gap-1.5 md:justify-start">
+                            <span className={`w-1.5 h-1.5 rounded-full inline-block ${audioError ? 'bg-red-500' : isBuffering ? 'bg-amber-500 animate-pulse' : isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
                                 {audioError
                                     ? 'تعذر الاتصال - اضغط لإعادة المحاولة'
                                     : isBuffering
@@ -614,9 +395,9 @@ export function MiniRadioPlayer() {
                     </div>
 
                     {/* Controls */}
-                    <div className="radio-controls">
+                    <div className="flex items-center justify-center gap-3 mt-1 shrink-0">
                         <button
-                            className="play-btn-mini"
+                            className="w-[42px] h-[42px] md:w-10 md:h-10 rounded-full border-0 bg-gradient-to-br from-[#ffd700] to-[#f59e0b] text-[#1a3a2a] flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_12px_rgba(255,215,0,0.3)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(255,215,0,0.5)] active:scale-95 shrink-0 max-[400px]:w-[38px] max-[400px]:h-[38px] max-[400px]:text-sm"
                             onClick={togglePlay}
                             type="button"
                             title={isPlaying ? 'إيقاف' : 'تشغيل'}
@@ -624,11 +405,11 @@ export function MiniRadioPlayer() {
                         >
                             <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying ? 0 : '2px' }}></i>
                         </button>
-                        <div className="volume-wrap">
-                            <i className="fas fa-volume-up"></i>
+                        <div className="items-center gap-2 hidden md:flex">
+                            <i className="fas fa-volume-up text-white/50 text-sm"></i>
                             <input
                                 type="range"
-                                className="volume-slider-mini"
+                                className="w-[70px] h-1 rounded bg-white/15 cursor-pointer appearance-none outline-none"
                                 min="0"
                                 max="1"
                                 step="0.05"
@@ -640,6 +421,14 @@ export function MiniRadioPlayer() {
                     </div>
                 </div>
             </div>
+
+            <FloatingToast
+                message={toast?.message || ''}
+                variant={toast?.variant || 'info'}
+                isVisible={toast !== null}
+                onClose={handleCloseToast}
+                autoCloseMs={4000}
+            />
         </>
     )
 }

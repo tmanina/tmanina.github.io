@@ -1,502 +1,221 @@
-/* Google Fonts - Amiri for Quran text */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+/* =============================================
+   طمأنينة - Global Styles
+   Tailwind CSS v3 + shadcn/ui Integration
+   ============================================= */
 
-/* Local Quran Font - KFGQPC HAFS Uthmanic Script */
-@font-face {
-  font-family: 'KFGQPC HAFS Uthmanic Script';
-  src: url('/fonts/KFGQPC-Uthmanic-Script-HAFS.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Tailwind CSS directives */
+/* Tailwind CSS v3 directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
+/* =============================================
+   Theme Variables - Light Mode
+   Warm, inviting tones with gold & sage accents
+   ============================================= */
+:root {
+  /* shadcn/ui HSL variables */
+  --background: 40 22% 95%;
+  --foreground: 20 12% 18%;
+  --card: 40 18% 98%;
+  --card-foreground: 20 12% 18%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 12% 18%;
+  --primary: 35 55% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 150 15% 45%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 40 12% 90%;
+  --muted-foreground: 30 5% 42%;
+  --accent: 180 28% 32%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 70% 48%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 30 10% 84%;
+  --input: 30 10% 84%;
+  --ring: 35 55% 55%;
+  --radius: 0.75rem;
+
+  /* Flat color tokens for direct use */
+  --gold: #d4a574;
+  --gold-dark: #b8885a;
+  --gold-light: #e8d0a0;
+  --sage: #7d9d7f;
+  --sage-dark: #5a7c5c;
+  --sage-light: #a8c3ae;
+  --teal: #2c6e7c;
+  --teal-dark: #1f5662;
+  --teal-light: #5ab1c2;
+
+  /* Gradients */
+  --primary-gradient: linear-gradient(135deg, #d4a574 0%, #7d9d7f 100%);
+  --hero-gradient: linear-gradient(135deg, #2c6e7c 0%, #7d9d7f 100%);
+
+  /* Body background */
+  --body-bg: linear-gradient(135deg, #f5f1ea 0%, #e8e3d8 50%, #f0ebe0 100%);
+}
+
+/* =============================================
+   Theme Variables - Dark Mode
+   Deep charcoal-slate with warm gold accents
+   ============================================= */
+.dark {
+  --background: 210 10% 8%;
+  --foreground: 40 18% 88%;
+  --card: 210 8% 12%;
+  --card-foreground: 40 15% 85%;
+  --popover: 210 8% 12%;
+  --popover-foreground: 40 15% 85%;
+  --primary: 35 50% 58%;
+  --primary-foreground: 20 15% 12%;
+  --secondary: 150 18% 38%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 6% 16%;
+  --muted-foreground: 35 6% 55%;
+  --accent: 180 22% 30%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 50% 38%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 210 6% 20%;
+  --input: 210 6% 20%;
+  --ring: 35 45% 55%;
+
+  /* Flat colors - adjusted for dark mode */
+  --gold: #e5bc78;
+  --gold-dark: #c9954f;
+  --gold-light: #f1d8a8;
+  --sage: #78a883;
+  --sage-dark: #5a8a64;
+  --sage-light: #a8c3ae;
+  --teal: #5ab1c2;
+  --teal-dark: #3e94a8;
+  --teal-light: #7dc9d8;
+
+  /* Gradients for dark mode */
+  --primary-gradient: linear-gradient(135deg, #d7a85d 0%, #2f7667 100%);
+  --hero-gradient: radial-gradient(circle at 15% 0%, rgba(229, 188, 120, 0.24), transparent 34%),
+    linear-gradient(135deg, #0b1f1d 0%, #12352e 52%, #101722 100%);
+
+  /* Body background */
+  --body-bg: radial-gradient(circle at 80% -10%, rgba(229, 188, 120, 0.16), transparent 30rem),
+    radial-gradient(circle at 12% 12%, rgba(47, 118, 103, 0.22), transparent 28rem),
+    radial-gradient(circle at 50% 100%, rgba(127, 156, 199, 0.1), transparent 30rem),
+    linear-gradient(135deg, #07100f 0%, #0b1816 48%, #0d1119 100%);
+}
+
+/* =============================================
+   Body Styling
+   ============================================= */
+:root body {
+  background: var(--body-bg);
+  background-attachment: fixed;
+}
+
+.dark body {
+  color-scheme: dark;
+  color: hsl(var(--foreground));
+  background: var(--body-bg);
+  background-attachment: fixed;
+}
+
+/* =============================================
+   @layer base - shadcn/ui global defaults
+   ============================================= */
 @layer base {
-  :root {
-    /* Primary palette - warm gold & sage green */
-    --primary-gold: #d4a574;
-    --primary-dark-gold: #b8885a;
-    --sage-green: #7d9d7f;
-    --sage-dark: #5a7c5c;
-
-    /* Secondary palette - indigo & cream */
-    --indigo-primary: #4a5d7e;
-    --indigo-light: #6b8cae;
-    --cream-bg: #f9f6f2;
-    --cream-card: #ffffff;
-
-    /* Gradients */
-    --primary-gradient: linear-gradient(135deg, #d4a574 0%, #7d9d7f 100%);
-    --hero-gradient: linear-gradient(135deg, #4a5d7e 0%, #7d9d7f 100%);
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg, #f5f1ea 0%, #e8e3d8 100%);
-  min-height: 100vh;
+/* Smooth theme transitions - covers all theme-changing properties */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    fill 0.25s ease,
+    stroke 0.25s ease,
+    outline-color 0.25s ease,
+    caret-color 0.25s ease,
+    opacity 0.25s ease;
 }
 
-[data-bs-theme="light"] body {
-  background: linear-gradient(135deg, #f5f1ea 0%, #e8e3d8 50%, #f0ebe0 100%);
+/* Exclude transitions from elements that need instant changes */
+.no-theme-transition,
+.no-theme-transition::before,
+.no-theme-transition::after {
+  transition: none !important;
 }
 
-[data-bs-theme="dark"] body {
-  background: linear-gradient(135deg, #212529 0%, #343a40 100%);
-}
-
-.gradient-bg {
-  background: var(--primary-gradient);
-}
-
-.gradient-text {
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: inline-block;
-}
-
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(212, 165, 116, 0.2), 0 10px 10px -5px rgba(212, 165, 116, 0.1) !important;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-in;
-}
-
+/* =============================================
+   Custom Keyframes
+   ============================================= */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+@keyframes shimmer {
+  from { background-position: -1000px 0; }
+  to { background-position: 1000px 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes fadeInScale {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-html {
-  scroll-behavior: smooth;
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* =============================================
+   Scrollbar Styling
+   ============================================= */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #d4a574;
+  background: hsl(var(--primary) / 0.6);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #b8885a;
-}
-
-.text-teal-600 {
-  color: var(--primary-gold);
-}
-
-.bg-teal-600 {
-  background-color: var(--primary-gold);
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.nav-pills .nav-link.active {
-  background: linear-gradient(135deg, #d4a574 0%, #b8885a 100%);
-  color: white;
-}
-
-.nav-pills .nav-link {
-  color: #6c757d;
-  transition: all 0.3s;
-}
-
-.nav-pills .nav-link:hover:not(.active) {
-  background: #f8f9fa;
-}
-
-[data-bs-theme="dark"] .nav-pills .nav-link:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--bs-light);
-}
-
-/* Islamic calendar styles */
-.islamic-calendar {
-  direction: rtl;
-  border-radius: 1rem;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.islamic-calendar .card-header {
-  background: linear-gradient(135deg, #f9f6f2, #f0ebe3);
-  border-bottom: none;
-}
-
-.islamic-calendar .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.35rem;
-}
-
-.islamic-calendar .calendar-day {
-  background-color: #f8f9fa;
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
-    background-color 0.12s ease;
-  font-size: 0.9rem;
-}
-
-.islamic-calendar .calendar-day:hover {
-  background-color: #fef9f3;
-  box-shadow: 0 0.35rem 0.75rem rgba(212, 165, 116, 0.25);
-  transform: translateY(-1px);
-}
-
-.islamic-calendar .calendar-day.day-today {
-  background: linear-gradient(135deg, #d4a574, #b8885a);
-  color: #ffffff;
-  box-shadow: 0 0.55rem 1.2rem rgba(212, 165, 116, 0.4);
-}
-
-.islamic-calendar .calendar-day.day-today .small {
-  color: rgba(248, 249, 250, 0.9);
-}
-
-.islamic-calendar .calendar-day-empty {
-  min-height: 2.5rem;
-}
-
-.islamic-calendar .today-badge {
-  font-size: 0.7rem;
-  padding-inline: 0.45rem;
-  padding-block: 0.15rem;
-}
-
-/* ==============================
-   Islamic Calendar Light / Dark Theme
-   ============================== */
-
-/* الأساس */
-.islamic-calendar {
-  direction: rtl;
-  border-radius: 1rem;
-  overflow: hidden;
-  background: var(--bs-body-bg);
-  color: var(--bs-body-color);
-}
-
-/* الهيدر */
-.islamic-calendar .card-header {
-  background: linear-gradient(135deg, var(--bs-primary-bg-subtle), var(--bs-purple-bg-subtle));
-  border-bottom: none;
-}
-
-/* شبكة الأيام */
-.islamic-calendar .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: .35rem;
-}
-
-.islamic-calendar .calendar-day {
-  background-color: var(--bs-secondary-bg);
-  color: var(--bs-body-color);
-  transition: all .12s ease;
-  font-size: .9rem;
-  border: 1px solid var(--bs-border-color-translucent);
-}
-
-/* Hover */
-.islamic-calendar .calendar-day:hover {
-  background-color: var(--bs-primary-bg-subtle);
-  box-shadow: 0 0.35rem 0.75rem rgba(var(--bs-primary-rgb), .25);
-  transform: translateY(-1px);
-}
-
-/* اليوم الحالي (Today) */
-.islamic-calendar .calendar-day.day-today {
-  background: linear-gradient(135deg, var(--primary-gold), var(--primary-dark-gold));
-  color: #ffffff !important;
-  border: none;
-  box-shadow: 0 0.55rem 1.2rem rgba(212, 165, 116, .45);
-}
-
-.islamic-calendar .calendar-day.day-today .small {
-  color: rgba(255, 255, 255, .9) !important;
-}
-
-/* الخلايا الفارغة */
-.islamic-calendar .calendar-day-empty {
-  min-height: 2.5rem;
-}
-
-/* الشارة "اليوم" */
-.islamic-calendar .today-badge {
-  font-size: .65rem;
-  padding: .15rem .45rem;
-  background: var(--bs-light);
-  color: var(--bs-primary);
-}
-
-/* ==============================
-   Dark Mode adjustments
-   ============================== */
-
-html[data-bs-theme="dark"] .islamic-calendar {
-  background: var(--bs-gray-900);
-  color: var(--bs-light);
-}
-
-html[data-bs-theme="dark"] .islamic-calendar .calendar-day {
-  background-color: var(--bs-dark-bg-subtle);
-  border-color: var(--bs-border-color);
-  color: var(--bs-light);
-}
-
-html[data-bs-theme="dark"] .islamic-calendar .calendar-day:hover {
-  background-color: rgba(var(--bs-primary-rgb), .15);
-}
-
-html[data-bs-theme="dark"] .islamic-calendar .card-header {
-  background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), .25), rgba(var(--bs-purple-rgb), .25));
-}
-
-html[data-bs-theme="dark"] .islamic-calendar .today-badge {
-  background: var(--bs-light);
-  color: var(--bs-primary);
-}
-
-/* Hero section (مرحباً بك في طمأنينة) */
-.home-hero-gradient {
-  background: var(--hero-gradient);
-  color: #ffffff;
-  /* ✅ white text for readability */
-}
-
-/* في الوضع الداكن نخلي الخلفية أغمق شوي لكن النص يبقى واضح */
-html[data-bs-theme="dark"] .home-hero-gradient {
-  background: radial-gradient(circle at top, #5a7c5c, #2d3a3d);
-  color: #ffffff;
-}
-
-/* لو حاب تصغّر النص الفرعي شوية */
-.home-hero-gradient p {
-  opacity: 0.95;
-}
-
-/* زر الصعود للأعلى - تصميم احترافي */
-.back-to-top-btn {
-  position: fixed;
-  bottom: 20px;
-  /* ديسكتوب: قريب من تحت */
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background: rgba(20, 20, 20, 0.6);
-  backdrop-filter: blur(6px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  display: none;
-  /* بيظهر بالـ JS لما scrollY > 300 */
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  font-size: 20px;
-  cursor: pointer;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  animation: fadeInScale 0.4s ease;
-}
-
-/* عند المرور */
-.back-to-top-btn:hover {
-  transform: translateY(-6px) scale(1.07);
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* أنميشن الظهور */
-@keyframes fadeInScale {
-  from {
-    transform: scale(0.7);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* 📱 على الموبايل / التابلت: نرفعه فوق شريط الـ bottom nav */
-@media (max-width: 992px) {
-  .back-to-top-btn {
-    bottom: 74px;
-    /* ارفعها لو لسه متغطية (مثلاً 100 أو 110px) */
-  }
-}
-
-/* زر الشات العائم في اليسار لجميع الأجهزة */
-.floating-chat-btn {
-  width: 60px;
-  height: 60px;
-  bottom: 20px;
-  /* مكان واضح في كل الأجهزة */
-  left: 20px;
-  /* زر في اليسار */
-  right: auto;
-  /* إلغاء اليمين */
-  z-index: 1050;
-  position: fixed;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-/* على الموبايل + التابلت — نرفعه للأعلى قليلًا بسبب الـ bottom nav */
-@media (max-width: 992px) {
-  .floating-chat-btn {
-    bottom: 70px;
-    /* رفعه فوق bottom navigation */
-  }
-}
-
-
-/* Navigation Card Buttons - Hover Effects */
-.nav-card-btn {
-  transition: all 0.3s ease !important;
-  background: var(--bs-body-secondary) !important;
-}
-
-.nav-card-btn:hover {
-  transform: translateY(-5px) !important;
-  box-shadow: 0 15px 35px rgba(212, 165, 116, 0.25) !important;
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(125, 157, 127, 0.1)) !important;
-}
-
-.nav-card-btn:active {
-  transform: translateY(-2px) !important;
-}
-
-/* Mobile Navigation Styles */
-@media (max-width: 767px) {
-  .main-tabs-wrapper {
-    margin-left: -1rem;
-    margin-right: -1rem;
-  }
-
-  .main-tabs {
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding: 0.5rem !important;
-  }
-
-  .main-tabs::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .main-tabs .nav-item {
-    flex: 0 0 auto;
-  }
-
-  .main-tabs .nav-link {
-    padding: 0.75rem 1rem !important;
-    font-size: 0.9rem;
-  }
-}
-
-/* Tablet Styles */
-@media (min-width: 768px) and (max-width: 991px) {
-  .main-tabs .nav-link {
-    font-size: 0.95rem;
-    padding: 0.75rem 1.25rem;
-  }
-}
-
-/* Bottom Navigation Bar - Mobile & Tablet */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--bs-body-bg);
-  border-top: 1px solid var(--bs-border-color);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1030;
-  padding: 0.5rem 0;
-}
-
-.bottom-nav .nav {
-  margin: 0;
-  padding: 0;
-}
-
-.bottom-nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 0.25rem !important;
-  color: var(--bs-secondary-color);
-  border: none !important;
-  background: transparent !important;
-  transition: all 0.2s ease;
-  min-height: 60px;
-}
-
-.bottom-nav-link:hover {
-  color: var(--primary-gold);
-  background: transparent !important;
-}
-
-.bottom-nav-link.active {
-  color: var(--primary-gold) !important;
-  background: transparent !important;
-  font-weight: 600;
-}
-
-.bottom-nav-link i,
-.bottom-nav-link span:not(.small) {
-  font-size: 1.25rem;
-}
-
-.bottom-nav-link .small {
-  font-size: 0.7rem;
-  margin-top: 0.25rem;
-}
-
-/* Bottom nav dropdown menu positioning */
-.bottom-nav .dropdown-menu {
-  position: absolute;
-  bottom: 100%;
-  top: auto;
-  margin-bottom: 0.5rem;
-}
-
-/* Add padding to bottom of main content to prevent overlap with bottom nav */
-@media (max-width: 991px) {
-  main {
-    padding-bottom: 80px !important;
-  }
+  background: hsl(var(--primary) / 0.8);
 }

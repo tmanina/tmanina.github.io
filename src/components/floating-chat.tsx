@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Button } from "@/components/ui/button"
 
 type Sender = "user" | "bot"
 
@@ -182,7 +183,7 @@ async function callGroqAPI(prompt: string): Promise<{ text: string; sources: Sou
   const result = await exponentialBackoff(apiCall, 3, 1000)
   const text: string = result?.choices?.[0]?.message?.content ?? ""
 
-  let sources: SourceLink[] = []
+  const sources: SourceLink[] = []
   const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g
   let match
   // Extract and filter links to allowed domains
@@ -306,22 +307,18 @@ export function FloatingChat() {
       {/* نافذة الدردشة */}
       {isOpen && (
         <div
-          className="position-fixed end-0 m-3 animate-fade-in"
+          className="fixed inset-x-3 bottom-[calc(5.75rem+env(safe-area-inset-bottom,0px))] animate-fade-in md:inset-x-auto md:end-3 md:bottom-[108px] md:w-[380px]"
           style={{
-            zIndex: 1040,
-            bottom: window.innerWidth <= 992 ? "113px" : "108px", // 5px more on mobile
-            maxWidth: "380px",
-            width: "calc(100vw - 2rem)",
+            zIndex: 10000,
           }}
         >
-          <div className="card border-0 shadow-lg rounded-4 bg-body">
-            {/* ... (header content remains same, omitted for brevity in replacement if not changing) ... */}
-            <div className="card-header gradient-bg text-white d-flex align-items-center justify-content-between p-3">
-              <div className="d-flex align-items-center gap-2">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl md:rounded-xl">
+            <div className="gradient-bg text-white flex items-center justify-between p-2.5 md:p-3">
+              <div className="flex items-center gap-2">
                 <i className="fas fa-comments"></i>
-                <div className="d-flex flex-column">
-                  <span className="fw-semibold">المساعد الديني</span>
-                  <small className="opacity-75">
+                <div className="flex min-w-0 flex-col">
+                  <span className="font-semibold leading-tight">المساعد الديني</span>
+                  <small className="truncate text-xs opacity-75">
                     اسأل عن الأذكار، الصلاة، القرآن...
                   </small>
                 </div>
@@ -329,45 +326,45 @@ export function FloatingChat() {
               <button
                 type="button"
                 onClick={handleToggle}
-                className="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center"
+                className="rounded-full p-1 flex items-center justify-center bg-white/20 hover:bg-white/30 transition-colors"
                 style={{ width: "32px", height: "32px" }}
+                aria-label="إغلاق المساعد الديني"
               >
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
             {/* محتوى الدردشة */}
-            <div className="card-body p-0 d-flex flex-column" style={{ height: "380px" }}>
+            <div className="flex max-h-[62dvh] min-h-[360px] flex-col p-0 md:h-[380px] md:max-h-none">
               {/* الرسائل */}
               <div
-                className="flex-grow-1 p-3 overflow-auto"
-                style={{ backgroundColor: "var(--bs-body-bg)" }}
+                className="flex-1 overflow-auto p-2.5 md:p-3"
               >
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`d-flex mb-2 ${msg.sender === "user" ? "justify-content-end" : "justify-content-start"
+                    className={`flex mb-2 ${msg.sender === "user" ? "justify-end" : "justify-start"
                       }`}
                   >
                     <div
-                      className={`p-2 rounded-3 ${msg.sender === "user"
-                        ? "bg-primary text-white rounded-bottom-0"
-                        : "bg-body-secondary text-body rounded-top-0"
+                      className={`p-2 rounded-lg ${msg.sender === "user"
+                        ? "bg-primary text-white rounded-b-none"
+                        : "bg-muted rounded-t-none"
                         }`}
-                      style={{ maxWidth: "80%", whiteSpace: "pre-wrap" }}
+                      style={{ maxWidth: "86%", whiteSpace: "pre-wrap" }}
                     >
                       {msg.sender === "user" ? (
-                        <p className="small mb-0">{msg.text}</p>
+                        <p className="text-xs mb-0">{msg.text}</p>
                       ) : (
                         <div
-                          className="small mb-0"
+                          className="text-xs mb-0"
                           dangerouslySetInnerHTML={formatMarkdownSafe(msg.text)}
                         />
                       )}
 
                       {msg.sources && msg.sources.length > 0 && (
-                        <div className="mt-2 pt-2 border-top border-secondary-subtle small">
-                          <div className="fw-semibold mb-1">المصادر:</div>
+                        <div className="mt-2 pt-2 border-t border-border text-sm">
+                          <div className="font-semibold mb-1">المصادر:</div>
                           <ul className="mb-0 ps-3">
                             {msg.sources.map((src, idx) => (
                               <li key={idx}>
@@ -389,16 +386,12 @@ export function FloatingChat() {
                 ))}
 
                 {isLoading && (
-                  <div className="d-flex justify-content-start mb-2">
+                  <div className="flex justify-start mb-2">
                     <div
-                      className="bg-body-secondary text-body small rounded-3 px-3 py-2 d-flex align-items-center gap-2"
+                      className="bg-muted text-sm rounded-lg px-3 py-2 flex items-center gap-2"
                       style={{ maxWidth: "80%" }}
                     >
-                      <div
-                        className="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></div>
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" role="status" aria-hidden="true"></div>
                       <span>أفكّر في الإجابة...</span>
                     </div>
                   </div>
@@ -407,72 +400,70 @@ export function FloatingChat() {
               </div>
 
               {/* أزرار سريعة */}
-              <div className="px-3 pt-2 pb-1 border-top">
-                <div className="row g-1">
-                  <div className="col-6">
-                    <button
-                      type="button"
-                      className="btn btn-outline-primary btn-sm w-100"
-                      onClick={() => quickAsk("adhkar")}
-                    >
-                      <i className="fas fa-book-open me-1"></i>
-                      <small>أذكار</small>
-                    </button>
-                  </div>
-                  <div className="col-6">
-                    <button
-                      type="button"
-                      className="btn btn-outline-primary btn-sm w-100"
-                      onClick={() => quickAsk("prayer")}
-                    >
-                      <i className="fas fa-mosque me-1"></i>
-                      <small>الصلاة</small>
-                    </button>
-                  </div>
-                  <div className="col-6 mt-1">
-                    <button
-                      type="button"
-                      className="btn btn-outline-primary btn-sm w-100"
-                      onClick={() => quickAsk("quran")}
-                    >
-                      <i className="fas fa-quran me-1"></i>
-                      <small>قرآن</small>
-                    </button>
-                  </div>
-                  <div className="col-6 mt-1">
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary btn-sm w-100"
-                      onClick={() => quickAsk("help")}
-                    >
-                      <i className="fas fa-info-circle me-1"></i>
-                      <small>مساعدة</small>
-                    </button>
-                  </div>
+              <div className="border-t border-border px-2.5 pb-1 pt-2 md:px-3">
+                <div className="grid grid-cols-4 gap-1 md:grid-cols-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => quickAsk("adhkar")}
+                    className="h-9 px-2"
+                  >
+                    <i className="fas fa-book-open ms-1"></i>
+                    <small className="truncate">أذكار</small>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => quickAsk("prayer")}
+                    className="h-9 px-2"
+                  >
+                    <i className="fas fa-mosque ms-1"></i>
+                    <small className="truncate">الصلاة</small>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => quickAsk("quran")}
+                    className="h-9 px-2"
+                  >
+                    <i className="fas fa-quran ms-1"></i>
+                    <small className="truncate">قرآن</small>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => quickAsk("help")}
+                    className="h-9 px-2"
+                  >
+                    <i className="fas fa-info-circle ms-1"></i>
+                    <small className="truncate">مساعدة</small>
+                  </Button>
                 </div>
               </div>
 
               {/* إدخال الرسائل */}
               <form
                 onSubmit={handleSubmit}
-                className="d-flex align-items-center gap-2 px-3 py-2 border-top"
+                className="flex items-center gap-2 border-t border-border px-2.5 py-2 md:px-3"
               >
                 <input
                   type="text"
-                  className="form-control form-control-lg rounded-3"
+                  className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   placeholder="اكتب سؤالك هنا..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
                 />
-                <button
+                <Button
                   type="submit"
-                  className="btn btn-primary rounded-3 d-flex align-items-center justify-content-center"
+                  variant="default"
+                  size="lg"
                   disabled={isLoading || !input.trim()}
-                  style={{ minWidth: "50px", height: "48px" }}
+                  className="h-10 min-w-11 px-3"
+                  aria-label="إرسال السؤال"
                 >
-                  <i className="fas fa-paper-plane fs-5"></i>
-                </button>
+                  <i className="fas fa-paper-plane text-lg"></i>
+                </Button>
               </form>
             </div>
           </div>
@@ -482,58 +473,11 @@ export function FloatingChat() {
       <button
         type="button"
         onClick={handleToggle}
-        className="floating-chat-btn position-fixed d-flex align-items-center justify-content-center shadow-lg"
+        className={`group fixed left-4 bottom-[calc(4.875rem+env(safe-area-inset-bottom,0px))] z-[10001] size-14 items-center justify-center rounded-full border-0 bg-gradient-to-br from-gold-500 to-sage-400 p-0 text-white shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-[3px] hover:scale-105 hover:shadow-[0_12px_32px_rgba(212,165,116,0.3)] active:-translate-y-px active:scale-[1.02] md:left-5 md:bottom-[70px] md:flex md:size-[60px] ${isOpen ? "hidden" : "flex"}`}
         aria-label="المساعد الديني"
       >
-        <i className={`fas ${isOpen ? "fa-times" : "fa-comment-dots"} chat-icon`}></i>
+        <i className={`fas ${isOpen ? "fa-times" : "fa-comment-dots"} text-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[5deg] md:text-2xl`}></i>
       </button>
-
-      <style jsx>{`
-        .floating-chat-btn {
-          left: 20px;
-          bottom: 70px;
-          width: 60px;
-          height: 60px;
-          border: none;
-          border-radius: 50%;
-          padding: 0;
-          background: linear-gradient(135deg, #d4a574 0%, #7d9d7f 100%);
-          color: white;
-          z-index: 1050;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .floating-chat-btn:hover {
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 0 12px 32px rgba(212, 165, 116, 0.3);
-        }
-
-        .floating-chat-btn:active {
-          transform: translateY(-1px) scale(1.02);
-        }
-
-        .chat-icon {
-          font-size: 1.5rem;
-          transition: transform 0.3s ease;
-        }
-
-        .floating-chat-btn:hover .chat-icon {
-          transform: scale(1.1) rotate(5deg);
-        }
-
-        @media (max-width: 992px) {
-          .floating-chat-btn {
-            bottom: 80px;
-            width: 56px;
-            height: 56px;
-          }
-
-          .chat-icon {
-            font-size: 1.3rem;
-          }
-        }
-      `}</style>
 
     </>
   )

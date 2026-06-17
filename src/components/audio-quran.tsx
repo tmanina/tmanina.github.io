@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Button } from "@/components/ui/button"
 
 interface Reciter {
     id: number
@@ -501,484 +502,12 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
     }, [isPlaying, audioUrl])
 
     return (
-        <div className="audio-quran animate__animated animate__fadeIn">
+        <div className="pb-8 animate-fade-in">
             <style jsx>{`
-                .audio-quran {
-                    padding-bottom: 2rem;
-                }
-
-                .quran-header {
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                    padding: 2rem;
-                    border-radius: 1rem;
-                    color: white;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
-                }
-
-                .header-content {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    gap: 1rem;
-                    margin-bottom: 1rem;
-                }
-
-                .header-text {
-                    flex: 1;
-                }
-
-                .favorites-toggle-btn {
-                    background: rgba(255, 255, 255, 0.2);
-                    color: white;
-                    border: 2px solid rgba(255, 255, 255, 0.3);
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 50px;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    transition: all 0.3s ease;
-                    white-space: nowrap;
-                }
-
-                .favorites-toggle-btn:hover {
-                    background: rgba(255, 255, 255, 0.3);
-                    border-color: rgba(255, 255, 255, 0.5);
-                    transform: translateY(-2px);
-                }
-
-                .favorites-toggle-btn.active {
-                    background: white;
-                    color: #10b981;
-                    border-color: white;
-                }
-
-                .favorites-count {
-                    background: #10b981;
-                    color: white;
-                    border-radius: 50%;
-                    width: 24px;
-                    height: 24px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                }
-
-                .favorites-toggle-btn.active .favorites-count {
-                    background: white;
-                    color: #10b981;
-                    border: 2px solid #10b981;
-                }
-
-                .search-container {
-                    margin-top: 1.5rem;
-                    max-width: 600px;
-                    margin-left: auto;
-                    margin-right: auto;
-                }
-
-                .search-wrapper {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                }
-
-                .search-icon {
-                    position: absolute;
-                    right: 1rem;
-                    color: rgba(255, 255, 255, 0.7);
-                    font-size: 1rem;
-                    pointer-events: none;
-                }
-
-                .search-input {
-                    width: 100%;
-                    padding: 0.875rem 3rem 0.875rem 1rem;
-                    border: 2px solid rgba(255, 255, 255, 0.3);
-                    border-radius: 2rem;
-                    background: rgba(255, 255, 255, 0.15);
-                    color: white;
-                    font-size: 1rem;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                    transition: all 0.3s;
-                    backdrop-filter: blur(10px);
-                    text-align: right;
-                    direction: rtl;
-                }
-
-                .search-input::placeholder {
-                    color: rgba(255, 255, 255, 0.6);
-                }
-
-                .search-input:focus {
-                    outline: none;
-                    border-color: rgba(255, 255, 255, 0.6);
-                    background: rgba(255, 255, 255, 0.25);
-                }
-
-                .clear-search {
-                    position: absolute;
-                    left: 1rem;
-                    background: rgba(255, 255, 255, 0.2);
-                    border: none;
-                    color: white;
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.3s;
-                }
-
-                .clear-search:hover {
-                    background: rgba(255, 255, 255, 0.3);
-                    transform: scale(1.1);
-                }
-
-                .reciters-count {
-                    margin-top: 0.75rem;
-                    font-size: 0.9rem;
-                    color: rgba(255, 255, 255, 0.8);
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                .reciters-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                    gap: 1.5rem;
-                    margin-bottom: 2rem;
-                }
-
-                .reciter-card {
-                    background: white;
-                    border-radius: 1rem;
-                    padding: 1.5rem;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-                    border: 2px solid transparent;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                }
-
-                .reciter-card:hover {
-                    transform: translateY(-4px);
-                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-                    border-color: #10b981;
-                }
-
-                .reciter-icon {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.5rem;
-                    margin-bottom: 1rem;
-                }
-
-                .reciter-name {
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #1f2937;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                .reciter-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .reciter-info {
-                    flex: 1;
-                }
-
-                .favorite-btn {
-                    background: none;
-                    border: none;
-                    color: #d1d5db;
-                    font-size: 1.2rem;
-                    cursor: pointer;
-                    padding: 0.5rem;
-                    border-radius: 50%;
-                    transition: all 0.3s ease;
-                }
-
-                .favorite-btn:hover {
-                    background: rgba(16, 185, 129, 0.1);
-                    color: #10b981;
-                    transform: scale(1.1);
-                }
-
-                .favorite-btn.active {
-                    color: #10b981;
-                    animation: heartBeat 0.3s ease-in-out;
-                }
-
-                @keyframes heartBeat {
-                    0%, 100% { transform: scale(1); }
-                    25% { transform: scale(1.3); }
-                    50% { transform: scale(1.1); }
-                    75% { transform: scale(1.2); }
-                }
-
-                .surahs-list {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                    gap: 1rem;
-                    margin-top: 2rem;
-                }
-
-                .surah-button {
-                    padding: 1rem;
-                    background: white;
-                    border: 2px solid #e5e7eb;
-                    border-radius: 0.75rem;
-                    color: #374151;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                    font-size: 1.1rem;
-                    text-align: center;
-                }
-
-                .surah-button:hover {
-                    background: #10b981;
-                    border-color: #10b981;
-                    color: white;
-                    transform: scale(1.05);
-                }
-
-                .surah-button.active {
-                    background: #10b981;
-                    border-color: #10b981;
-                    color: white;
-                }
-
-                .timer-dropdown-wrapper {
-                    position: relative;
-                    display: inline-block;
-                }
-
-                .timer-active {
-                    color: #10b981 !important;
-                    background: rgba(16, 185, 129, 0.1) !important;
-                }
-
-                .timer-dropdown {
-                    position: absolute;
-                    bottom: 100%;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    margin-bottom: 10px;
-                    background: white;
-                    border-radius: 12px;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-                    padding: 0.5rem;
-                    min-width: 180px;
-                    z-index: 1001;
-                    animation: dropdownSlideUp 0.2s ease-out;
-                }
-
-                @keyframes dropdownSlideUp {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-50%) translateY(10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                    }
-                }
-
-                .timer-dropdown-header {
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    color: #6b7280;
-                    padding: 0.5rem 0.75rem;
-                    border-bottom: 1px solid #e5e7eb;
-                    margin-bottom: 0.25rem;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                .timer-option {
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    background: none;
-                    border: none;
-                    border-radius: 8px;
-                    text-align: right;
-                    font-size: 1rem;
-                    font-weight: 500;
-                    color: #1f2937;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                .timer-option:hover {
-                    background: #f3f4f6;
-                }
-
-                .timer-option.active {
-                    background: #10b981;
-                    color: white;
-                }
-
-                .timer-option i {
-                    font-size: 0.875rem;
-                }
-
-                .audio-player {
-                    margin-top: 2rem;
-                    padding: 2.5rem;
-                    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-                    border-radius: 1.5rem;
-                    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-                    border: 1px solid rgba(16, 185, 129, 0.1);
-                }
-
-                .player-header {
-                    text-align: center;
-                    margin-bottom: 2rem;
-                }
-
-                .surah-title {
-                    font-size: 2rem;
-                    font-weight: 700;
-                    color: #10b981;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                    margin-bottom: 0.5rem;
-                }
-
-                .reciter-name-display {
-                    color: #6b7280;
-                    font-size: 1.1rem;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                .controls-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1.5rem;
-                }
-
-                .main-controls {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 1rem;
-                    flex-wrap: wrap;
-                }
-
-                .control-btn {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    border: 2px solid #e5e7eb;
-                    background: white;
-                    color: #374151;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 1.2rem;
-                    flex-shrink: 0;
-                }
-
-                .control-btn:hover:not(:disabled) {
-                    background: #10b981;
-                    border-color: #10b981;
-                    color: white;
-                    transform: scale(1.1);
-                }
-
-                .control-btn:disabled {
-                    opacity: 0.3;
-                    cursor: not-allowed;
-                }
-
-                .play-pause-btn {
-                    width: 70px;
-                    height: 70px;
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                    border: none;
-                    color: white;
-                    font-size: 1.8rem;
-                    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-                }
-
-                .play-pause-btn:hover {
-                    transform: scale(1.15);
-                    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
-                }
-
-                .skip-btn {
-                    width: 42px;
-                    height: 42px;
-                    font-size: 0.85rem;
-                    background: #f3f4f6;
-                    border-color: #d1d5db;
-                }
-
-                .skip-btn:hover:not(:disabled) {
-                    background: #10b981;
-                    border-color: #10b981;
-                    color: white;
-                }
-
-                .progress-container {
-                    width: 100%;
-                }
-
-                .progress-bar {
-                    width: 100%;
-                    height: 10px;
-                    background: white;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 10px;
-                    overflow: visible;
-                    cursor: pointer;
-                    position: relative;
-                    padding: 0;
-                }
-
-                .progress-bar-inner {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 8px;
-                    position: relative;
-                    overflow: visible; /* Make sure knob is visible */
-                }
-
-                .progress-fill {
-                    height: 100%;
-                    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-                    border-radius: 10px;
-                    transition: width 0.1s linear;
-                    position: absolute; /* Anchor to right */
-                    right: 0;
-                    top: 0;
-                }
-
                 .progress-fill::after {
                     content: '';
                     position: absolute;
-                    left: -7px; /* Position at the end (left side) of the fill */
+                    left: -7px;
                     top: 50%;
                     transform: translateY(-50%);
                     width: 16px;
@@ -989,130 +518,17 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
                     z-index: 10;
                 }
-
-                .time-display {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 0.5rem;
-                    font-size: 0.875rem;
-                    color: #6b7280;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                }
-
-                audio {
-                    display: none;
-                }
-
-                .now-playing {
-                    text-align: center;
-                    margin-bottom: 1.5rem;
-                }
-
-                .now-playing-title {
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    color: #10b981;
-                    font-family: 'Traditional Arabic', 'Amiri', serif;
-                    margin-bottom: 0.5rem;
-                }
-
-                .now-playing-reciter {
-                    color: #6b7280;
-                    font-size: 1rem;
-                }
-
                 @media (max-width: 768px) {
-                    .header-content {
-                        flex-direction: column;
-                        align-items: center;
-                    }
-
-                    .header-text {
-                        text-align: center;
-                    }
-
-                    .favorites-toggle-btn {
-                        width: 100%;
-                        justify-content: center;
-                    }
-
-                    .timer-dropdown {
-                        left: auto;
-                        right: 0;
-                        transform: none;
-                    }
-
-                    @keyframes dropdownSlideUp {
-                        from {
-                            opacity: 0;
-                            transform: translateY(10px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
-
-                    .reciters-grid,
-                    .surahs-list {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .audio-player {
-                        padding: 1.5rem;
-                    }
-
-                    .surah-title {
-                        font-size: 1.5rem;
-                    }
-
-                    .reciter-name-display {
-                        font-size: 0.95rem;
-                    }
-
-                    .main-controls {
-                        gap: 0.5rem;
-                    }
-
-                    .control-btn {
-                        width: 44px;
-                        height: 44px;
-                        font-size: 1rem;
-                    }
-
-                    .play-pause-btn {
-                        width: 60px;
-                        height: 60px;
-                        font-size: 1.5rem;
-                    }
-
-                    .skip-btn {
-                        width: 38px;
-                        height: 38px;
-                        font-size: 0.75rem;
-                    }
-
-                    .progress-bar {
-                        height: 10px;
-                        padding: 0;
-                    }
-
-                    .progress-bar-inner {
-                        height: 100%;
-                    }
-
                     .progress-fill::after {
                         width: 14px;
                         height: 14px;
                         left: -7px;
-                        right: auto;
                     }
                 }
             `}</style>
 
             {/* Back Button */}
-            <button
-                className="btn btn-outline-secondary rounded-pill mb-4"
+            <Button
                 onClick={() => {
                     if (showPlayer) {
                         handleBackFromPlayer()
@@ -1122,18 +538,19 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                         onBack()
                     }
                 }}
-                type="button"
+                variant="outline"
+                className="rounded-full mb-4"
             >
-                <i className="fas fa-arrow-right me-2"></i>
+                <i className="fas fa-arrow-right ms-2"></i>
                 {showPlayer ? 'رجوع للسور' : selectedReciter ? 'رجوع للقراء' : 'رجوع للمكتبة'}
-            </button>
+            </Button>
 
             {/* Header */}
-            <div className="quran-header text-center">
-                <div className="header-content">
-                    <div className="header-text">
-                        <i className="fas fa-volume-up fs-1 mb-2 opacity-75"></i>
-                        <h1 className="fw-bold mb-1">
+            <div className="bg-gradient-to-br from-emerald-400 to-emerald-600 p-8 rounded-xl text-white mb-8 shadow-[0_10px_25px_rgba(16,185,129,0.2)]">
+                <div className="flex flex-col items-center md:flex-row md:justify-between md:items-start gap-4 mb-4">
+                    <div className="flex-1 text-center md:text-start">
+                        <i className="fas fa-volume-up text-[2.5rem] mb-2 opacity-75"></i>
+                        <h1 className="font-bold mb-1">
                             {showPlayer && selectedSurah
                                 ? `سورة ${surahNames[selectedSurah]}`
                                 : selectedReciter
@@ -1152,14 +569,14 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                     </div>
                     {!showPlayer && (
                         <button
-                            className={`favorites-toggle-btn ${showFavoritesOnly ? 'active' : ''}`}
+                            className={`bg-white/20 text-white border-2 border-white/30 px-5 py-3 rounded-full text-base font-semibold cursor-pointer flex items-center gap-2 transition-all duration-300 whitespace-nowrap w-full md:w-auto justify-center md:justify-start hover:bg-white/30 hover:border-white/50 hover:-translate-y-0.5 ${showFavoritesOnly ? 'bg-white text-emerald-500 border-white' : ''}`}
                             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                             type="button"
                         >
                             <i className={showFavoritesOnly ? "fas fa-heart" : "far fa-heart"}></i>
                             المفضلة
                             {favoriteReciters.length > 0 && (
-                                <span className="favorites-count">{favoriteReciters.length}</span>
+                                <span className={`bg-emerald-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold ${showFavoritesOnly ? 'bg-white text-emerald-500 border-2 border-emerald-500' : ''}`}>{favoriteReciters.length}</span>
                             )}
                         </button>
                     )}
@@ -1167,26 +584,27 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                 {/* Search Bar - Only show when viewing reciters list */}
                 {!selectedReciter && !showPlayer && (
-                    <div className="search-container">
-                        <div className="search-wrapper">
-                            <i className="fas fa-search search-icon"></i>
+                    <div className="mt-6 relative max-w-lg mx-auto">
+                        <div className="relative flex items-center">
+                            <i className="fas fa-search absolute end-4 top-1/2 -translate-y-1/2 text-white/70 text-base pointer-events-none"></i>
                             <input
                                 type="text"
-                                className="search-input"
+                                className="w-full ps-4 pe-12 py-3.5 border-2 border-white/30 rounded-[2rem] bg-white/15 text-white text-base transition-all duration-300 text-right placeholder:text-white/60 focus:outline-none focus:border-white/60 focus:bg-white/25"
                                 placeholder="ابحث عن قارئ..."
+                                dir="rtl"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                             {searchQuery && (
                                 <button
-                                    className="clear-search"
+                                    className="absolute start-4 bg-white/20 border-none text-white w-7 h-7 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-white/30 hover:scale-110"
                                     onClick={() => setSearchQuery("")}
                                 >
                                     <i className="fas fa-times"></i>
                                 </button>
                             )}
                         </div>
-                        <div className="reciters-count">
+                        <div className="mt-3 text-sm text-white/80">
                             {filteredReciters.length} من {reciters.length} قارئ
                         </div>
                     </div>
@@ -1195,32 +613,32 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
             {/* Player Page - Shown when surah is selected */}
             {showPlayer && audioUrl && selectedSurah ? (
-                <div className="player-page">
-                    <div className="audio-player">
+                <div>
+                    <div className="mt-8 p-6 md:p-10 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-emerald-500/10">
                         {/* Player Header */}
-                        <div className="player-header">
-                            <div className="surah-title">سورة {surahNames[selectedSurah]}</div>
-                            <div className="reciter-name-display">{selectedReciter?.name}</div>
+                        <div className="text-center mb-8">
+                            <div className="text-2xl md:text-3xl font-bold text-emerald-500 mb-2">سورة {surahNames[selectedSurah]}</div>
+                            <div className="text-gray-500 text-base md:text-lg">{selectedReciter?.name}</div>
                         </div>
 
                         {/* Controls Container */}
-                        <div className="controls-container">
+                        <div className="flex flex-col gap-6">
                             {/* Main Playback Controls */}
-                            <div className="main-controls">
+                            <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
                                 {/* Timer Dropdown */}
-                                <div className="timer-dropdown-wrapper">
+                                <div className="relative inline-block">
                                     <button
-                                        className={`control-btn ${sleepTimer ? 'timer-active' : ''}`}
+                                        className={`w-11 h-11 md:w-[50px] md:h-[50px] text-base md:text-xl rounded-full border-2 border-gray-200 bg-white text-gray-700 flex items-center justify-center cursor-pointer transition-all duration-300 shrink-0 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed ${sleepTimer ? 'text-emerald-500 bg-emerald-500/10' : ''}`}
                                         onClick={() => setShowTimerDropdown(!showTimerDropdown)}
                                         title="المُؤقت"
                                     >
                                         <i className="far fa-clock"></i>
                                     </button>
                                     {showTimerDropdown && (
-                                        <div className="timer-dropdown">
-                                            <div className="timer-dropdown-header">المُؤقت</div>
+                                        <div className="absolute bottom-full mb-2.5 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-2 min-w-[180px] z-[1001] max-md:right-0 max-md:translate-x-0 md:left-1/2 md:-translate-x-1/2 animate-fade-in-up">
+                                            <div className="text-sm font-semibold text-gray-500 px-3 py-2 border-b border-gray-200 mb-1">المُؤقت</div>
                                             <button
-                                                className={`timer-option ${sleepTimer === null ? 'active' : ''}`}
+                                                className={`w-full px-4 py-3 bg-transparent border-0 rounded-lg text-right text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 flex justify-between items-center hover:bg-gray-100 ${sleepTimer === null ? 'bg-emerald-500 text-white' : ''}`}
                                                 onClick={() => setSleepTimerMinutes(null)}
                                                 type="button"
                                             >
@@ -1228,7 +646,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                                                 {sleepTimer === null && <i className="fas fa-check"></i>}
                                             </button>
                                             <button
-                                                className={`timer-option ${sleepTimer === 15 ? 'active' : ''}`}
+                                                className={`w-full px-4 py-3 bg-transparent border-0 rounded-lg text-right text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 flex justify-between items-center hover:bg-gray-100 ${sleepTimer === 15 ? 'bg-emerald-500 text-white' : ''}`}
                                                 onClick={() => setSleepTimerMinutes(15)}
                                                 type="button"
                                             >
@@ -1236,7 +654,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                                                 {sleepTimer === 15 && <i className="fas fa-check"></i>}
                                             </button>
                                             <button
-                                                className={`timer-option ${sleepTimer === 30 ? 'active' : ''}`}
+                                                className={`w-full px-4 py-3 bg-transparent border-0 rounded-lg text-right text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 flex justify-between items-center hover:bg-gray-100 ${sleepTimer === 30 ? 'bg-emerald-500 text-white' : ''}`}
                                                 onClick={() => setSleepTimerMinutes(30)}
                                                 type="button"
                                             >
@@ -1244,7 +662,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                                                 {sleepTimer === 30 && <i className="fas fa-check"></i>}
                                             </button>
                                             <button
-                                                className={`timer-option ${sleepTimer === 60 ? 'active' : ''}`}
+                                                className={`w-full px-4 py-3 bg-transparent border-0 rounded-lg text-right text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 flex justify-between items-center hover:bg-gray-100 ${sleepTimer === 60 ? 'bg-emerald-500 text-white' : ''}`}
                                                 onClick={() => setSleepTimerMinutes(60)}
                                                 type="button"
                                             >
@@ -1257,7 +675,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                                 {/* Previous Track Button */}
                                 <button
-                                    className="control-btn"
+                                    className="w-11 h-11 md:w-[50px] md:h-[50px] text-base md:text-xl rounded-full border-2 border-gray-200 bg-white text-gray-700 flex items-center justify-center cursor-pointer transition-all duration-300 shrink-0 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
                                     onClick={playPreviousSurah}
                                     disabled={!canGoPrevious()}
                                     title="السورة السابقة"
@@ -1267,7 +685,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                                 {/* Skip Backward -10s */}
                                 <button
-                                    className="control-btn skip-btn"
+                                    className="w-[38px] h-[38px] md:w-[42px] md:h-[42px] text-xs md:text-sm rounded-full border-2 border-gray-300 bg-gray-100 text-gray-700 flex items-center justify-center cursor-pointer transition-all duration-300 shrink-0 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-110"
                                     onClick={skipBackward}
                                     title="رجوع 10 ثواني"
                                 >
@@ -1277,7 +695,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                                 {/* Play/Pause Button */}
                                 <button
-                                    className="control-btn play-pause-btn"
+                                    className="w-[60px] h-[60px] md:w-[70px] md:h-[70px] text-2xl md:text-3xl rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-none text-white flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:scale-110 hover:shadow-[0_12px_30px_rgba(16,185,129,0.4)] active:scale-95 shrink-0"
                                     onClick={togglePlayPause}
                                     title={isPlaying ? "إيقاف مؤقت" : "تشغيل"}
                                 >
@@ -1286,7 +704,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                                 {/* Skip Forward +10s */}
                                 <button
-                                    className="control-btn skip-btn"
+                                    className="w-[38px] h-[38px] md:w-[42px] md:h-[42px] text-xs md:text-sm rounded-full border-2 border-gray-300 bg-gray-100 text-gray-700 flex items-center justify-center cursor-pointer transition-all duration-300 shrink-0 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-110"
                                     onClick={skipForward}
                                     title="تقدم 10 ثواني"
                                 >
@@ -1296,7 +714,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
 
                                 {/* Next Track Button */}
                                 <button
-                                    className="control-btn"
+                                    className="w-11 h-11 md:w-[50px] md:h-[50px] text-base md:text-xl rounded-full border-2 border-gray-200 bg-white text-gray-700 flex items-center justify-center cursor-pointer transition-all duration-300 shrink-0 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
                                     onClick={playNextSurah}
                                     disabled={!canGoNext()}
                                     title="السورة التالية"
@@ -1305,9 +723,9 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                                 </button>
                             </div>
 
-                            <div className="progress-container">
+                            <div className="w-full">
                                 <div
-                                    className="progress-bar"
+                                    className="w-full h-2.5 bg-white border border-gray-200 rounded-[10px] overflow-visible cursor-pointer relative p-0"
                                     onMouseDown={handleDragStart}
                                     onTouchStart={handleDragStart}
                                     onMouseMove={handleDragMove}
@@ -1315,14 +733,14 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                                     onMouseUp={handleDragEnd}
                                     onTouchEnd={handleDragEnd}
                                 >
-                                    <div className="progress-bar-inner">
+                                    <div className="w-full h-full rounded-lg relative overflow-visible">
                                         <div
-                                            className="progress-fill"
+                                            className="progress-fill h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-[10px] absolute right-0 top-0"
                                             style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
                                         />
                                     </div>
                                 </div>
-                                <div className="time-display">
+                                <div className="flex justify-between mt-2 text-sm text-gray-500">
                                     <span>{formatTime(currentTime)}</span>
                                     <span>{formatTime(duration)}</span>
                                 </div>
@@ -1334,6 +752,7 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                             ref={audioRef}
                             src={audioUrl}
                             autoPlay
+                            className="hidden"
                             onPlay={() => setIsPlaying(true)}
                             onPause={() => setIsPlaying(false)}
                             onTimeUpdate={(e) => {
@@ -1348,22 +767,22 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                 </div>
             ) : !selectedReciter ? (
                 /* Reciters Grid */
-                <div className="reciters-grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     {filteredReciters.map(reciter => (
                         <div
                             key={reciter.id}
-                            className="reciter-card"
+                            className="bg-white rounded-xl p-6 shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-2 border-transparent cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:border-emerald-500"
                             onClick={() => handleReciterSelect(reciter)}
                         >
-                            <div className="reciter-header">
-                                <div className="reciter-icon">
+                            <div className="flex items-center gap-4">
+                                <div className="w-[50px] h-[50px] rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-2xl mb-4 shrink-0">
                                     <i className="fas fa-microphone"></i>
                                 </div>
-                                <div className="reciter-info">
-                                    <div className="reciter-name">{reciter.name}</div>
+                                <div className="flex-1">
+                                    <div className="text-lg font-semibold text-gray-800">{reciter.name}</div>
                                 </div>
                                 <button
-                                    className={`favorite-btn ${favoriteReciters.includes(reciter.id) ? 'active' : ''}`}
+                                    className={`bg-transparent border-none text-gray-300 text-xl cursor-pointer p-2 rounded-full transition-all duration-300 hover:bg-emerald-500/10 hover:text-emerald-500 hover:scale-110 ${favoriteReciters.includes(reciter.id) ? 'text-emerald-500' : ''}`}
                                     onClick={(e) => toggleFavoriteReciter(reciter.id, e)}
                                     type="button"
                                     aria-label="إضافة إلى المفضلة"
@@ -1376,11 +795,11 @@ export function AudioQuran({ onBack }: AudioQuranProps) {
                 </div>
             ) : selectedMoshaf && (
                 /* Surahs List */
-                <div className="surahs-list">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                     {getSurahList(selectedMoshaf).map(surahId => (
                         <button
                             key={surahId}
-                            className={`surah-button ${selectedSurah === surahId ? 'active' : ''}`}
+                            className={`p-4 bg-white border-2 border-gray-200 rounded-xl text-gray-700 font-semibold cursor-pointer transition-all duration-300 text-center hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:scale-105 ${selectedSurah === surahId ? 'bg-emerald-500 border-emerald-500 text-white' : ''}`}
                             onClick={() => handleSurahSelect(surahId)}
                         >
                             {surahId}. {surahNames[surahId]}

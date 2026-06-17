@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Button } from "@/components/ui/button"
 import { AdhkarDisplay } from "./adhkar/adhkar-display"
 import { morningAdhkarConfig } from "./adhkar/morning-adhkar-data"
 import { eveningAdhkarConfig } from "./adhkar/evening-adhkar-data"
@@ -62,145 +63,29 @@ export function AdhkarList() {
     }, [selectedAdhkar, startTime])
 
     return (
-        <div className="adhkar-page">
-            <style jsx>{`
-                .adhkar-page {
-                    padding: 1rem 0;
-                }
-                
-                .adhkar-card {
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    border: none;
-                    overflow: hidden;
-                    height: 100%;
-                }
-                
-                .adhkar-card:hover {
-                    transform: translateY(-8px);
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-                }
-                
-                .adhkar-card .card-header {
-                    padding: 2.5rem 2rem;
-                    border: none;
-                }
-                
-                .adhkar-card-morning .card-header {
-                    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-                }
-                
-                .adhkar-card-evening .card-header {
-                    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                }
-                
-                .adhkar-card-prayer .card-header {
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                }
-                
-                .adhkar-card-sleep .card-header {
-                    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-                }
-                
-                .adhkar-icon {
-                    width: 80px;
-                    height: 80px;
-                    background: rgba(255, 255, 255, 0.25);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 2.2rem;
-                    margin: 0 auto 1.2rem;
-                    backdrop-filter: blur(10px);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                }
-                
-                .adhkar-title {
-                    color: white;
-                    font-size: 1.6rem;
-                    font-weight: 700;
-                    margin: 0;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-                }
-                
-                .adhkar-subtitle {
-                    color: rgba(255, 255, 255, 0.95);
-                    font-size: 0.95rem;
-                    margin-top: 0.6rem;
-                    font-weight: 500;
-                }
-                
-                .view-btn {
-                    background: white;
-                    color: inherit;
-                    border: none;
-                    padding: 0.85rem 2.2rem;
-                    border-radius: 50px;
-                    font-weight: 600;
-                    font-size: 1rem;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-                }
-                
-                .view-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-                }
-                
-                .adhkar-card-morning .view-btn {
-                    color: #f59e0b;
-                }
-                
-                .adhkar-card-evening .view-btn {
-                    color: #7c3aed;
-                }
-                
-                .adhkar-card-prayer .view-btn {
-                    color: #059669;
-                }
-                
-                .adhkar-card-sleep .view-btn {
-                    color: #4f46e5;
-                }
-                
-                @media (max-width: 768px) {
-                    .adhkar-card .card-header {
-                        padding: 2rem 1.5rem;
-                    }
-                    
-                    .adhkar-icon {
-                        width: 70px;
-                        height: 70px;
-                        font-size: 2rem;
-                    }
-                    
-                    .adhkar-title {
-                        font-size: 1.4rem;
-                    }
-                }
-            `}</style>
+        <div className="py-4">
 
             {/* Header */}
-            <div className="text-center mb-5">
-                <h2 className="h2 fw-bold gradient-text mb-2">الأذكار اليومية</h2>
-                <p className="text-body-secondary fs-5">تقرّب إلى الله بذكره في كل وقت</p>
+            <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold gradient-text mb-2">الأذكار اليومية</h2>
+                <p className="text-muted-foreground text-lg">تقرّب إلى الله بذكره في كل وقت</p>
             </div>
 
             {/* Show cards or adhkar content */}
             {!selectedAdhkar ? (
                 /* Adhkar Cards */
-                <div className="row g-4" role="tablist">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4" role="tablist">
                     {/* اذكار الصباح */}
-                    <div className="col-12 col-md-6 col-xl-3">
-                        <div className="card adhkar-card adhkar-card-morning shadow" onClick={() => handleCardClick('morning')} style={{ cursor: 'pointer' }}>
-                            <div className="card-header text-center">
-                                <div className="adhkar-icon">
+                    <div>
+                        <div className="group transition-all duration-300 ease-out border-0 overflow-hidden h-full shadow-md bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]" onClick={() => handleCardClick('morning')} style={{ cursor: 'pointer' }}>
+                            <div className="text-center p-10 max-md:p-8 bg-gradient-to-br from-amber-300 to-amber-500 border-0">
+                                <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                     <i className="fas fa-sun"></i>
                                 </div>
-                                <h3 className="adhkar-title">اذكار الصباح</h3>
-                                <p className="adhkar-subtitle mb-4">أذكار الصباح والحماية</p>
-                                <button className="btn view-btn" type="button">
-                                    <i className="fas fa-book-open me-2"></i>
+                                <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">اذكار الصباح</h3>
+                                <p className="text-white/95 text-sm mt-2 font-medium mb-4">أذكار الصباح والحماية</p>
+                                <button className="bg-white border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg text-amber-500" type="button">
+                                    <i className="fas fa-book-open ms-2"></i>
                                     عرض الأذكار
                                 </button>
                             </div>
@@ -208,16 +93,16 @@ export function AdhkarList() {
                     </div>
 
                     {/* اذكار المساء */}
-                    <div className="col-12 col-md-6 col-xl-3">
-                        <div className="card adhkar-card adhkar-card-evening shadow" onClick={() => handleCardClick('evening')} style={{ cursor: 'pointer' }}>
-                            <div className="card-header text-center">
-                                <div className="adhkar-icon">
+                    <div>
+                        <div className="group transition-all duration-300 ease-out border-0 overflow-hidden h-full shadow-md bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]" onClick={() => handleCardClick('evening')} style={{ cursor: 'pointer' }}>
+                            <div className="text-center p-10 max-md:p-8 bg-gradient-to-br from-purple-400 to-purple-600 border-0">
+                                <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                     <i className="fas fa-moon"></i>
                                 </div>
-                                <h3 className="adhkar-title">اذكار المساء</h3>
-                                <p className="adhkar-subtitle mb-4">أذكار المساء والسكينة</p>
-                                <button className="btn view-btn" type="button">
-                                    <i className="fas fa-book-open me-2"></i>
+                                <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">اذكار المساء</h3>
+                                <p className="text-white/95 text-sm mt-2 font-medium mb-4">أذكار المساء والسكينة</p>
+                                <button className="bg-white border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg text-purple-600" type="button">
+                                    <i className="fas fa-book-open ms-2"></i>
                                     عرض الأذكار
                                 </button>
                             </div>
@@ -225,16 +110,16 @@ export function AdhkarList() {
                     </div>
 
                     {/* اذكار ما بعد الصلاة */}
-                    <div className="col-12 col-md-6 col-xl-3">
-                        <div className="card adhkar-card adhkar-card-prayer shadow" onClick={() => handleCardClick('prayer')} style={{ cursor: 'pointer' }}>
-                            <div className="card-header text-center">
-                                <div className="adhkar-icon">
+                    <div>
+                        <div className="group transition-all duration-300 ease-out border-0 overflow-hidden h-full shadow-md bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]" onClick={() => handleCardClick('prayer')} style={{ cursor: 'pointer' }}>
+                            <div className="text-center p-10 max-md:p-8 bg-gradient-to-br from-emerald-400 to-emerald-600 border-0">
+                                <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                     <i className="fas fa-mosque"></i>
                                 </div>
-                                <h3 className="adhkar-title">اذكار بعد الصلاة</h3>
-                                <p className="adhkar-subtitle mb-4">أذكار وتسبيح بعد الصلاة</p>
-                                <button className="btn view-btn" type="button">
-                                    <i className="fas fa-book-open me-2"></i>
+                                <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">اذكار بعد الصلاة</h3>
+                                <p className="text-white/95 text-sm mt-2 font-medium mb-4">أذكار وتسبيح بعد الصلاة</p>
+                                <button className="bg-white border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg text-emerald-600" type="button">
+                                    <i className="fas fa-book-open ms-2"></i>
                                     عرض الأذكار
                                 </button>
                             </div>
@@ -242,16 +127,16 @@ export function AdhkarList() {
                     </div>
 
                     {/* اذكار النوم */}
-                    <div className="col-12 col-md-6 col-xl-3">
-                        <div className="card adhkar-card adhkar-card-sleep shadow" onClick={() => handleCardClick('sleep')} style={{ cursor: 'pointer' }}>
-                            <div className="card-header text-center">
-                                <div className="adhkar-icon">
+                    <div>
+                        <div className="group transition-all duration-300 ease-out border-0 overflow-hidden h-full shadow-md bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]" onClick={() => handleCardClick('sleep')} style={{ cursor: 'pointer' }}>
+                            <div className="text-center p-10 max-md:p-8 bg-gradient-to-br from-indigo-400 to-indigo-600 border-0">
+                                <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                     <i className="fas fa-bed"></i>
                                 </div>
-                                <h3 className="adhkar-title">اذكار النوم</h3>
-                                <p className="adhkar-subtitle mb-4">أذكار قبل النوم والراحة</p>
-                                <button className="btn view-btn" type="button">
-                                    <i className="fas fa-book-open me-2"></i>
+                                <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">اذكار النوم</h3>
+                                <p className="text-white/95 text-sm mt-2 font-medium mb-4">أذكار قبل النوم والراحة</p>
+                                <button className="bg-white border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg text-indigo-600" type="button">
+                                    <i className="fas fa-book-open ms-2"></i>
                                     عرض الأذكار
                                 </button>
                             </div>
@@ -260,15 +145,14 @@ export function AdhkarList() {
                 </div>
             ) : (
                 /* Adhkar Content with Back Button */
-                <div>
-                    <button
-                        className="btn btn-outline-primary rounded-pill mb-4"
-                        onClick={handleBackToCards}
-                        type="button"
-                    >
-                        <i className="fas fa-arrow-right me-2"></i>
-                        رجوع للأذكار
-                    </button>
+                <div>                        <Button
+                            onClick={handleBackToCards}
+                            variant="outline"
+                            className="rounded-full mb-4"
+                        >
+                            <i className="fas fa-arrow-right ms-2"></i>
+                            رجوع للأذكار
+                        </Button>
 
                     {selectedAdhkar === 'morning' && <AdhkarDisplay config={morningAdhkarConfig} prefix="morning-adhkar" />}
                     {selectedAdhkar === 'evening' && <AdhkarDisplay config={eveningAdhkarConfig} prefix="evening-adhkar" />}

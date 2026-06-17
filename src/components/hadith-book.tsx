@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 
 import * as React from "react"
+import { Button } from "@/components/ui/button"
 
 interface Hadith {
     hadith_number: number
@@ -115,180 +116,41 @@ export function HadithBook({ onBack }: HadithBookProps) {
     }
 
     return (
-        <div className="hadith-book animate__animated animate__fadeIn">
-            <style jsx>{`
-                .hadith-book {
-                    padding-bottom: 2rem;
-                }
-                
-                .book-header {
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                    padding: 2rem;
-                    border-radius: 1rem;
-                    color: white;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
-                }
-
-                .search-input-wrapper {
-                    position: relative;
-                    max-width: 600px;
-                    margin: 0 auto;
-                }
-
-                .search-input {
-                    width: 100%;
-                    padding: 1rem 3rem 1rem 1rem;
-                    border-radius: 50px;
-                    border: none;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                    font-size: 1.1rem;
-                }
-
-                .search-icon {
-                    position: absolute;
-                    right: 1.2rem;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: #d97706;
-                }
-                
-                .clear-icon {
-                    position: absolute;
-                    left: 1.2rem;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: #9ca3af;
-                    cursor: pointer;
-                    background: none;
-                    border: none;
-                    padding: 0;
-                }
-                
-                .clear-icon:hover {
-                    color: #d97706;
-                }
-
-                .hadith-card {
-                    background: white;
-                    border-radius: 1rem;
-                    padding: 2rem;
-                    margin-bottom: 1.5rem;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-                    border: 1px solid rgba(0,0,0,0.05);
-                    transition: transform 0.2s;
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                .hadith-card:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-                }
-
-                .hadith-number-badge {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background: #fef3c7;
-                    color: #d97706;
-                    padding: 0.5rem 1.5rem;
-                    border-bottom-left-radius: 1rem;
-                    font-weight: bold;
-                    font-family: monospace;
-                    font-size: 1.1rem;
-                }
-
-                .hadith-text {
-                    font-family: 'Amiri', 'Traditional Arabic', serif;
-                    font-size: 1.4rem;
-                    line-height: 2.2;
-                    color: #1f2937;
-                    margin-top: 1.5rem;
-                    text-align: justify;
-                }
-
-                .action-btn {
-                    color: #9ca3af;
-                    background: transparent;
-                    border: none;
-                    padding: 0.5rem;
-                    transition: color 0.2s;
-                }
-
-                .action-btn:hover {
-                    color: #d97706;
-                }
-
-                .pagination-btn {
-                    background: white;
-                    border: 1px solid #e5e7eb;
-                    padding: 0.5rem 1rem;
-                    border-radius: 0.5rem;
-                    color: #374151;
-                    transition: all 0.2s;
-                }
-
-                .pagination-btn:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
-
-                .pagination-btn:not(:disabled):hover {
-                    background: #fef3c7;
-                    border-color: #d97706;
-                    color: #d97706;
-                }
-
-                .loading-spinner {
-                    width: 3rem;
-                    height: 3rem;
-                    border: 4px solid #f3f3f3;
-                    border-top: 4px solid #d97706;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
-                    margin: 3rem auto;
-                }
-
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
+        <div className="pb-8 animate-fade-in">
 
             {/* Back Button */}
-            <button
-                className="btn btn-outline-secondary rounded-pill mb-4"
+            <Button
                 onClick={onBack}
-                type="button"
+                variant="outline"
+                className="rounded-full mb-4"
             >
-                <i className="fas fa-arrow-right me-2"></i>
+                <i className="fas fa-arrow-right ms-2"></i>
                 رجوع للكتب
-            </button>
+            </Button>
 
             {/* Header & Search */}
-            <div className="book-header text-center">
+            <div className="bg-gradient-to-br from-amber-500 to-amber-700 p-8 rounded-xl text-white mb-8 shadow-[0_10px_25px_rgba(245,158,11,0.2)] text-center">
                 <div className="mb-3">
-                    <i className="fas fa-book fs-1 mb-2 opacity-75"></i>
-                    <h1 className="fw-bold mb-1">صحيح البخاري</h1>
+                    <i className="fas fa-book text-4xl mb-2 opacity-75 block"></i>
+                    <h1 className="font-bold mb-1">صحيح البخاري</h1>
                     <p className="opacity-90">الجامع المسند الصحيح المختصر من أمور رسول الله ﷺ وسننه وأيامه</p>
-                    <div className="small opacity-50 mt-2" id="debug-info">
+                    <div className="text-xs opacity-50 mt-2" id="debug-info">
                         Debug: Total {hadiths.length} | Query "{searchQuery}"
                     </div>
                 </div>
 
-                <div className="search-input-wrapper">
-                    <i className="fas fa-search search-icon"></i>
+                <div className="relative max-w-lg mx-auto">
+                    <i className="fas fa-search absolute start-4 top-1/2 -translate-y-1/2 text-amber-600 dark:text-amber-400"></i>
                     <input
                         type="text"
-                        className="search-input"
+                        className="w-full ps-12 pe-12 py-4 rounded-full border-0 shadow-md text-lg bg-background text-foreground placeholder:text-muted-foreground"
                         placeholder="ابحث في الأحاديث (بالنص أو الرقم)..."
                         value={searchQuery}
                         onChange={(e) => handleSearchChange(e.target.value)}
                     />
                     {searchQuery && (
                         <button
-                            className="clear-icon"
+                            className="absolute end-4 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer bg-transparent border-0 p-0 hover:text-amber-600 dark:hover:text-amber-400"
                             onClick={() => handleSearchChange("")}
                             title="مسح البحث"
                         >
@@ -301,41 +163,41 @@ export function HadithBook({ onBack }: HadithBookProps) {
             {/* Content */}
             {loading ? (
                 <div className="text-center py-5">
-                    <div className="loading-spinner"></div>
-                    <p className="text-muted mt-3">جاري تحميل الأحاديث...</p>
+                    <div className="w-12 h-12 border-4 border-border border-t-amber-600 rounded-full animate-spin mx-auto mt-12"></div>
+                    <p className="text-muted-foreground mt-3">جاري تحميل الأحاديث...</p>
                 </div>
             ) : (
                 <>
                     {/* Stats */}
-                    <div className="d-flex justify-content-between align-items-center mb-4 px-2">
-                        <span className="text-muted">
+                    <div className="flex justify-between items-center mb-4 px-2">
+                        <span className="text-muted-foreground text-sm">
                             عرض {currentHadiths.length} من أصل {filteredHadiths.length} حديث
                         </span>
-                        <span className="text-muted">
+                        <span className="text-muted-foreground text-sm">
                             صفحة {currentPage} من {totalPages}
                         </span>
                     </div>
 
                     {/* Hadith List */}
                     {currentHadiths.length > 0 ? (
-                        <div className="hadith-list">
+                        <div>
                             {currentHadiths.map((hadith) => (
-                                <div key={hadith.hadith_number} className="hadith-card">
-                                    <div className="hadith-number-badge">
+                                <div key={hadith.hadith_number} className="bg-card border border-border rounded-xl p-8 mb-6 shadow-sm transition-transform duration-200 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md">
+                                    <div className="absolute top-0 end-0 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-4 py-2 rounded-bl-xl font-bold font-mono text-lg">
                                         #{hadith.hadith_number}
                                     </div>
-                                    <p className="hadith-text">
+                                    <p className="font-arabic-serif text-[1.4rem] leading-[2.2] text-foreground mt-6 text-justify">
                                         {hadith.text}
                                     </p>
-                                    <div className="d-flex justify-content-end gap-2 mt-3 pt-3 border-top border-light">
+                                    <div className="flex justify-end gap-2 mt-3 pt-3 border-t border-border">
                                         <button
-                                            className="action-btn"
+                                            className="text-muted-foreground bg-transparent border-0 p-2 transition-colors duration-200 hover:text-amber-600 dark:hover:text-amber-400"
                                             onClick={() => handleCopy(hadith.text)}
                                             title="نسخ الحديث"
                                         >
                                             <i className="fas fa-copy"></i>
                                         </button>
-                                        <button className="action-btn" title="مشاركة">
+                                        <button className="text-gray-400 bg-transparent border-0 p-2 transition-colors duration-200 hover:text-amber-600 dark:hover:text-amber-400" title="مشاركة">
                                             <i className="fas fa-share-alt"></i>
                                         </button>
                                     </div>
@@ -343,25 +205,24 @@ export function HadithBook({ onBack }: HadithBookProps) {
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-5 text-muted">
-                            <i className="fas fa-search fs-1 mb-3 opacity-25"></i>
+                        <div className="text-center py-5 text-muted-foreground">
+                            <i className="fas fa-search text-4xl mb-3 opacity-25 block"></i>
                             <p>لا توجد نتائج للبحث</p>
                         </div>
                     )}
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="d-flex justify-content-center align-items-center gap-2 mt-4 dir-ltr">
+                        <div className="flex justify-center items-center gap-2 mt-4">
                             <button
-                                className="pagination-btn"
+                                className="bg-background border border-input px-4 py-2 rounded-lg text-foreground transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-100 hover:border-amber-600 hover:text-amber-600 dark:hover:bg-amber-900/20"
                                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                                 disabled={currentPage === 1}
                             >
                                 <i className="fas fa-chevron-right"></i>
                             </button>
-
                             <select
-                                className="form-select w-auto mx-2"
+                                className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm mx-2"
                                 value={currentPage}
                                 onChange={(e) => handlePageChange(Number(e.target.value))}
                             >
@@ -371,7 +232,7 @@ export function HadithBook({ onBack }: HadithBookProps) {
                             </select>
 
                             <button
-                                className="pagination-btn"
+                                className="bg-background border border-input px-4 py-2 rounded-lg text-foreground transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-100 hover:border-amber-600 hover:text-amber-600 dark:hover:bg-amber-900/20"
                                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                                 disabled={currentPage === totalPages}
                             >

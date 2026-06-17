@@ -17,15 +17,23 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
   }, [onFinish])
 
   React.useEffect(() => {
+    // Mark splash as seen on first visit
+    const seen = localStorage.getItem("splashSeen")
+    if (seen === "true") {
+      onFinishRef.current()
+      return
+    }
+
     // Start exit animation slightly before the total duration
     const exitTimer = setTimeout(() => {
       setIsExiting(true)
-    }, 1500) // Start exit at 1.5s
+    }, 1500)
 
     // Complete and unmount
     const finishTimer = setTimeout(() => {
+      localStorage.setItem("splashSeen", "true")
       onFinishRef.current()
-    }, 2000) // Total duration 2s
+    }, 2000)
 
     return () => {
       clearTimeout(exitTimer)

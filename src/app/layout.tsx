@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Cairo, Amiri, Inter } from "next/font/google"
+import { Cairo, Amiri } from "next/font/google"
 import Script from "next/script"
 import { Footer } from "@/components/footer"
 
@@ -15,13 +15,6 @@ const amiri = Amiri({
   weight: ["400", "700"],
   subsets: ["arabic", "latin"],
   variable: "--font-amiri",
-  display: "swap",
-})
-
-// Latin/UI font
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
   display: "swap",
 })
 
@@ -45,15 +38,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" data-bs-theme="light">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Bootstrap RTL */}
-        <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css"
-          rel="stylesheet"
-          integrity="sha384-nU14brUcp6StFntEOOEBvcJm4huWjB0OcIeQ3fltAfSmuZFrkAif0T+UtNGlKKQv"
-          crossOrigin="anonymous"
-        />
+        {/* App utility styles - loaded separately for proper CSS cascade */}
+        <link rel="stylesheet" href="/app.css" />
 
         {/* Font Awesome */}
         <link
@@ -66,7 +54,10 @@ export default function RootLayout({
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2b5a4b" />
+        <meta name="theme-color" content="#2b5a4b" id="theme-color-meta" />
+        <script dangerouslySetInnerHTML={{
+          __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark");var m=document.getElementById("theme-color-meta");if(m)m.setAttribute("content","#0d1515")}}catch(e){}})()`
+        }} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="طمأنينة" />
@@ -76,15 +67,15 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
 
-      <body className={`${cairo.variable} ${amiri.variable} ${inter.variable} d-flex flex-column min-vh-100`} style={{ fontFamily: "var(--font-cairo), Arial, sans-serif" }}>
+      <body className={`${cairo.variable} ${amiri.variable} flex flex-col min-h-screen`} style={{ fontFamily: "var(--font-cairo), Arial, sans-serif" }}>
 
         {/* المحتوى الرئيسي */}
-        <main className="flex-fill">
+        <main className="flex-1">
           {children}
         </main>
 
         {/* Footer يظهر فقط على الـ Desktop */}
-        <div className="d-none d-md-block">
+        <div className="hidden md:block">
           <Footer />
         </div>
 
@@ -96,14 +87,6 @@ export default function RootLayout({
         >
           <i className="fas fa-arrow-up"></i>
         </button>
-
-        {/* Bootstrap JS */}
-        <Script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
 
         {/* سكريبت زر العودة للأعلى */}
         <Script id="back-to-top-script" strategy="afterInteractive">

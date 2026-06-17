@@ -1,6 +1,7 @@
 // Helper functions for adhkar tracking and progress
 
 import { type RemainingMap, type ProgressData, type AdhkarItem } from "./types"
+import { dispatchAdhkarToast } from "./toast-events"
 
 const PROGRESS_STORAGE_KEY = "tmanina_progress"
 
@@ -45,7 +46,7 @@ export async function copyDhikr(zekr: string) {
     try {
         if (navigator?.clipboard?.writeText) {
             await navigator.clipboard.writeText(zekr)
-            alert("تم نسخ الذكر ✅")
+            dispatchAdhkarToast("تم نسخ الذكر ✅", "success")
         } else {
             const dummy = document.createElement("textarea")
             dummy.value = zekr
@@ -53,10 +54,10 @@ export async function copyDhikr(zekr: string) {
             dummy.select()
             document.execCommand("copy")
             document.body.removeChild(dummy)
-            alert("تم نسخ الذكر إلى الحافظة ✅")
+            dispatchAdhkarToast("تم نسخ الذكر إلى الحافظة ✅", "success")
         }
     } catch (error) {
         console.error("Copy failed", error)
-        alert("تعذّر نسخ الذكر، حاول مرة أخرى.")
+        dispatchAdhkarToast("تعذّر نسخ الذكر، حاول مرة أخرى.", "error")
     }
 }

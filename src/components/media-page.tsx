@@ -1,18 +1,33 @@
 "use client"
 
 import * as React from "react"
-import { AudioQuran } from "./audio-quran"
-import { HadithLibrary } from "./hadith-library"
-import { RuqyahPlayer } from "./ruqyah-player"
-// import { QuranReader } from "./quran-reader" // Hidden until update
-import { VectorMushaf } from "./vector-mushaf"
-import { RadioPlayer } from "./radio-player"
-import { SahabaPlayer } from "./sahaba-player"
-import { LivePlayer } from "./live-player"
-import { PodcastPlayer } from "./podcast-player"
-import SurahReader from "./surah-reader"
-import SurahList from "./surah-list"
+import { Button } from "@/components/ui/button"
+import dynamic from "next/dynamic"
 import { useRouter, useSearchParams } from "next/navigation"
+
+// Lazy-loaded media components
+const AudioQuran = dynamic(() => import("./audio-quran").then(m => m.AudioQuran), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري التحميل...</p></div> })
+const HadithLibrary = dynamic(() => import("./hadith-library").then(m => m.HadithLibrary), { loading: LoadingSpinner })
+const RuqyahPlayer = dynamic(() => import("./ruqyah-player").then(m => m.RuqyahPlayer), { loading: LoadingSpinner })
+const VectorMushaf = dynamic(() => import("./vector-mushaf").then(m => m.VectorMushaf), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري تحميل المصحف...</p></div> })
+const RadioPlayer = dynamic(() => import("./radio-player").then(m => m.RadioPlayer), { loading: LoadingSpinner })
+const SahabaPlayer = dynamic(() => import("./sahaba-player").then(m => m.SahabaPlayer), { loading: LoadingSpinner })
+const LivePlayer = dynamic(() => import("./live-player").then(m => m.LivePlayer), { loading: LoadingSpinner })
+const PodcastPlayer = dynamic(() => import("./podcast-player").then(m => m.PodcastPlayer), { loading: LoadingSpinner })
+const DuaLibrary = dynamic(() => import("./dua-library/dua-library").then(m => m.DuaLibrary), { loading: LoadingSpinner })
+const AsmaaPage = dynamic(() => import("./asmaa/asmaa-page").then(m => m.AsmaaPage), { loading: LoadingSpinner })
+const SurahReader = dynamic(() => import("./surah-reader"), { loading: LoadingSpinner })
+const SurahList = dynamic(() => import("./surah-list"), { loading: LoadingSpinner })
+const QuranReader = dynamic(() => import("./quran-reader/quran-reader").then(m => m.QuranReader), { loading: () => <div className="flex items-center justify-center py-20"><div className="text-center"><div className="mx-auto mb-4 w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin"></div><p className="text-muted-foreground">جاري تحميل المصحف...</p></div></div> })
+
+function LoadingSpinner() {
+  return (
+    <div className="text-center py-12">
+      <div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+      <p className="text-muted-foreground text-sm">جاري التحميل...</p>
+    </div>
+  )
+}
 
 export function MediaPage() {
     const router = useRouter()
@@ -48,238 +63,34 @@ export function MediaPage() {
     }
 
     return (
-        <div className="media-page">
-            <style jsx>{`
-                .media-page {
-                    padding: 1rem 0;
-                }
-                
-                .media-card {
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    border: none;
-                    overflow: hidden;
-                    height: 100%;
-                    cursor: pointer;
-                }
-                
-                .media-card:not(.disabled):hover {
-                    transform: translateY(-8px);
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-                }
-                
-                .media-card.disabled {
-                    cursor: not-allowed;
-                    opacity: 0.6;
-                }
-                
-                .media-card .card-header {
-                    padding: 2.5rem 2rem;
-                    border: none;
-                }
-                .card-header { position: relative; }
-                .new-badge {
-                    position: absolute;
-                    top: 0.5rem;
-                    right: 0.5rem;
-                    background: #ff4757;
-                    color: white;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    padding: 0.25rem 0.6rem;
-                    border-radius: 0.5rem;
-                    z-index: 10;
-                }
-                
-                .media-card-ruqyah .card-header {
-                    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                }
-                
-                .media-card-audio .card-header {
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                }
-                
-                .media-card-hadiths .card-header {
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                }
-                
-                .media-card-quran .card-header {
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                }
-                
-                .media-card-video .card-header {
-                    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-                }
-                
-                .media-card-podcast .card-header {
-                    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-                }
-                
-                .media-icon {
-                    width: 80px;
-                    height: 80px;
-                    background: rgba(255, 255, 255, 0.25);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 2.2rem;
-                    margin: 0 auto 1.2rem;
-                    backdrop-filter: blur(10px);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                }
-                
-                .media-title {
-                    color: white;
-                    font-size: 1.6rem;
-                    font-weight: 700;
-                    margin: 0;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-                }
-                
-                .media-subtitle {
-                    color: rgba(255, 255, 255, 0.95);
-                    font-size: 0.95rem;
-                    margin-top: 0.6rem;
-                    font-weight: 500;
-                }
-                
-                .view-btn {
-                    background: white;
-                    color: inherit;
-                    border: none;
-                    padding: 0.85rem 2.2rem;
-                    border-radius: 50px;
-                    font-weight: 600;
-                    font-size: 1rem;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-                }
-                
-                .view-btn:hover:not(:disabled) {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-                }
-                
-                .media-card-ruqyah .view-btn {
-                    color: #7c3aed;
-                }
-                
-                .media-card-audio .view-btn {
-                    color: #059669;
-                }
-                
-                .media-card-hadiths .view-btn {
-                    color: #d97706;
-                }
-                
-                .media-card-quran .view-btn {
-                    color: #059669;
-                }
-                
-                .media-card-video .view-btn {
-                    color: #4b5563;
-                    opacity: 0.7;
-                }
-                
-                .media-card-podcast .view-btn {
-                    color: #9333ea;
-                    opacity: 0.7;
-                }
-                
-                .media-card-radio .card-header {
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                }
-                
-                .media-card-radio .view-btn {
-                    color: #2563eb;
-                }
-                
-                .media-card-sahaba .card-header {
-                    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-                }
-                
-                .media-card-sahaba .view-btn {
-                    color: #fb923c;
-                }
-                
-                .media-card-live .card-header {
-                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-                }
-                
-                .media-card-live .view-btn {
-                    color: #dc2626;
-                }
-                
-                .media-card-surah .card-header {
-                    background: linear-gradient(135deg, #c9a961 0%, #8b6914 100%);
-                }
-                
-                .media-card-surah .view-btn {
-                    color: #8b6914;
-                }
-                
-                .media-card-mushaf .card-header {
-                    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-                }
-                
-                .media-card-mushaf .view-btn {
-                    color: #047857;
-                }
-                
-                .coming-soon-badge {
-                    position: absolute;
-                    top: 1rem;
-                    right: 1rem;
-                    background: rgba(255, 255, 255, 0.9);
-                    color: #6b7280;
-                    padding: 0.4rem 1rem;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                }
-                
-                @media (max-width: 768px) {
-                    .media-card .card-header {
-                        padding: 2rem 1.5rem;
-                    }
-                    
-                    .media-icon {
-                        width: 70px;
-                        height: 70px;
-                        font-size: 2rem;
-                    }
-                    
-                    .media-title {
-                        font-size: 1.4rem;
-                    }
-                }
-            `}</style>
+        <div className="py-4">
+
 
             {!activeSection ? (
                 <>
                     {/* Header */}
                     <div className="text-center mb-5 animate__animated animate__fadeIn">
-                        <h2 className="h2 fw-bold gradient-text mb-2">المكتبة الإسلامية</h2>
-                        <p className="text-body-secondary fs-5">محتوى إسلامي متنوع لإثراء معرفتك</p>
+                        <h2 className="text-3xl font-bold gradient-text mb-2">المكتبة الإسلامية</h2>
+                        <p className="text-muted-foreground text-lg">محتوى إسلامي متنوع لإثراء معرفتك</p>
                     </div>
 
                     {/* Media Cards */}
-                    <div className="row g-4 animate__animated animate__fadeInUp">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate__animated animate__fadeInUp">
                         {/* رقية شرعية */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-ruqyah shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('ruqyah')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-purple-500 to-purple-700">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-book-medical"></i>
                                     </div>
-                                    <h3 className="media-title">رقية شرعية</h3>
-                                    <p className="media-subtitle mb-4">آيات وأدعية الرقية الشرعية</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-folder-open me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">رقية شرعية</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">آيات وأدعية الرقية الشرعية</p>
+                                    <button className="bg-white text-purple-700 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-folder-open ms-2"></i>
                                         عرض المحتوى
                                     </button>
                                 </div>
@@ -287,20 +98,20 @@ export function MediaPage() {
                         </div>
 
                         {/* صوتيات */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-audio shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('audio')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-emerald-400 to-emerald-600">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-headphones"></i>
                                     </div>
-                                    <h3 className="media-title">قرآن كريم - صوتي</h3>
-                                    <p className="media-subtitle mb-4">استمع للقرآن بأصوات القراء</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-play me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">قرآن كريم - صوتي</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">استمع للقرآن بأصوات القراء</p>
+                                    <button className="bg-white text-emerald-600 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-play ms-2"></i>
                                         استماع الآن
                                     </button>
                                 </div>
@@ -308,20 +119,20 @@ export function MediaPage() {
                         </div>
 
                         {/* أحاديث */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-hadiths shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('hadiths')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-amber-500 to-amber-700">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-book-quran"></i>
                                     </div>
-                                    <h3 className="media-title">أحاديث</h3>
-                                    <p className="media-subtitle mb-4">أحاديث نبوية شريفة</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-folder-open me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">أحاديث</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">أحاديث نبوية شريفة</p>
+                                    <button className="bg-white text-amber-700 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-folder-open ms-2"></i>
                                         عرض المحتوى
                                     </button>
                                 </div>
@@ -331,18 +142,18 @@ export function MediaPage() {
                         {/* القرآن الكريم - Hidden until update */}
                         {/* <div className="col-12 col-md-6 col-xl-3">
                             <div
-                                className="card media-card media-card-quran shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('quran')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-emerald-400 to-emerald-600">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-quran"></i>
                                     </div>
-                                    <h3 className="media-title">المصحف الشريف</h3>
-                                    <p className="media-subtitle mb-4">قراءة بنظام الصفحات</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-folder-open me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">المصحف الشريف</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">قراءة بنظام الصفحات</p>
+                                    <button className="bg-white text-emerald-600 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-folder-open ms-2"></i>
                                         عرض المحتوى
                                     </button>
                                 </div>
@@ -350,20 +161,20 @@ export function MediaPage() {
                         </div> */}
 
                         {/* قراءة السور */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-surah shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('surah-reader')}
                             >
-                                <div className="card-header text-center">
-                                    <span className="new-badge">جديد</span>
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-[#c9a961] to-[#8b6914]">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-book-open"></i>
                                     </div>
-                                    <h3 className="media-title">قراءة السور</h3>
-                                    <p className="media-subtitle mb-4">السور كاملة للقراءة</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-book-reader me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">قراءة السور</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">السور كاملة للقراءة</p>
+                                    <button className="bg-white text-[#8b6914] border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-reader ms-2"></i>
                                         قراءة القرآن
                                     </button>
                                 </div>
@@ -371,41 +182,83 @@ export function MediaPage() {
                         </div>
 
                         {/* المصحف الرقمي - صور */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-mushaf shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('mushaf')}
                             >
-                                <div className="card-header text-center">
-                                    <span className="new-badge">جديد</span>
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-emerald-600 to-emerald-800">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-image"></i>
                                     </div>
-                                    <h3 className="media-title">المصحف الرقمي</h3>
-                                    <p className="media-subtitle mb-4">صور 100% مطابقة للمطبوع</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-eye me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">المصحف الرقمي</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">صور 100% مطابقة للمطبوع</p>
+                                    <button className="bg-white text-emerald-800 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-eye ms-2"></i>
                                         عرض المصحف
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* راديو */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        {/* مكتبة الأدعية */}
+                        <div>
                             <div
-                                className="card media-card media-card-radio shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+                                onClick={() => handleSectionChange('dua')}
+                            >
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-[#d4a574] to-[#7d9d7f]">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
+                                        <i className="fas fa-hands-praying"></i>
+                                    </div>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">مكتبة الأدعية</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">أدعية مأثورة مقسمة (السفر، المطر، الطعام، الإفطار)</p>
+                                    <button className="bg-white text-[#7d9d7f] border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-open ms-2"></i>
+                                        عرض الأدعية
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* أسماء الله الحسنى */}
+                        <div>
+                            <div
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+                                onClick={() => handleSectionChange('asmaa')}
+                            >
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-[#667eea] to-[#764ba2]">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
+                                        <i className="fas fa-dove"></i>
+                                    </div>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">أسماء الله الحسنى</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">99 اسماً مع معانيها وتسبيح</p>
+                                    <button className="bg-white text-[#764ba2] border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-open ms-2"></i>
+                                        عرض الأسماء
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* راديو */}
+                        <div>
+                            <div
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('radio')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-blue-500 to-blue-700">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-broadcast-tower"></i>
                                     </div>
-                                    <h3 className="media-title">راديو</h3>
-                                    <p className="media-subtitle mb-4">إذاعات القرآن الكريم مباشرة</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-play me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">راديو</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">إذاعات القرآن الكريم مباشرة</p>
+                                    <button className="bg-white text-blue-700 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-play ms-2"></i>
                                         استماع الآن
                                     </button>
                                 </div>
@@ -413,20 +266,20 @@ export function MediaPage() {
                         </div>
 
                         {/* صور من حياة الصحابة */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-sahaba shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('sahaba')}
                             >
-                                <div className="card-header text-center">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-orange-300 to-orange-500">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-users"></i>
                                     </div>
-                                    <h3 className="media-title">حياه الصحابة</h3>
-                                    <p className="media-subtitle mb-4">قصص ومواقف من حياة الصحابة</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-play me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">حياه الصحابة</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">قصص ومواقف من حياة الصحابة</p>
+                                    <button className="bg-white text-orange-500 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-play ms-2"></i>
                                         استماع الآن
                                     </button>
                                 </div>
@@ -434,20 +287,20 @@ export function MediaPage() {
                         </div>
 
                         {/* بودكاست */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-podcast shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('podcast')}
                             >
-                                <div className="card-header text-center position-relative">
-                                    <span className="new-badge">جديد</span>
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-purple-500 to-purple-700">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-podcast"></i>
                                     </div>
-                                    <h3 className="media-title">بودكاست</h3>
-                                    <p className="media-subtitle mb-4">مناقشة و تبسيط كتب التراث الديني</p>
-                                    <button className="btn view-btn" type="button">
-                                        <i className="fas fa-play me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">بودكاست</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">مناقشة و تبسيط كتب التراث الديني</p>
+                                    <button className="bg-white text-purple-700 opacity-70 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-play ms-2"></i>
                                         استماع الآن
                                     </button>
                                 </div>
@@ -455,18 +308,18 @@ export function MediaPage() {
                         </div>
 
                         {/* فيديو - قريباً */}
-                        <div className="col-12 col-md-6 col-xl-3">
-                            <div className="card media-card media-card-video shadow disabled">
-                                <div className="card-header text-center position-relative">
-                                    {showNewBadge && (<span className="new-badge">جديد</span>)}
-                                    <span className="coming-soon-badge">قريباً</span>
-                                    <div className="media-icon">
+                        <div>
+                            <div className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-not-allowed opacity-60 shadow bg-card rounded-2xl">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-gray-500 to-gray-700">
+                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
+                                    <span className="absolute top-4 end-4 bg-white/90 text-gray-500 px-4 py-1.5 rounded-full text-xs font-semibold">قريباً</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-video"></i>
                                     </div>
-                                    <h3 className="media-title">فيديو</h3>
-                                    <p className="media-subtitle mb-4">مقاطع فيديو إسلامية</p>
-                                    <button className="btn view-btn" type="button" disabled>
-                                        <i className="fas fa-folder me-2"></i>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">فيديو</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">مقاطع فيديو إسلامية</p>
+                                    <button className="bg-white text-gray-700 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button" disabled>
+                                        <i className="fas fa-folder ms-2"></i>
                                         قريباً
                                     </button>
                                 </div>
@@ -474,20 +327,20 @@ export function MediaPage() {
                         </div>
 
                         {/* بث مباشر */}
-                        <div className="col-12 col-md-6 col-xl-3">
+                        <div>
                             <div
-                                className="card media-card media-card-live shadow"
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('live')}
                             >
-                                <div className="card-header text-center">
-                                    <div className="media-icon">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-red-500 to-red-700">
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
                                         <i className="fas fa-video"></i>
                                     </div>
-                                    <h3 className="media-title">بث مباشر</h3>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">بث مباشر</h3>
                                 </div>
-                                <div className="card-body text-center">
+                                <div className="media-card-body text-center p-4">
                                     <p className="media-description">الحرم المكي - بث مباشر</p>
-                                    <button className="view-btn" type="button">
+                                    <button className="bg-white text-red-600 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
                                         مشاهدة <i className="fas fa-play-circle ms-2"></i>
                                     </button>
                                 </div>
@@ -499,14 +352,22 @@ export function MediaPage() {
                 /* Sub-views */
                 <div className="animate__animated animate__fadeIn">
                     {/* Back Button */}
-                    <button
-                        className="btn btn-outline-primary rounded-pill mb-4"
+                    <Button
                         onClick={() => handleSectionChange(null)}
-                        type="button"
+                        variant="outline"
+                        className="rounded-full mb-4"
                     >
-                        <i className="fas fa-arrow-right me-2"></i>
+                        <i className="fas fa-arrow-right ms-2"></i>
                         رجوع للمكتبة
-                    </button>
+                    </Button>
+
+                    {activeSection === 'dua' && (
+                        <DuaLibrary onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'asmaa' && (
+                        <AsmaaPage />
+                    )}
 
                     {activeSection === 'hadiths' && (
                         <HadithLibrary onBack={() => handleSectionChange(null)} />
@@ -520,11 +381,9 @@ export function MediaPage() {
                         <AudioQuran onBack={() => handleSectionChange(null)} />
                     )}
 
-                    {/* QuranReader hidden until update
                     {activeSection === 'quran' && (
                         <QuranReader onBack={() => handleSectionChange(null)} />
                     )}
-                    */}
 
                     {activeSection === 'radio' && (
                         <RadioPlayer onBack={() => handleSectionChange(null)} />

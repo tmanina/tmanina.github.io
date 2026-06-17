@@ -68,102 +68,21 @@ export function UpdateNotification() {
     if (!showUpdate) return null;
 
     return (
-        <>
-            <style jsx>{`
-                .update-notification {
-                    position: fixed;
-                    bottom: 80px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: linear-gradient(135deg, #2b5a4b 0%, #1a3830 100%);
-                    color: white;
-                    padding: 12px 20px;
-                    border-radius: 12px;
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-                    z-index: 10001;
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    animation: slideUp 0.3s ease-out;
-                    max-width: 90%;
-                }
-
-                @keyframes slideUp {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-50%) translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                    }
-                }
-
-                .update-icon {
-                    font-size: 1.5rem;
-                }
-
-                .update-text {
-                    flex: 1;
-                }
-
-                .update-title {
-                    font-weight: 600;
-                    font-size: 0.95rem;
-                    margin-bottom: 2px;
-                }
-
-                .update-subtitle {
-                    font-size: 0.8rem;
-                    opacity: 0.8;
-                }
-
-                .update-actions {
-                    display: flex;
-                    gap: 8px;
-                }
-
-                .update-btn {
-                    border: none;
-                    padding: 8px 16px;
-                    border-radius: 8px;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: transform 0.2s;
-                }
-
-                .update-btn:hover {
-                    transform: scale(1.05);
-                }
-
-                .update-btn-primary {
-                    background: white;
-                    color: #2b5a4b;
-                }
-
-                .update-btn-secondary {
-                    background: rgba(255,255,255,0.2);
-                    color: white;
-                }
-            `}</style>
-
-            <div className="update-notification">
-                <i className="fas fa-sync-alt update-icon"></i>
-                <div className="update-text">
-                    <div className="update-title">تحديث جديد متاح {newVersion && `(${newVersion})`}</div>
-                    <div className="update-subtitle">اضغط للتحديث الآن</div>
-                </div>
-                <div className="update-actions">
-                    <button className="update-btn update-btn-primary" onClick={handleUpdate}>
-                        تحديث
-                    </button>
-                    <button className="update-btn update-btn-secondary" onClick={handleDismiss}>
-                        لاحقاً
-                    </button>
-                </div>
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gradient-to-br from-[#2b5a4b] to-[#1a3830] text-white px-5 py-3 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] z-[10001] flex items-center gap-3 animate-slide-up-notification max-w-[90%]">
+            <i className="fas fa-sync-alt text-2xl"></i>
+            <div className="flex-1">
+                <div className="font-semibold text-sm mb-0.5">تحديث جديد متاح {newVersion && `(${newVersion})`}</div>
+                <div className="text-xs opacity-80">اضغط للتحديث الآن</div>
             </div>
-        </>
+            <div className="flex gap-2">
+                <button className="border-0 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer transition-transform duration-200 hover:scale-105 bg-white text-[#2b5a4b]" onClick={handleUpdate}>
+                    تحديث
+                </button>
+                <button className="border-0 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer transition-transform duration-200 hover:scale-105 bg-white/20 text-white" onClick={handleDismiss}>
+                    لاحقاً
+                </button>
+            </div>
+        </div>
     );
 }
 

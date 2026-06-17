@@ -138,26 +138,26 @@ export function DhikrCounter() {
   }
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-12 col-lg-8">
-        <div className="card border-0 shadow-lg rounded-4 overflow-hidden card-hover">
+    <div className="flex justify-center">
+      <div className="w-full max-w-4xl">
+        <div className="shadow-lg rounded-xl overflow-hidden card-hover bg-card border border-border text-card-foreground">
 
           {/* الهيدر */}
-          <div className="gradient-bg text-white p-4 text-center">
-            <h3 className="mb-0 d-flex align-items-center justify-content-center gap-2">
+          <div className="gradient-bg p-4 text-center text-white">
+            <h3 className="mb-0 flex items-center justify-center gap-2">
               <i className="fas fa-hands-praying"></i>
               <span>سبحة إلكترونية</span>
             </h3>
           </div>
 
           {/* المحتوى */}
-          <div className="card-body p-4 p-md-5 d-flex flex-column align-items-center gap-4">
+          <div className="p-4 md:p-5 flex flex-col items-center gap-4">
 
             {/* اختيار الذكر */}
-            <div className="w-100" style={{ maxWidth: "480px" }}>
-              <label className="form-label small text-body-secondary mb-1">اختر الذكر</label>
+            <div className="w-full" style={{ maxWidth: "480px" }}>
+              <label className="text-sm text-muted-foreground mb-1 block">اختر الذكر</label>
               <select
-                className="form-select rounded-3"
+                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 value={selectedId}
                 onChange={handleChangeDhikr}
               >
@@ -170,11 +170,11 @@ export function DhikrCounter() {
             </div>
 
             {/* الذكر + المعلومات */}
-            <div className="w-100 text-center p-3 rounded-4 bg-body-secondary bg-opacity-25" style={{ maxWidth: "480px" }}>
-              <h3 className="h4 mb-2">{selectedDhikr.text}</h3>
-              <p className="small text-body-secondary">{selectedDhikr.label}</p>
+            <div className="w-full text-center p-3 rounded-xl bg-muted text-foreground" style={{ maxWidth: "480px" }}>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">{selectedDhikr.text}</h3>
+              <p className="text-sm text-muted-foreground">{selectedDhikr.label}</p>
 
-              <div className="d-flex justify-content-between align-items-center small text-body-secondary">
+              <div className="flex justify-between items-center text-sm text-muted-foreground">
                 <div>المتبقي: {remaining}</div>
                 <div>إجمالي التسبيح: {totalForCurrent}</div>
 
@@ -182,25 +182,24 @@ export function DhikrCounter() {
                 <button
                   type="button"
                   onClick={toggleVibration}
-                  className="btn btn-sm rounded-circle p-0"
+                  className="rounded-full p-0 inline-flex items-center justify-center transition-all"
                   style={{
                     width: '32px',
                     height: '32px',
                     backgroundColor: 'transparent',
-                    border: `2px solid ${vibrationEnabled ? 'var(--bs-primary)' : 'var(--bs-secondary)'}`,
-                    color: vibrationEnabled ? 'var(--bs-primary)' : 'var(--bs-secondary)',
-                    transition: 'all 0.3s ease',
+                    border: `2px solid ${vibrationEnabled ? '#d4a574' : '#9ca3af'}`,
+                    color: vibrationEnabled ? '#d4a574' : '#9ca3af',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = vibrationEnabled ? 'var(--bs-primary)' : 'var(--bs-secondary)'
+                    e.currentTarget.style.backgroundColor = vibrationEnabled ? '#d4a574' : '#9ca3af'
                     e.currentTarget.style.color = 'white'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = 'transparent'
-                    e.currentTarget.style.color = vibrationEnabled ? 'var(--bs-primary)' : 'var(--bs-secondary)'
+                    e.currentTarget.style.color = vibrationEnabled ? '#d4a574' : '#9ca3af'
                   }}
                   title={vibrationEnabled ? "تعطيل الاهتزاز" : "تفعيل الاهتزاز"}
                   aria-label={vibrationEnabled ? "تعطيل الاهتزاز" : "تفعيل الاهتزاز"}
@@ -214,64 +213,50 @@ export function DhikrCounter() {
             </div>
 
             {/* الدائرة التفاعلية */}
-            <div className="d-flex justify-content-center">
-              <style jsx>{`
-                @keyframes shake-tap {
-                  0%, 100% { transform: scale(1); }
-                  25% { transform: scale(0.92) rotate(-2deg); }
-                  50% { transform: scale(0.88) rotate(2deg); }
-                  75% { transform: scale(0.92) rotate(-1deg); }
-                }
-                
-                .tap-shake {
-                  animation: shake-tap 0.3s ease-out;
-                }
-              `}</style>
-
+            <div className="flex justify-center">
               <div
                 onClick={handleTasbeehTap}
-                className={`rounded-circle d-flex align-items-center justify-content-center shadow-lg bg-body-secondary position-relative ${isPressed ? "tap-shake" : ""
-                  }`}
+                className={`rounded-full flex items-center justify-center shadow-lg bg-muted relative ${isPressed ? "animate-shake-tap" : ""
+                  } text-foreground`}
                 style={{
                   width: "220px",
                   height: "220px",
-                  border: "8px solid var(--bs-body-bg)",
+                  border: "8px solid hsl(var(--card))",
                   cursor: "pointer",
                   userSelect: "none",
                   touchAction: "manipulation",
                 }}
               >
-                <span className="display-4 fw-bold gradient-text font-monospace">{count}</span>
-                <span className="position-absolute bottom-0 start-50 translate-middle-x small text-body-secondary mb-2">
+                <span className="text-5xl font-bold gradient-text font-mono">{count}</span>
+                <span className="absolute bottom-0 start-1/2 -translate-x-1/2 text-xs text-muted-foreground mb-2">
                   الهدف: {isInfinite ? <i className="fas fa-infinity"></i> : target}
                 </span>
               </div>
             </div>
 
             {/* شريط التقدم */}
-            <div className="w-100" style={{ maxWidth: "480px" }}>
-              <div className="d-flex justify-content-between small text-body-secondary mb-2">
+            <div className="w-full" style={{ maxWidth: "480px" }}>
+              <div className="flex justify-between text-sm text-muted-foreground mb-2">
                 <span>0</span>
                 <span>{isInfinite ? <i className="fas fa-infinity"></i> : target}</span>
               </div>
 
-              <div className="progress" style={{ height: "10px" }}>
+              <div className="w-full bg-muted-foreground/20 rounded-full" style={{ height: "10px" }}>
                 <div
-                  className="progress-bar gradient-bg"
-                  role="progressbar"
+                  className="gradient-bg rounded-full h-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
             </div>
 
             {/* أهداف جاهزة */}
-            <div className="d-flex justify-content-center gap-2 flex-wrap">
+            <div className="flex justify-center gap-2 flex-wrap">
               {[33, 99, 100].map((num) => (
                 <button
                   key={num}
                   type="button"
                   onClick={() => handleQuickTargetChange(num)}
-                  className={`btn btn-sm rounded-pill px-3 ${target === num ? "gradient-bg text-white" : "btn-outline-primary"
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all ${target === num ? "gradient-bg text-white" : "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
                     }`}
                 >
                   {num}
@@ -280,7 +265,7 @@ export function DhikrCounter() {
               <button
                 type="button"
                 onClick={() => handleQuickTargetChange(Number.MAX_SAFE_INTEGER)}
-                className={`btn btn-sm rounded-pill px-3 ${target === Number.MAX_SAFE_INTEGER ? "gradient-bg text-white" : "btn-outline-primary"
+                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all ${target === Number.MAX_SAFE_INTEGER ? "gradient-bg text-white" : "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
                   }`}
                 title="عداد مفتوح"
               >
@@ -292,8 +277,8 @@ export function DhikrCounter() {
             <button
               type="button"
               onClick={handleResetCurrent}
-              className="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center card-hover"
-              style={{ width: '50px', height: '50px', transition: 'all 0.3s ease' }}
+              className="rounded-full flex items-center justify-center card-hover border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
+              style={{ width: '50px', height: '50px' }}
               title="إعادة تعيين"
             >
               <i className="fas fa-rotate-right" style={{ fontSize: '1.5rem' }}></i>

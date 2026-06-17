@@ -1,7 +1,7 @@
 /* Navigation Card Buttons - Hover Effects */
 .nav-card-btn {
     transition: all 0.3s ease !important;
-    background: var(--bs-body-secondary) !important;
+    background: hsl(var(--muted)) !important;
 }
 
 .nav-card-btn:hover {

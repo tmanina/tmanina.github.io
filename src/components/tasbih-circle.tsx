@@ -86,91 +86,27 @@ export function TasbihCircle() {
     const selectedButton = buttons[0] // Always the first button
 
     return (
-        <div className="col-12">
-            <style jsx>{`
-        .tasbih-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 2rem;
-        }
-        
-        @keyframes shake {
-          0%, 100% { transform: translateX(0) scale(1); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-4px) scale(0.95); }
-          20%, 40%, 60%, 80% { transform: translateX(4px) scale(0.95); }
-        }
-        
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(0.92); }
-          100% { transform: scale(1); }
-        }
-        
-        .circle-shake {
-          animation: shake 0.4s ease-in-out, pulse 0.4s ease-in-out;
-        }
-
-        /* Main Integrated Circle */
-        .main-circle {
-            width: 220px;
-            height: 220px;
-            position: relative;
-            cursor: pointer;
-            user-select: none;
-            touch-action: manipulation;
-            border-radius: 50%;
-            background-color: transparent;
-            box-shadow: none !important;
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
-        }
-        
-        .main-circle:active {
-            transform: scale(0.95);
-        }
-
-        @media (max-width: 768px) {
-          .tasbih-container {
-            gap: 1rem;
-          }
-        }
-
-        @media (max-width: 576px) {
-            .main-circle {
-                width: 180px;
-                height: 180px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .main-circle {
-                width: 160px;
-                height: 160px;
-            }
-        }
-      `}</style>
-
-            <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div>
+            <div className="shadow-sm rounded-xl overflow-hidden bg-card border border-border text-card-foreground">
                 {/* Header */}
-                <div className="gradient-bg text-white p-3 text-center">
-                    <h4 className="mb-0 d-flex align-items-center justify-content-center gap-2">
+                <div className="gradient-bg p-3 text-center text-white">
+                    <h4 className="mb-0 flex items-center justify-center gap-2">
                         <i className="fas fa-dharmachakra"></i>
                         <span>حلقة تسبيح</span>
                     </h4>
                 </div>
 
                 {/* Content */}
-                <div className="card-body p-4">
+                <div className="p-4">
                     {!allCompleted ? (
-                        <div className="tasbih-container">
+                        <div className="flex items-center justify-center gap-8 max-md:gap-4">
                             {/* Buttons Column - Always Left */}
                             <div style={{ minWidth: "160px", position: "relative" }}>
                                 {/* Rotation button in corner */}
                                 <button
                                     type="button"
                                     onClick={handleRotateButtons}
-                                    className="btn btn-sm btn-outline-secondary rounded-circle"
+                                    className="inline-flex items-center justify-center rounded-full border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
                                     style={{
                                         position: "absolute",
                                         top: "-35px",
@@ -179,22 +115,21 @@ export function TasbihCircle() {
                                         height: "32px",
                                         padding: "0",
                                         zIndex: 10,
-                                        transition: "all 0.3s ease",
                                     }}
                                     title="تدوير الأذكار"
                                 >
                                     <i className="fas fa-arrow-rotate-right" style={{ fontSize: "0.75rem" }}></i>
                                 </button>
 
-                                <div className="d-flex flex-column gap-2">
+                                <div className="flex flex-col gap-2">
                                     {buttons.slice(0, 3).map((button, index) => (
                                         <div
                                             key={button.id}
-                                            className={`btn rounded-pill ${index === 0
+                                            className={`rounded-full px-4 py-2 text-center text-sm font-semibold ${index === 0
                                                 ? "gradient-bg text-white"
                                                 : completedDhikrs.includes(button.id)
-                                                    ? "btn-success"
-                                                    : "btn-outline-secondary"
+                                                    ? "bg-green-500 text-white"
+                                                    : "border border-input bg-background text-foreground"
                                                 }`}
                                             style={{
                                                 transition: "all 0.3s ease",
@@ -214,14 +149,9 @@ export function TasbihCircle() {
                             </div>
 
                             {/* Circle with 3-segment Progress Border */}
-                            {/* Circle with 3-segment Progress Border */}
-
-                            {/* Integrated Circle with SVG Border */}
-
-
                             <div
                                 onClick={handleCircleClick}
-                                className={`main-circle d-flex align-items-center justify-content-center ${isPressed ? "circle-shake" : ""}`}
+                                className={`w-[220px] h-[220px] max-sm:w-[180px] max-sm:h-[180px] max-[360px]:w-[160px] max-[360px]:h-[160px] relative cursor-pointer select-none touch-manipulation rounded-full bg-transparent transition-all duration-300 mb-4 active:scale-95 flex items-center justify-center ${isPressed ? "animate-shake animate-pulse-circle" : ""}`}
                             >
                                 {/* SVG Border */}
                                 <svg
@@ -314,7 +244,7 @@ export function TasbihCircle() {
                                 </svg>
 
                                 {/* Text Content */}
-                                <span className="h4 text-center px-4 fw-bold gradient-text position-relative" style={{ zIndex: 2 }}>
+                                <span className="text-2xl text-center px-4 font-bold gradient-text" style={{ zIndex: 2 }}>
                                     {selectedButton?.text}
                                 </span>
                             </div>
@@ -323,13 +253,13 @@ export function TasbihCircle() {
                         <>
                             {/* Completion Message */}
                             <div className="text-center py-5">
-                                <h2 className="mb-5 gradient-text fw-bold" style={{ fontSize: "2.5rem" }}>تم بحمد الله</h2>
+                                <h2 className="mb-5 gradient-text font-bold" style={{ fontSize: "2.5rem" }}>تم بحمد الله</h2>
                                 <br />
 
                                 <button
                                     type="button"
                                     onClick={handleReset}
-                                    className="btn btn-lg gradient-bg text-white rounded-pill px-5 py-3"
+                                    className="gradient-bg text-white rounded-full px-5 py-3 text-lg font-semibold inline-flex items-center justify-center"
                                 >
                                     <i className="fas fa-rotate-right me-2"></i>
                                     أعد التسبيح

@@ -114,31 +114,31 @@ export function InstallPrompt() {
             {/* Install prompt for Android & Desktop */}
             {showPrompt && !isIOS && (
                 <div
-                    className="position-fixed start-0 end-0 p-3 animate__animated animate__slideInUp"
+                    className="fixed left-0 right-0 p-3 animate__animated animate__slideInUp"
                     style={{ zIndex: 9998, bottom: isMobile ? '90px' : '20px' }}
                 >
-                    <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div className="shadow-lg rounded-xl overflow-hidden bg-card border border-border">
                         <div className="gradient-bg text-white p-4">
-                            <div className="d-flex align-items-center gap-3">
-                                <div className="rounded-circle bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
-                                    <i className="fas fa-download fs-4"></i>
+                            <div className="flex items-center gap-3">
+                                <div className="rounded-full bg-white/25 p-3 flex items-center justify-center" style={{ width: '60px', height: '60px' }}>
+                                    <i className="fas fa-download text-xl"></i>
                                 </div>
-                                <div className="flex-grow-1">
-                                    <h6 className="mb-1 fw-bold">تثبيت تطبيق طمأنينة</h6>
-                                    <p className="mb-0 small opacity-75">احصل على تجربة أفضل مع التطبيق المثبت</p>
+                                <div className="flex-1">
+                                    <h6 className="mb-1 font-bold">تثبيت تطبيق طمأنينة</h6>
+                                    <p className="mb-0 text-xs opacity-75">احصل على تجربة أفضل مع التطبيق المثبت</p>
                                 </div>
                             </div>
-                            <div className="d-flex gap-2 mt-3">
+                            <div className="flex gap-2 mt-3">
                                 <button
                                     onClick={handleInstallClick}
-                                    className="btn btn-light flex-grow-1 fw-bold"
+                                    className="flex-1 font-bold bg-white text-gray-900 hover:bg-white/90 rounded-lg px-4 py-2"
                                 >
-                                    <i className="fas fa-check me-2"></i>
+                                    <i className="fas fa-check ms-2"></i>
                                     تثبيت
                                 </button>
                                 <button
                                     onClick={() => setShowPrompt(false)}
-                                    className="btn btn-outline-light"
+                                    className="border border-white/30 text-white hover:bg-white/10 rounded-lg px-4 py-2"
                                 >
                                     إلغاء
                                 </button>
@@ -151,21 +151,21 @@ export function InstallPrompt() {
             {/* iOS Install Instructions */}
             {isIOS && showPrompt && (
                 <div
-                    className="position-fixed start-0 end-0 p-2 animate__animated animate__slideInUp"
+                    className="fixed left-0 right-0 p-2 animate__animated animate__slideInUp"
                     style={{ zIndex: 9998, bottom: '90px' }}
                 >
-                    <div className="card border-0 shadow-lg rounded-3">
-                        <div className="card-body p-3 text-center bg-body">
+                    <div className="shadow-lg rounded-xl bg-card">
+                        <div className="p-3 text-center bg-background rounded-xl">
                             <div className="mb-2">
-                                <i className="fas fa-mobile-screen-button fs-3 text-primary"></i>
+                                <i className="fas fa-mobile-screen-button text-2xl text-primary"></i>
                             </div>
-                            <h6 className="fw-bold mb-2">تثبيت طمأنينة على iPhone</h6>
-                            <p className="small text-body-secondary mb-3">
+                            <h6 className="font-bold mb-2">تثبيت طمأنينة على iPhone</h6>
+                            <p className="text-xs text-muted-foreground mb-3">
                                 اضغط على <i className="fas fa-arrow-up-from-bracket text-primary"></i> ثم اختر "إضافة إلى الشاشة الرئيسية"
                             </p>
                             <button
                                 onClick={() => setShowPrompt(false)}
-                                className="btn btn-sm btn-primary"
+                                className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 text-sm font-medium transition-colors"
                             >
                                 فهمت
                             </button>

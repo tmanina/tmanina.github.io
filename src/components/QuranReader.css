@@ -1,17 +1,6 @@
 /* QuranReader.module.css - Mushaf Reader Styles */
 
 /* ===== FONTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
-
-@font-face {
-    font-family: 'AlQuranAlKareem';
-    src: url('/fonts/AlQuranAlKareem.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+FDF2, U+FDFD, U+06DD;
-}
-
 @font-face {
     font-family: 'KFGQPC';
     src: url('/fonts/KFGQPC-Hafs.otf') format('opentype');
@@ -605,7 +594,7 @@
     line-height: 1.6;
     overflow: hidden;
     word-spacing: normal;
-    font-family: 'KFGQPC', 'KFGQPC HAFS Uthmanic Script', 'AlQuranAlKareem', 'Scheherazade New', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+    font-family: 'KFGQPC', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
     font-weight: 400;
     font-size: calc(var(--madina-font) * var(--fit-scale));
     font-feature-settings: "liga" 1, "calt" 1, "kern" 1, "ccmp" 1, "locl" 1, "mark" 1, "mkmk" 1;
@@ -639,7 +628,7 @@
     line-height: 1.28;
     white-space: nowrap;
     overflow: hidden;
-    font-family: 'KFGQPC', 'AlQuranAlKareem', 'Scheherazade New', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+    font-family: 'KFGQPC', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
     font-feature-settings: "liga" 1, "calt" 1, "kern" 1, "ccmp" 1, "locl" 1, "mark" 1, "mkmk" 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -649,7 +638,7 @@
 .mushaf-word {
     flex: 0 0 auto;
     display: inline-block;
-    font-family: 'KFGQPC', 'AlQuranAlKareem', 'Scheherazade New', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+    font-family: 'KFGQPC', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
     font-weight: 600;
     white-space: nowrap;
     font-feature-settings: "liga" 1, "calt" 1, "kern" 1, "ccmp" 1, "locl" 1, "mark" 1, "mkmk" 1;
@@ -1515,7 +1504,7 @@
     unicode-bidi: plaintext;
 
     /* Responsive font - smaller to fit 15 lines */
-    font-family: 'KFGQPC', 'AlQuranAlKareem', 'Scheherazade New', serif;
+    font-family: 'KFGQPC', 'Traditional Arabic', serif;
     font-weight: 400;
     font-size: clamp(16px, 3.5vw, 28px);
     /* Smaller: min 16px, max 28px */

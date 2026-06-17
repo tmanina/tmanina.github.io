@@ -3,6 +3,8 @@
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useRadioContext } from "@/contexts/radio-context"
+import { FloatingToast } from "@/components/floating-toast"
+import type { ToastVariant } from "@/components/floating-toast"
 
 interface Radio {
     id: number
@@ -37,6 +39,8 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [volume, setVolume] = React.useState(0.7)
     const [searchQuery, setSearchQuery] = React.useState("")
+    const [toast, setToast] = React.useState<{ message: string; variant: ToastVariant } | null>(null)
+    const handleCloseToast = React.useCallback(() => setToast(null), [])
 
     const audioRef = React.useRef<HTMLAudioElement>(null)
     const playingRadioRef = React.useRef(playingRadio)
@@ -603,6 +607,10 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                 audioRef.current.src = radio.url
                 audioRef.current.play().catch(() => setIsPlaying(false))
             }
+            setToast({
+                message: `جاري تشغيل ${radio.name}`,
+                variant: 'info',
+            })
         }
     }
 
@@ -643,368 +651,16 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
     const selectedCategoryObj = categories.find(c => c.id === selectedCategory)
 
     return (
-        <div className="radio-player">
-            <style jsx>{`
-                .radio-player {
-                    padding: 1rem 0;
-                }
-
-                .radio-header {
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                    color: white;
-                    padding: 2.5rem 2rem;
-                    border-radius: 20px;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
-                }
-
-                .radio-title {
-                    font-size: 2rem;
-                    font-weight: 700;
-                    margin: 0 0 0.5rem 0;
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .radio-subtitle {
-                    font-size: 1rem;
-                    opacity: 0.95;
-                    margin: 0;
-                }
-
-                .breadcrumb-nav {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    margin-bottom: 1.5rem;
-                    padding: 1rem 1.5rem;
-                    background: white;
-                    border-radius: 15px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-                }
-
-                .breadcrumb-link {
-                    color: #6b7280;
-                    text-decoration: none;
-                    font-weight: 500;
-                    transition: color 0.3s ease;
-                    cursor: pointer;
-                }
-
-                .breadcrumb-link:hover {
-                    color: #3b82f6;
-                }
-
-                .breadcrumb-separator {
-                    color: #d1d5db;
-                }
-
-                .breadcrumb-current {
-                    color: #1f2937;
-                    font-weight: 600;
-                }
-
-                .categories-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                    gap: 1.5rem;
-                    margin-bottom: 2rem;
-                }
-
-                .category-card {
-                    background: white;
-                    border-radius: 20px;
-                    padding: 2rem;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    border: 2px solid transparent;
-                    position: relative;
-                    overflow: hidden;
-                }
-
+        <div className="py-4">
+            <style>{`
                 .category-card::before {
-                    content: '';
+                    content: "";
                     position: absolute;
                     top: 0;
                     left: 0;
                     right: 0;
                     height: 5px;
                     background: var(--gradient);
-                }
-
-                .category-card:hover {
-                    transform: translateY(-8px);
-                    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-                    border-color: rgba(236, 72, 153, 0.3);
-                }
-
-                .category-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1.25rem;
-                    margin-bottom: 1rem;
-                }
-
-                .category-icon {
-                    width: 60px;
-                    height: 60px;
-                    background: var(--gradient);
-                    border-radius: 15px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.5rem;
-                    flex-shrink: 0;
-                }
-
-                .category-info {
-                    flex: 1;
-                }
-
-                .category-name {
-                    font-size: 1.25rem;
-                    font-weight: 700;
-                    color: #1f2937;
-                    margin: 0 0 0.25rem 0;
-                }
-
-                .category-count {
-                    font-size: 0.9rem;
-                    color: #6b7280;
-                    font-weight: 500;
-                }
-
-                .category-description {
-                    font-size: 0.9rem;
-                    color: #9ca3af;
-                    margin: 0;
-                    line-height: 1.5;
-                }
-
-                .search-box {
-                    background: white;
-                    border-radius: 15px;
-                    padding: 1.5rem;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                }
-
-                .search-input {
-                    border: 2px solid #e5e7eb;
-                    border-radius: 50px;
-                    padding: 0.85rem 1.5rem;
-                    font-size: 1rem;
-                    transition: all 0.3s ease;
-                }
-
-                .search-input:focus {
-                    border-color: #3b82f6;
-                    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
-                    outline: none;
-                }
-
-                .radio-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                    gap: 1.5rem;
-                    margin-bottom: 2rem;
-                }
-
-                .radio-card {
-                    background: white;
-                    border-radius: 15px;
-                    padding: 1.5rem;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    border: 2px solid transparent;
-                }
-
-                .radio-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-                    border-color: #3b82f6;
-                }
-
-                .radio-card.playing {
-                    border-color: #3b82f6;
-                    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-                }
-
-                .radio-card-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    margin-bottom: 1rem;
-                }
-
-                .radio-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.3rem;
-                    flex-shrink: 0;
-                    overflow: hidden;
-                }
-
-                .radio-icon img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .radio-card.playing .radio-icon {
-                    animation: pulse 2s ease-in-out infinite;
-                }
-
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                }
-
-                .radio-name {
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #1f2937;
-                    margin: 0;
-                    line-height: 1.4;
-                }
-
-                .radio-actions {
-                    display: flex;
-                    gap: 0.5rem;
-                }
-
-                .radio-btn {
-                    flex: 1;
-                    padding: 0.75rem;
-                    border-radius: 10px;
-                    border: none;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                }
-
-                .play-btn {
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                    color: white;
-                }
-
-                .play-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-                }
-
-                .player-bar {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    background: white;
-                    border-top: 2px solid #3b82f6;
-                    padding: 1.25rem 2rem;
-                    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-                    z-index: 1000;
-                    animation: slideUp 0.3s ease-out;
-                }
-
-                @keyframes slideUp {
-                    from { transform: translateY(100%); }
-                    to { transform: translateY(0); }
-                }
-
-                .player-content {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    display: flex;
-                    align-items: center;
-                    gap: 1.5rem;
-                }
-
-                .now-playing {
-                    flex: 1;
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .playing-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.3rem;
-                    animation: pulse 2s ease-in-out infinite;
-                }
-
-                .playing-info h4 {
-                    margin: 0;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: #1f2937;
-                }
-
-                .playing-info p {
-                    margin: 0.25rem 0 0 0;
-                    font-size: 0.85rem;
-                    color: #6b7280;
-                }
-
-                .player-controls {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .control-btn {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    border: none;
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                    color: white;
-                    font-size: 1.2rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .control-btn:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-                }
-
-                .volume-control {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                }
-
-                .volume-slider {
-                    width: 100px;
-                    height: 6px;
-                    border-radius: 3px;
-                    background: #e5e7eb;
-                    outline: none;
-                    -webkit-appearance: none;
                 }
 
                 .volume-slider::-webkit-slider-thumb {
@@ -1024,99 +680,6 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                     cursor: pointer;
                     border: none;
                 }
-
-                .loading-container,
-                .error-container {
-                    text-align: center;
-                    padding: 3rem 1rem;
-                }
-
-                .spinner {
-                    width: 60px;
-                    height: 60px;
-                    border: 4px solid #fce7f3;
-                    border-top-color: #3b82f6;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
-                    margin: 0 auto 1.5rem;
-                }
-
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
-                }
-
-                .error-icon {
-                    font-size: 4rem;
-                    color: #ef4444;
-                    margin-bottom: 1rem;
-                }
-
-                .retry-btn {
-                    background: #3b82f6;
-                    color: white;
-                    border: none;
-                    padding: 0.85rem 2rem;
-                    border-radius: 50px;
-                    font-weight: 600;
-                    margin-top: 1rem;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .retry-btn:hover {
-                    background: #2563eb;
-                    transform: translateY(-2px);
-                }
-
-                .empty-category {
-                    text-align: center;
-                    padding: 4rem 1rem;
-                    background: white;
-                    border-radius: 20px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                }
-
-                .empty-icon {
-                    font-size: 4rem;
-                    color: #d1d5db;
-                    margin-bottom: 1.5rem;
-                }
-
-                @media (max-width: 768px) {
-                    .categories-grid,
-                    .radio-grid {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .radio-header {
-                        padding: 2rem 1.5rem;
-                    }
-
-                    .radio-title {
-                        font-size: 1.6rem;
-                    }
-
-                    .player-bar {
-                        padding: 1rem;
-                    }
-
-                    .player-content {
-                        flex-direction: column;
-                        gap: 1rem;
-                    }
-
-                    .now-playing {
-                        width: 100%;
-                    }
-
-                    .volume-control {
-                        display: none;
-                    }
-
-                    .category-card {
-                        padding: 1.5rem;
-                    }
-                }
             `}</style>
 
             {/* Hidden audio element */}
@@ -1130,48 +693,47 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             />
 
             {/* Header */}
-            <div className="radio-header">
-                <h2 className="radio-title">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white px-8 py-10 rounded-[20px] mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold m-0 mb-2 flex items-center gap-4">
                     <i className="fas fa-broadcast-tower"></i>
                     {selectedCategoryObj ? selectedCategoryObj.name : "مكتبة الإذاعات"}
                 </h2>
-                <p className="radio-subtitle">
+                <p className="text-base opacity-95 m-0">
                     {selectedCategoryObj ? selectedCategoryObj.description : "اختر التصنيف المناسب لك"}
                 </p>
             </div>
 
             {/* Breadcrumb Navigation */}
             {selectedCategory && (
-                <div className="breadcrumb-nav">
-                    <span className="breadcrumb-link" onClick={handleBackToCategories}>
-                        <i className="fas fa-home me-2"></i>
+                <div className="flex items-center gap-3 mb-6 px-6 py-4 bg-card rounded-[15px] shadow-sm">                            <span className="text-muted-foreground no-underline font-medium transition-colors duration-300 cursor-pointer hover:text-blue-500" onClick={handleBackToCategories}>
+                        <i className="fas fa-home ml-2"></i>
                         راديو
                     </span>
-                    <span className="breadcrumb-separator">
+                    <span className="text-muted-foreground/50">
                         <i className="fas fa-chevron-left"></i>
                     </span>
-                    <span className="breadcrumb-current">{selectedCategoryObj?.name}</span>
+                    <span className="text-foreground font-semibold">{selectedCategoryObj?.name}</span>
                 </div>
             )}
 
             {/* Loading State */}
             {loading && (
-                <div className="loading-container">
-                    <div className="spinner"></div>
+                <div className="text-center px-4 py-12">
+                    <div className="w-[60px] h-[60px] border-4 border-rose-100 border-t-blue-500 rounded-full animate-spin mx-auto mb-6"></div>
                     <h3>جاري تحميل الإذاعات...</h3>
                 </div>
             )}
 
             {/* Error State */}
             {error && (
-                <div className="error-container">
-                    <div className="error-icon">
+                <div className="text-center px-4 py-12">
+                    <div className="text-[4rem] text-red-500 mb-4">
                         <i className="fas fa-exclamation-circle"></i>
                     </div>
                     <h3>حدث خطأ في تحميل الإذاعات</h3>
-                    <p className="text-muted">{error}</p>
-                    <button className="retry-btn" onClick={fetchRadios}>
-                        <i className="fas fa-redo me-2"></i>
+                    <p className="text-muted-foreground">{error}</p>
+                    <button className="bg-blue-500 text-white border-none px-8 py-3.5 rounded-[50px] font-semibold mt-4 cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:-translate-y-0.5" onClick={fetchRadios}>
+                        <i className="fas fa-redo ml-2"></i>
                         إعادة المحاولة
                     </button>
                 </div>
@@ -1179,7 +741,7 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
 
             {/* Categories Grid - Level 1 */}
             {!loading && !error && !selectedCategory && (
-                <div className="categories-grid">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     {categories.map((category) => {
                         const count = getRadiosByCategory(category.id).length
                         if (count === 0) return null
@@ -1187,23 +749,23 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                         return (
                             <div
                                 key={category.id}
-                                className="category-card"
+                                className="bg-white rounded-[20px] p-6 md:p-8 shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer border-2 border-transparent relative overflow-hidden hover:-translate-y-2 hover:shadow-[0_12px_28px_rgba(0,0,0,0.15)] hover:border-rose-300/30"
                                 style={{ '--gradient': category.gradient } as React.CSSProperties}
                                 onClick={() => handleCategorySelect(category.id)}
                             >
-                                <div className="category-header">
-                                    <div className="category-icon" style={{ background: category.gradient }}>
+                                <div className="flex items-center gap-5 mb-4">
+                                    <div className="w-[60px] h-[60px] rounded-[15px] flex items-center justify-center text-white text-2xl shrink-0" style={{ background: category.gradient }}>
                                         <i className={`fas ${category.icon}`}></i>
                                     </div>
-                                    <div className="category-info">
-                                        <h3 className="category-name">{category.name}</h3>
-                                        <p className="category-count">
-                                            <i className="fas fa-broadcast-tower me-1"></i>
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-bold text-foreground m-0 mb-1">{category.name}</h3>
+                                        <p className="text-sm text-muted-foreground font-medium">
+                                            <i className="fas fa-broadcast-tower ml-1"></i>
                                             {count} إذاعة
                                         </p>
                                     </div>
                                 </div>
-                                <p className="category-description">{category.description}</p>
+                                <p className="text-sm text-muted-foreground/70 m-0 leading-relaxed">{category.description}</p>
                             </div>
                         )
                     })}
@@ -1214,12 +776,12 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
             {!loading && !error && selectedCategory && (
                 <>
                     {/* Search Box */}
-                    <div className="search-box">
-                        <div className="position-relative">
-                            <i className="fas fa-search position-absolute" style={{ right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }}></i>
+                    <div className="bg-card rounded-[15px] p-6 mb-8 shadow-sm">
+                        <div className="relative">
+                            <i className="fas fa-search absolute" style={{ right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }}></i>
                             <input
                                 type="text"
-                                className="form-control search-input"
+                                className="border-2 border-gray-200 rounded-[50px] px-6 py-3.5 text-base transition-all duration-300 focus:border-blue-500 focus:shadow-[0_0_0_4px_rgba(236,72,153,0.1)] focus:outline-none w-full"
                                 placeholder="ابحث عن إذاعة..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -1230,21 +792,21 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
 
                     {/* Radio Grid */}
                     {filteredRadios.length > 0 ? (
-                        <div className="radio-grid">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                             {filteredRadios.map((radio) => (
                                 <div
                                     key={radio.id}
-                                    className={`radio-card ${playingRadio?.id === radio.id ? 'playing' : ''}`}
+                                    className={`bg-card rounded-[15px] p-6 shadow-sm transition-all duration-300 cursor-pointer border-2 hover:-translate-y-1 hover:shadow-md hover:border-blue-500 ${playingRadio?.id === radio.id ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20' : 'border-transparent'}`}
                                     onClick={() => playRadio(radio)}
                                 >
-                                    <div className="radio-card-header">
-                                        <div className="radio-icon">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className={`w-[50px] h-[50px] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-white text-xl shrink-0 overflow-hidden ${playingRadio?.id === radio.id ? 'animate-pulse' : ''}`}>
                                             <i className={playingRadio?.id === radio.id && isPlaying ? "fas fa-volume-up" : "fas fa-radio"}></i>
                                         </div>
-                                        <h3 className="radio-name">{radio.name}</h3>
+                                        <h3 className="text-lg font-semibold text-foreground m-0 leading-relaxed">{radio.name}</h3>
                                     </div>
-                                    <div className="radio-actions">
-                                        <button className="radio-btn play-btn" type="button">
+                                    <div className="flex gap-2">
+                                        <button className="flex-1 px-3 py-3 rounded-xl border-none font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-br from-blue-500 to-blue-700 text-white hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(236,72,153,0.4)]" type="button">
                                             <i className={`fas ${playingRadio?.id === radio.id && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
                                             {playingRadio?.id === radio.id && isPlaying ? 'إيقاف مؤقت' : 'استماع'}
                                         </button>
@@ -1253,23 +815,31 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                             ))}
                         </div>
                     ) : (
-                        <div className="empty-category">
-                            <div className="empty-icon">
+                        <div className="text-center px-4 py-16 bg-card rounded-[20px] shadow-sm">
+                            <div className="text-[4rem] text-gray-300 mb-6">
                                 <i className="fas fa-search"></i>
                             </div>
-                            <h4 className="text-muted">لا توجد نتائج</h4>
-                            <p className="text-muted">جرب البحث بكلمات أخرى</p>
+                            <h4 className="text-muted-foreground">لا توجد نتائج</h4>
+                            <p className="text-muted-foreground">جرب البحث بكلمات أخرى</p>
                         </div>
                     )}
                 </>
             )}
 
+            <FloatingToast
+                message={toast?.message || ''}
+                variant={toast?.variant || 'info'}
+                isVisible={toast !== null}
+                onClose={handleCloseToast}
+                autoCloseMs={4000}
+            />
+
             {/* Player Bar */}
             {playingRadio && (
-                <div className="player-bar">
-                    <div className="player-content">
-                        <div className="now-playing">
-                            <div className="playing-icon">
+                <div className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] left-0 right-0 bg-card border-t-2 border-blue-500 p-4 md:px-8 md:py-5 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-[1000] animate-slide-up">
+                    <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-6">
+                        <div className="flex-1 w-full md:w-auto flex items-center gap-4">
+                            <div className="w-[50px] h-[50px] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-white text-xl animate-pulse shrink-0 overflow-hidden">
                                 {playingRadio.img ? (
                                     <img src={playingRadio.img} alt={playingRadio.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
                                 ) : (
@@ -1277,16 +847,16 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                                 )}
                             </div>
                             <div className="playing-info">
-                                <h4>{playingRadio.name}</h4>
-                                <p>
-                                    <i className={`fas ${isPlaying ? 'fa-circle text-danger' : 'fa-pause-circle text-muted'} me-1`}></i>
+                                <h4 className="m-0 text-base font-semibold text-foreground">{playingRadio.name}</h4>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    <i className={`fas ${isPlaying ? 'fa-circle text-red-500' : 'fa-pause-circle text-muted-foreground'} ml-1`}></i>
                                     {isPlaying ? 'يتم البث الآن' : 'متوقف مؤقتاً'}
                                 </p>
                             </div>
                         </div>
-                        <div className="player-controls">
+                        <div className="flex items-center gap-4">
                             <button
-                                className="control-btn"
+                                className="w-[50px] h-[50px] rounded-full border-none bg-gradient-to-br from-blue-500 to-blue-700 text-white text-xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:shadow-lg"
                                 onClick={togglePlayPause}
                                 type="button"
                                 title={isPlaying ? 'إيقاف مؤقت' : 'تشغيل'}
@@ -1294,18 +864,18 @@ export function RadioPlayer({ onBack }: RadioPlayerProps) {
                                 <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
                             </button>
                             <button
-                                className="control-btn"
+                                className="w-[50px] h-[50px] rounded-full border-none bg-gradient-to-br from-blue-500 to-blue-700 text-white text-xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:shadow-lg"
                                 onClick={stopRadio}
                                 type="button"
                                 title="إيقاف"
                             >
                                 <i className="fas fa-stop"></i>
                             </button>
-                            <div className="volume-control">
-                                <i className="fas fa-volume-up text-muted"></i>
+                            <div className="hidden md:flex items-center gap-3">
+                                <i className="fas fa-volume-up text-muted-foreground"></i>
                                 <input
                                     type="range"
-                                    className="volume-slider"
+                                    className="w-[100px] h-[6px] rounded-[3px] bg-gray-200 outline-none appearance-none"
                                     min="0"
                                     max="1"
                                     step="0.1"

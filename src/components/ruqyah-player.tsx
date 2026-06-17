@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Button } from "@/components/ui/button"
 
 interface RuqyahPlayerProps {
     onBack: () => void
@@ -78,165 +79,41 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
     ]
 
     return (
-        <div className="ruqyah-player animate__animated animate__fadeIn">
-            <style jsx>{`
-                .ruqyah-player {
-                    padding-bottom: 2rem;
-                }
-                
-                .player-header {
-                    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                    padding: 2rem;
-                    border-radius: 1rem;
-                    color: white;
-                    margin-bottom: 2rem;
-                    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
-                }
-
-                .tracks-grid {
-                    display: grid;
-                    gap: 1.5rem;
-                }
-
-                .track-card {
-                    background: white;
-                    border-radius: 1rem;
-                    padding: 1.5rem;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-                    border: 2px solid transparent;
-                    transition: all 0.3s ease;
-                }
-
-                .track-card:hover {
-                    border-color: #8b5cf6;
-                    box-shadow: 0 8px 16px rgba(139, 92, 246, 0.15);
-                    transform: translateY(-2px);
-                }
-
-                .track-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    margin-bottom: 1rem;
-                }
-
-                .track-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.5rem;
-                    flex-shrink: 0;
-                }
-
-                .track-info {
-                    flex: 1;
-                }
-
-                .track-title {
-                    font-size: 1.1rem;
-                    font-weight: 700;
-                    color: #1f2937;
-                    margin: 0 0 0.25rem 0;
-                }
-
-                .track-description {
-                    font-size: 0.9rem;
-                    color: #6b7280;
-                    margin: 0;
-                }
-
-                .track-reciter {
-                    font-size: 0.85rem;
-                    color: #8b5cf6;
-                    font-weight: 600;
-                    margin-top: 0.25rem;
-                }
-
-                .soundcloud-embed {
-                    width: 100%;
-                    border-radius: 12px;
-                    overflow: hidden;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }
-
-                .info-section {
-                    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
-                    border-radius: 1rem;
-                    padding: 1.5rem;
-                    margin-top: 2rem;
-                }
-
-                .info-title {
-                    color: #6b21a8;
-                    font-weight: 700;
-                    font-size: 1.2rem;
-                    margin-bottom: 1rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .info-text {
-                    color: #581c87;
-                    line-height: 1.8;
-                    font-size: 1rem;
-                }
-
-                @media (max-width: 768px) {
-                    .track-card {
-                        padding: 1.25rem;
-                    }
-
-                    .track-icon {
-                        width: 45px;
-                        height: 45px;
-                        font-size: 1.3rem;
-                    }
-
-                    .track-title {
-                        font-size: 1rem;
-                    }
-                }
-            `}</style>
+        <div className="pb-8 animate-fade-in">
 
             {/* Back Button */}
-            <button
-                className="btn btn-outline-secondary rounded-pill mb-4"
+            <Button
                 onClick={onBack}
-                type="button"
+                variant="outline"
+                className="rounded-full mb-4"
             >
-                <i className="fas fa-arrow-right me-2"></i>
+                <i className="fas fa-arrow-right ms-2"></i>
                 رجوع للمكتبة
-            </button>
+            </Button>
 
             {/* Header */}
-            <div className="player-header text-center">
+            <div className="bg-gradient-to-br from-purple-500 to-purple-700 p-8 rounded-xl text-white mb-8 shadow-[0_10px_25px_rgba(139,92,246,0.2)] text-center">
                 <div className="mb-3">
-                    <i className="fas fa-book-medical fs-1 mb-2 opacity-75"></i>
-                    <h1 className="fw-bold mb-1">رقية شرعية</h1>
+                    <i className="fas fa-book-medical text-4xl mb-2 opacity-75 block"></i>
+                    <h1 className="font-bold mb-1">رقية شرعية</h1>
                     <p className="opacity-90">آيات وأدعية الرقية الشرعية - مجموعة متنوعة</p>
                 </div>
             </div>
 
             {/* Tracks Grid */}
-            <div className="tracks-grid">
+            <div className="grid gap-6">
                 {tracks.map((track, index) => (
-                    <div key={index} className="track-card">
-                        <div className="track-header">
-                            <div className="track-icon">
+                    <div key={index} className="bg-card border border-border rounded-xl p-6 shadow-sm border-2 border-transparent transition-all duration-300 hover:border-purple-500 hover:shadow-[0_8px_16px_rgba(139,92,246,0.15)] hover:-translate-y-0.5">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="w-[50px] h-[50px] max-md:w-[45px] max-md:h-[45px] bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center text-white text-2xl max-md:text-xl shrink-0">
                                 <i className="fas fa-play"></i>
                             </div>
-                            <div className="track-info">
-                                <h3 className="track-title">{track.title}</h3>
-                                <p className="track-description">{track.description}</p>
+                            <div className="flex-1">
+                                <h3 className="text-lg max-md:text-base font-bold text-foreground m-0 mb-1">{track.title}</h3>
+                                <p className="text-sm text-muted-foreground m-0">{track.description}</p>
                                 {track.reciter && (
-                                    <div className="track-reciter">
-                                        <i className="fas fa-microphone-alt me-1"></i>
+                                    <div className="text-xs text-purple-600 dark:text-purple-400 font-semibold mt-1">
+                                        <i className="fas fa-microphone-alt ms-1"></i>
                                         {track.reciter}
                                     </div>
                                 )}
@@ -244,7 +121,7 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
                         </div>
 
                         {/* SoundCloud Embed */}
-                        <div className="soundcloud-embed">
+                        <div className="w-full rounded-xl overflow-hidden shadow-sm">
                             <iframe
                                 width="100%"
                                 height="166"
@@ -259,18 +136,18 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
             </div>
 
             {/* Info Section */}
-            <div className="info-section">
-                <div className="info-title">
+            <div className="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-6 mt-8">
+                <div className="text-purple-800 dark:text-purple-300 font-bold text-xl mb-4 flex items-center gap-2">
                     <i className="fas fa-info-circle"></i>
                     <span>عن الرقية الشرعية</span>
                 </div>
-                <div className="info-text">
+                <div className="text-purple-900 dark:text-purple-200 leading-relaxed text-base">
                     الرقية الشرعية هي التعوذ بالله من الشيطان والاستعانة به في دفع ما يضر العبد، وتكون بقراءة آيات من القرآن الكريم والأدعية المأثورة عن النبي ﷺ. يُنصح بالاستماع في مكان هادئ والتركيز على معاني الآيات.
                 </div>
 
                 <div className="mt-3 text-center">
-                    <small className="text-muted">
-                        <i className="fas fa-volume-up me-1"></i>
+                    <small className="text-muted-foreground">
+                        <i className="fas fa-volume-up ms-1"></i>
                         استمع للرقية التي تناسبك وكررها حسب الحاجة
                     </small>
                 </div>
