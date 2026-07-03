@@ -192,9 +192,9 @@ export function VectorMushaf({ onBack }: VectorMushafProps) {
         const dx = touchStart.x - e.changedTouches[0].clientX
         const dy = Math.abs(touchStart.y - e.changedTouches[0].clientY)
         if (Math.abs(dx) > 40 && dy < Math.abs(dx) * 0.6) {
-            // RTL: swipe left = forward, swipe right = back
-            if (dx > 0) nextPage()
-            else prevPage()
+            // RTL: swipe right = forward (next), swipe left = back (prev)
+            if (dx > 0) prevPage()
+            else nextPage()
         }
         setTouchStart(null)
     }
@@ -205,6 +205,7 @@ export function VectorMushaf({ onBack }: VectorMushafProps) {
         const rect = e.currentTarget.getBoundingClientRect()
         const x = e.clientX - rect.left
         const third = rect.width / 3
+        // RTL: tap right = forward, tap left = back
         if (x < third) prevPage()
         else if (x > rect.width - third) nextPage()
         else setShowControls(prev => !prev)

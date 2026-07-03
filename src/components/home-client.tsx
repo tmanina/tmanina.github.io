@@ -23,6 +23,7 @@ const NextPrayerWidget = dynamic(() => import("@/components/next-prayer-widget")
 const InstallPrompt = dynamic(() => import("@/components/install-prompt").then(m => m.InstallPrompt), { loading: () => null })
 const SplashScreen = dynamic(() => import("@/components/splash-screen").then(m => m.SplashScreen), { loading: () => null })
 const FloatingChat = dynamic(() => import("@/components/floating-chat").then(m => m.FloatingChat), { loading: () => null })
+const HadithSearch = dynamic(() => import("@/components/hadith-search").then(m => m.HadithSearch), { loading: () => null })
 const UpdateNotification = dynamic(() => import("@/components/update-notification").then(m => m.UpdateNotification), { loading: () => null })
 
 function L() {
@@ -152,6 +153,10 @@ export function HomeClient() {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  <div>
+                    <HadithSearch />
                   </div>
 
                   <div>

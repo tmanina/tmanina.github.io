@@ -132,7 +132,7 @@ export function QuranReader({ onBack }: QuranReaderProps) {
 
     const noBasmalaSurahs = [1, 9]
 
-    ;(verses as any[]).forEach((verse: any) => {
+    verses.forEach((verse) => {
       if (!verse.words?.length) return
       const [surahNum, ayahNum] = verse.verse_key.split(":").map(Number)
       if (ayahNum !== 1) return

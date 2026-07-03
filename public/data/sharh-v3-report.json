@@ -1,0 +1,850 @@
+{
+  "summary": {
+    "total": 1896,
+    "corrected": 1362,
+    "matched": 533,
+    "topicMismatches": 38,
+    "noSharh": 1,
+    "withSharh": 1895,
+    "uniqueSharhTexts": 202
+  },
+  "corrections": [
+    {
+      "key": "riyadussalihin:introduction:1",
+      "oldSharh": -1,
+      "newSharh": 301,
+      "oldCompat": 0,
+      "newCompat": 105,
+      "hadithTopic": "كتاب الدعوات",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:2",
+      "oldSharh": -1,
+      "newSharh": 474,
+      "oldCompat": 0,
+      "newCompat": 125,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:3",
+      "oldSharh": -1,
+      "newSharh": 14,
+      "oldCompat": 0,
+      "newCompat": 100,
+      "hadithTopic": "الآداب والأخلاق",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:4",
+      "oldSharh": -1,
+      "newSharh": 234,
+      "oldCompat": 0,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "newSharhTopic": "الذكر والدعاء"
+    },
+    {
+      "key": "riyadussalihin:introduction:5",
+      "oldSharh": -1,
+      "newSharh": 224,
+      "oldCompat": 0,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:6",
+      "oldSharh": -1,
+      "newSharh": 1,
+      "oldCompat": 0,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:7",
+      "oldSharh": -1,
+      "newSharh": 23,
+      "oldCompat": 0,
+      "newCompat": 100,
+      "hadithTopic": "اليمين والنذر",
+      "newSharhTopic": "الطعام والشراب"
+    },
+    {
+      "key": "riyadussalihin:introduction:8",
+      "oldSharh": 422,
+      "newSharh": 474,
+      "oldCompat": 9,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الجهاد",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:10",
+      "oldSharh": 422,
+      "newSharh": 301,
+      "oldCompat": 16,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المنثورات والملح",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:11",
+      "oldSharh": 422,
+      "newSharh": 301,
+      "oldCompat": 6,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:12",
+      "oldSharh": 423,
+      "newSharh": 301,
+      "oldCompat": 25,
+      "newCompat": 105,
+      "hadithTopic": "كتاب الدعوات",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:13",
+      "oldSharh": 423,
+      "newSharh": 325,
+      "oldCompat": 46,
+      "newCompat": 100,
+      "hadithTopic": "البيوع",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "البيوع"
+    },
+    {
+      "key": "riyadussalihin:introduction:14",
+      "oldSharh": 423,
+      "newSharh": 325,
+      "oldCompat": 46,
+      "newCompat": 100,
+      "hadithTopic": "البيوع",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "البيوع"
+    },
+    {
+      "key": "riyadussalihin:introduction:15",
+      "oldSharh": 423,
+      "newSharh": 1,
+      "oldCompat": 36,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:20",
+      "oldSharh": 423,
+      "newSharh": 1,
+      "oldCompat": 36,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:21",
+      "oldSharh": 423,
+      "newSharh": 474,
+      "oldCompat": 39,
+      "newCompat": 120,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:22",
+      "oldSharh": 423,
+      "newSharh": 1,
+      "oldCompat": 36,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:23",
+      "oldSharh": 424,
+      "newSharh": 224,
+      "oldCompat": 19,
+      "newCompat": 105,
+      "hadithTopic": "كتـــــاب أدب الطعام",
+      "oldSharhTopic": "الآداب والأخلاق",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:24",
+      "oldSharh": 424,
+      "newSharh": 474,
+      "oldCompat": 14,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الآداب والأخلاق",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:25",
+      "oldSharh": 424,
+      "newSharh": 474,
+      "oldCompat": 9,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الآداب والأخلاق",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:26",
+      "oldSharh": 425,
+      "newSharh": 474,
+      "oldCompat": 13,
+      "newCompat": 110,
+      "hadithTopic": "كتاب آداب السفر",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:27",
+      "oldSharh": 425,
+      "newSharh": 474,
+      "oldCompat": 9,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:28",
+      "oldSharh": 425,
+      "newSharh": 1,
+      "oldCompat": 21,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:29",
+      "oldSharh": 425,
+      "newSharh": 1,
+      "oldCompat": 21,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:30",
+      "oldSharh": 425,
+      "newSharh": 474,
+      "oldCompat": 19,
+      "newCompat": 120,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "oldSharhTopic": "الجهاد",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:31",
+      "oldSharh": 426,
+      "newSharh": 1,
+      "oldCompat": 17,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:32",
+      "oldSharh": 426,
+      "newSharh": 48,
+      "oldCompat": 9,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الذكر والدعاء"
+    },
+    {
+      "key": "riyadussalihin:introduction:33",
+      "oldSharh": 426,
+      "newSharh": 1,
+      "oldCompat": 17,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "الصلاة",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:34",
+      "oldSharh": 427,
+      "newSharh": 193,
+      "oldCompat": 4,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "الزكاة",
+      "newSharhTopic": "الصيام"
+    },
+    {
+      "key": "riyadussalihin:introduction:35",
+      "oldSharh": 427,
+      "newSharh": 301,
+      "oldCompat": 11,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "الزكاة",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:36",
+      "oldSharh": 427,
+      "newSharh": 193,
+      "oldCompat": 4,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "الزكاة",
+      "newSharhTopic": "الصيام"
+    },
+    {
+      "key": "riyadussalihin:introduction:37",
+      "oldSharh": 428,
+      "newSharh": 43,
+      "oldCompat": 49,
+      "newCompat": 105,
+      "hadithTopic": "كتــــاب اللباس",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "اللباس والزينة"
+    },
+    {
+      "key": "riyadussalihin:introduction:38",
+      "oldSharh": 428,
+      "newSharh": 43,
+      "oldCompat": 49,
+      "newCompat": 105,
+      "hadithTopic": "كتــــاب اللباس",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "اللباس والزينة"
+    },
+    {
+      "key": "riyadussalihin:introduction:40",
+      "oldSharh": 428,
+      "newSharh": 20,
+      "oldCompat": 74,
+      "newCompat": 110,
+      "hadithTopic": "كتاب السلام",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:43",
+      "oldSharh": 428,
+      "newSharh": 474,
+      "oldCompat": 84,
+      "newCompat": 125,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:44",
+      "oldSharh": 428,
+      "newSharh": 224,
+      "oldCompat": 65,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:46",
+      "oldSharh": 428,
+      "newSharh": 301,
+      "oldCompat": 66,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المنثورات والملح",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:47",
+      "oldSharh": 428,
+      "newSharh": 397,
+      "oldCompat": 50,
+      "newCompat": 100,
+      "hadithTopic": "الفتن",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الفتن"
+    },
+    {
+      "key": "riyadussalihin:introduction:48",
+      "oldSharh": 428,
+      "newSharh": 282,
+      "oldCompat": 68,
+      "newCompat": 120,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:50",
+      "oldSharh": 428,
+      "newSharh": 474,
+      "oldCompat": 41,
+      "newCompat": 120,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:53",
+      "oldSharh": 428,
+      "newSharh": 435,
+      "oldCompat": 62,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المقدمات",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "التوبة"
+    },
+    {
+      "key": "riyadussalihin:introduction:54",
+      "oldSharh": 428,
+      "newSharh": 26,
+      "oldCompat": 25,
+      "newCompat": 105,
+      "hadithTopic": "كتـــــاب أدب الطعام",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الطعام والشراب"
+    },
+    {
+      "key": "riyadussalihin:introduction:55",
+      "oldSharh": 428,
+      "newSharh": 238,
+      "oldCompat": 83,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأذكار",
+      "oldSharhTopic": "عيادة المريض والموت",
+      "newSharhTopic": "الذكر والدعاء"
+    },
+    {
+      "key": "riyadussalihin:introduction:57",
+      "oldSharh": 429,
+      "newSharh": 124,
+      "oldCompat": 50,
+      "newCompat": 100,
+      "hadithTopic": "العلم",
+      "oldSharhTopic": "العلم",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:58",
+      "oldSharh": 429,
+      "newSharh": 263,
+      "oldCompat": 12,
+      "newCompat": 110,
+      "hadithTopic": "كتاب آداب السفر",
+      "oldSharhTopic": "العلم",
+      "newSharhTopic": "الذكر والدعاء"
+    },
+    {
+      "key": "riyadussalihin:introduction:59",
+      "oldSharh": 430,
+      "newSharh": 474,
+      "oldCompat": 37,
+      "newCompat": 125,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "oldSharhTopic": "الحدود والجنايات",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:60",
+      "oldSharh": 430,
+      "newSharh": 474,
+      "oldCompat": 12,
+      "newCompat": 110,
+      "hadithTopic": "كتاب الأدب",
+      "oldSharhTopic": "الحدود والجنايات",
+      "newSharhTopic": "الصلاة"
+    },
+    {
+      "key": "riyadussalihin:introduction:61",
+      "oldSharh": 430,
+      "newSharh": 301,
+      "oldCompat": 14,
+      "newCompat": 105,
+      "hadithTopic": "كتاب المنثورات والملح",
+      "oldSharhTopic": "الحدود والجنايات",
+      "newSharhTopic": "الآداب والأخلاق"
+    },
+    {
+      "key": "riyadussalihin:introduction:62",
+      "oldSharh": 430,
+      "newSharh": 208,
+      "oldCompat": 63,
+      "newCompat": 100,
+      "hadithTopic": "الجهاد",
+      "oldSharhTopic": "الحدود والجنايات",
+      "newSharhTopic": "العلم"
+    },
+    {
+      "key": "riyadussalihin:introduction:63",
+      "oldSharh": 430,
+      "newSharh": 474,
+      "oldCompat": 24,
+      "newCompat": 125,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "oldSharhTopic": "الحدود والجنايات",
+      "newSharhTopic": "الصلاة"
+    }
+  ],
+  "mismatches": [
+    {
+      "key": "riyadussalihin:introduction:238",
+      "oldSharh": 455,
+      "compat": 0,
+      "hadithTopic": "كتاب المقدمات",
+      "sharhTopic": "الصبر",
+      "matnPreview": "وخطت عنه ذنوبه كما تحط الشجرة ورقها)) (متفق عليه) .\n\nو ((الو",
+      "sharhPreview": "هذان الحديثان: حديث أبي سعيد وأبي هريرة وابن مسعود - رضي الله عنهم- فيهما دليل ع"
+    },
+    {
+      "key": "riyadussalihin:introduction:587",
+      "oldSharh": 476,
+      "compat": 0,
+      "hadithTopic": "غير معروف",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "[١٠ـ باب المبادرة إلى الخيرات]\n\nوحث من توجه لخير على الإقبال",
+      "sharhPreview": "قال المؤلف رحمه الله تعالى: (باب المبادرة إلى الخيرات وحث من أقبل على الخير أن ي"
+    },
+    {
+      "key": "riyadussalihin:introduction:628",
+      "oldSharh": 484,
+      "compat": 0,
+      "hadithTopic": "غير معروف",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "(فتساورت) هو بالسين المهملة: أي وثبت متطلعاً.\n\n[",
+      "sharhPreview": "قال المؤلف ـ رحمه الله تعالى ـ فيما نقله عن أبي هريرة رضي الله عنه، أن رسول الله"
+    },
+    {
+      "key": "riyadussalihin:1:693",
+      "oldSharh": 8,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الطلاق",
+      "matnPreview": "٦٩٣ - عن عدي بن حاتم رضي الله عنه قال: قال رسول الله صلى الل",
+      "sharhPreview": "قال المؤلف رحمه الله تعالى: (باب استحباب طيب الكلام وطلاقة الوجه عند اللقاء) يعن"
+    },
+    {
+      "key": "riyadussalihin:2:759",
+      "oldSharh": 38,
+      "compat": 0,
+      "hadithTopic": "كتـــــاب أدب الطعام",
+      "sharhTopic": "الطعام والشراب",
+      "matnPreview": "٧٥٩ - وعن أبي قتادة رضي الله عنه أن النبي صلى الله عليه وسلم",
+      "sharhPreview": "قال المؤلف رحمه الله تعالى: (باب أدب الشرب واستحباب النفس ثلاثا خارج\nالإناء وكرا"
+    },
+    {
+      "key": "riyadussalihin:3:787",
+      "oldSharh": 46,
+      "compat": 0,
+      "hadithTopic": "كتــــاب اللباس",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "٧٨٧ - وعنها قالت: خرج رسول الله صلى الله عليه وسلم ذات غداة ",
+      "sharhPreview": "هذه الأحاديث التي ذكرها المؤلف رحمه الله في (كتاب اللباس)\nفيها الإشارة كما سبق إ"
+    },
+    {
+      "key": "riyadussalihin:3:793",
+      "oldSharh": 47,
+      "compat": 0,
+      "hadithTopic": "كتــــاب اللباس",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "٧٩٣ - وعنه عن النبي صلى الله عليه وسلم قال: ما أسفل الكعبين ",
+      "sharhPreview": "هذه الأحاديث التي ذكرها النووي رحمه الله في (كتاب اللباس) فيها أحاديث تدل على أن"
+    },
+    {
+      "key": "riyadussalihin:3:799",
+      "oldSharh": 51,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "اللباس والزينة",
+      "matnPreview": "٧٩٩ - وعن أبي سعيد الخدري رضي الله عنه قال: قال رسول الله صل",
+      "sharhPreview": "هذه أحاديث ثلاثة ساقها النووي رحمه الله في رياض الصالحين في (كتاب اللباس) منها: "
+    },
+    {
+      "key": "riyadussalihin:3:812",
+      "oldSharh": 54,
+      "compat": 0,
+      "hadithTopic": "كتــــاب اللباس",
+      "sharhTopic": "اللباس والزينة",
+      "matnPreview": "٨١٢ - عن أبي المليح عن أبيه رضي الله عنه أن رسول الله صلى ال",
+      "sharhPreview": "هذه الأبواب التي ذكرها المؤلف هي آخر أبواب كتاب رياض الصالحين فالباب الأول: جواز"
+    },
+    {
+      "key": "riyadussalihin:4:823",
+      "oldSharh": 58,
+      "compat": 0,
+      "hadithTopic": "كتاب آداب النوم",
+      "sharhTopic": "الطلاق",
+      "matnPreview": "٨٢٣ - وعن قيلة بنت مخرمة رضي الله عنها قالت: رأيت النبي صلى ",
+      "sharhPreview": "هذا الباب الذي عقده النووي رحمه الله في بيان النوم على الظهر وقد سبق أن الأفضل ل"
+    },
+    {
+      "key": "riyadussalihin:4:828",
+      "oldSharh": 60,
+      "compat": 0,
+      "hadithTopic": "كتاب آداب النوم",
+      "sharhTopic": "الفتن",
+      "matnPreview": "٨٢٨ - وعن أبي عبد الله سلمان الفارسي رضي الله عنه قال: قال ر",
+      "sharhPreview": "هذان الحديثان نقلهما النووي رحمه الله في (باب آداب المجلس والجليس) فمن آداب المج"
+    },
+    {
+      "key": "riyadussalihin:4:831",
+      "oldSharh": 61,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "٨٣١ - وعن أبي سعيد الخدري رضي الله عنه قال: سمعت رسول الله ص",
+      "sharhPreview": "ومن آداب المجالس ما ذكره المؤلف عن عمرو بن شعيب عن أبيه عن جده رضي الله عنه أن ا"
+    },
+    {
+      "key": "riyadussalihin:5:868",
+      "oldSharh": 73,
+      "compat": 0,
+      "hadithTopic": "كتاب السلام",
+      "sharhTopic": "العلم",
+      "matnPreview": "٨٦٨ - وعن أسامة رضي الله عنه أن النبي صلى الله عليه وسلم مر ",
+      "sharhPreview": "هذا الباب ذكره المؤلف في كتابه رياض الصالحين في حكم السلام على الكفار الخلص وعلى"
+    },
+    {
+      "key": "riyadussalihin:5:885",
+      "oldSharh": 76,
+      "compat": 0,
+      "hadithTopic": "كتاب السلام",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "٨٨٥ - عن أبي الخطاب قتادة قال قلت لأنس أكانت المصافحة في أصح",
+      "sharhPreview": "هذا الباب عقده المؤلف النووي رحمه الله في كتاب رياض الصالحين بآداب السلام والاست"
+    },
+    {
+      "key": "riyadussalihin:6:904",
+      "oldSharh": 85,
+      "compat": 0,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "٩٠٤ - وعن سعد بن أبي وقاص رضي الله عنه قال عادني رسول الله ص",
+      "sharhPreview": "هذه الأحاديث مما يقال عند المريض إذا عاده الإنسان ذكرها النووي رحمه الله في كتاب"
+    },
+    {
+      "key": "riyadussalihin:6:905",
+      "oldSharh": 85,
+      "compat": 0,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "٩٠٥ - وعن أبي عبد الله عثمان بن العاص رضي الله عنه أنه شكا إ",
+      "sharhPreview": "هذه الأحاديث مما يقال عند المريض إذا عاده الإنسان ذكرها النووي رحمه الله في كتاب"
+    },
+    {
+      "key": "riyadussalihin:6:921",
+      "oldSharh": 95,
+      "compat": 0,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "sharhTopic": "الآداب والأخلاق",
+      "matnPreview": "٩٢١ - وعنها قالت سمعت رسول الله صلى الله عليه وسلم يقول ما م",
+      "sharhPreview": "هذه الأحاديث ذكرها النووي رحمه الله في رياض الصالحين فيما يقال عند الموت يعني إذ"
+    },
+    {
+      "key": "riyadussalihin:7:965",
+      "oldSharh": 112,
+      "compat": 0,
+      "hadithTopic": "كتاب آداب السفر",
+      "sharhTopic": "الآداب والأخلاق",
+      "matnPreview": "٩٦٥ - وعن أبي ثعلبة الخشني رضي الله عنه قال كان الناس إذا نز",
+      "sharhPreview": "هذه الأحاديث في آداب السفر ساقها النووي رحمه الله في رياض الصالحين منها أن النبي"
+    },
+    {
+      "key": "riyadussalihin:8:1038",
+      "oldSharh": 145,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١٠٣٨ - وعن أبي سعيد الخدري رضي الله عنه أن رسول الله صلى الل",
+      "sharhPreview": "هذه الأحاديث بقية باب فضل الأذان ساقها النووي رحمه الله في (رياض الصالحين) منها:"
+    },
+    {
+      "key": "riyadussalihin:8:1049",
+      "oldSharh": 147,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١٠٤٩ - وعن جندب بن سفيان رضي الله عنه قال قال رسول الله صلى ",
+      "sharhPreview": "هذه الأحاديث في بيان فضيلة صلاة الفجر وصلاة العصر فمنها الحديث الأول أن النبي صل"
+    },
+    {
+      "key": "riyadussalihin:8:1085",
+      "oldSharh": 162,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الرقاق والزهد",
+      "matnPreview": "١٠٨٥ - وعن أبي سعيد الخدري رضي الله عنه أن رسول الله صلى الل",
+      "sharhPreview": "هذه الأحاديث في بيان فضل الصفوف نقلها النووي رحمه الله في رياض الصالحين منها حدي"
+    },
+    {
+      "key": "riyadussalihin:8:1101",
+      "oldSharh": 167,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١١٠١ - وعنها قالت لم يكن النبي صلى الله عليه وسلم على شيء من",
+      "sharhPreview": "قال المؤلف النووي رحمه الله في كتابه رياض الصالحين باب تأكيد ركعتي الصبح يعني سن"
+    },
+    {
+      "key": "riyadussalihin:8:1135",
+      "oldSharh": 174,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "السفر",
+      "matnPreview": "١١٣٥ - وعن أبي سعيد الخدري رضي الله عنه أن النبي صلى الله عل",
+      "sharhPreview": "هذه الأحاديث في بقية ما يتعلق بالوتر ذكرها المؤلف في رياض الصالحين منها أن النبي"
+    },
+    {
+      "key": "riyadussalihin:8:1154",
+      "oldSharh": 178,
+      "compat": 0,
+      "hadithTopic": "كتاب آداب النوم",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١١٥٤ - وعن سلمان رضي الله عنه قال: قال رسول الله صلى الله عل",
+      "sharhPreview": "قال رحمه الله تعالى: باب سجود الشكر عند تجدد النعم واندفاع النقم.\nمن & المعلوم أ"
+    },
+    {
+      "key": "riyadussalihin:8:1184",
+      "oldSharh": 184,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١١٨٤ - وعنه وعن أبي سعيد رضي الله عنهما قالا: قال رسول الله ",
+      "sharhPreview": "هذه بقية الأحاديث التي نقلها النووي رحمه الله في كتابه رياض الصالحين في: باب فضل"
+    },
+    {
+      "key": "riyadussalihin:8:1200",
+      "oldSharh": 187,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١٢٠٠ - وعن شريح بن هانئ قال: قلت لعائشة رضي الله عنها: بأي ش",
+      "sharhPreview": "قال المؤلف رحمه الله في كتابه رياض الصالحين باب فضل السواك وسنن الفطرة.\nالسواك ه"
+    },
+    {
+      "key": "riyadussalihin:11:1289",
+      "oldSharh": 209,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الجهاد",
+      "matnPreview": "١٢٨٩ - وعن أبي سعيد الخدري رضي الله عنه قال: أتى رجل رسول ال",
+      "sharhPreview": "سبق لنا الكلام على قوله تعالى يا أيها الذين آمنوا هل أدلكم على تجارة تنجيكم من ع"
+    },
+    {
+      "key": "riyadussalihin:11:1336",
+      "oldSharh": 215,
+      "compat": 0,
+      "hadithTopic": "كتاب الجهاد",
+      "sharhTopic": "العلم",
+      "matnPreview": "١٣٣٦ - وعن سلمة بن الأكوع رضي الله عنه قال: مر النبي صلى الل",
+      "sharhPreview": "هذه الأحاديث في بيان أمور في الجهاد في سبيل الله منها الرمي وقد سبق أن النبي صلى"
+    },
+    {
+      "key": "riyadussalihin:11:1371",
+      "oldSharh": 223,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "البيوع",
+      "matnPreview": "١٣٧١ - وعن أبي مسعود البدري رضي الله عنه قال: قال رسول الله ",
+      "sharhPreview": "هذه الأحاديث الثلاثة في باب فضل السماحة في البيع والشراء وفيها فضل العفو عن النا"
+    },
+    {
+      "key": "riyadussalihin:17:1521",
+      "oldSharh": 285,
+      "compat": 0,
+      "hadithTopic": "كتاب الأدب",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "١٥٢١ - وعن أبي سعيد الخدري رضي الله عنه عن النبي صلى الله عل",
+      "sharhPreview": "هذا من الأحاديث التي ساقها المؤلف رحمه الله، كلها فيها التحذير من اللسان وشروره "
+    },
+    {
+      "key": "riyadussalihin:17:1531",
+      "oldSharh": 289,
+      "compat": 0,
+      "hadithTopic": "كتاب عيادة المريض وتشييع الميت والصلاة عليه وحضور دفنه",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "١٥٣١ - عن عائشة رضي الله عنها أن رجلاً استأذن على النبي صلى ",
+      "sharhPreview": "تقدم أن النووي رحمه الله ذكر باباً في بيان ما يجوز من الغيبة وذكر لذلك أحاديث فم"
+    },
+    {
+      "key": "riyadussalihin:17:1601",
+      "oldSharh": 319,
+      "compat": 0,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "sharhTopic": "الآداب والأخلاق",
+      "matnPreview": "١٦٠١ - وعنه أنه مر بفتيان من قريش قد نصبوا طيرا وهم يرمونه و",
+      "sharhPreview": "هذا الباب ذكره المؤلف رحمه الله في كتابه رياض الصالحين النهي عن تعذيب الحيوان وا"
+    },
+    {
+      "key": "riyadussalihin:17:1604",
+      "oldSharh": 320,
+      "compat": 0,
+      "hadithTopic": "كتاب الفضائل",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "١٦٠٤ - وعن أبي مسعود البدري رضي الله عنه قال: كنت اضرب",
+      "sharhPreview": "هذه الأحاديث التي ساقها النووي رحمه الله في كتابه رياض الصالحين في باب النهي عن "
+    },
+    {
+      "key": "riyadussalihin:17:1665",
+      "oldSharh": 343,
+      "compat": 0,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "sharhTopic": "الآداب والأخلاق",
+      "matnPreview": "١٦٦٥ - وعن أسيد بن أبي أسيد التابعي عن امرأة من المبايعات",
+      "sharhPreview": "هذه الأحاديث التي ساقها النووي رحمه الله في كتابه رياض الصالحين كلها تدل على تحر"
+    },
+    {
+      "key": "riyadussalihin:17:1764",
+      "oldSharh": 379,
+      "compat": 0,
+      "hadithTopic": "كتاب الأمور المنهي عنها",
+      "sharhTopic": "الصيام",
+      "matnPreview": "١٧٦٤ - عن أبي هريرة وعائشة رضي الله عنهما أن النبي صلى الله ",
+      "sharhPreview": "قال المؤلف رحمه الله في كتابه رياض الصالحين: باب تحريم الوصال في الصوم ومعنى الو"
+    },
+    {
+      "key": "riyadussalihin:18:1836",
+      "oldSharh": 405,
+      "compat": 0,
+      "hadithTopic": "كتــــاب اللباس",
+      "sharhTopic": "الصلاة",
+      "matnPreview": "١٨٣٦ - وعنه عن النبي صلى الله عليه وسلم قال بين النفختين أرب",
+      "sharhPreview": "هذه الأحاديث من الملح والمنثورات وسبق الكلام عن الكثير منها فهذه أحاديث أربعة عن"
+    },
+    {
+      "key": "riyadussalihin:18:1841",
+      "oldSharh": 406,
+      "compat": 0,
+      "hadithTopic": "كتــــاب اللباس",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "١٨٤١ - وعنه عن النبي صلى الله عليه وسلم قال أحب البلاد إلى ا",
+      "sharhPreview": "هذه الأحاديث من الأحاديث المنثورة التي ذكرها النووي رحمه الله في كتابه رياض الصا"
+    },
+    {
+      "key": "riyadussalihin:18:1842",
+      "oldSharh": 406,
+      "compat": 0,
+      "hadithTopic": "كتاب آداب النوم",
+      "sharhTopic": "الذكر والدعاء",
+      "matnPreview": "١٨٤٢ - وعن سلمان الفارسي رضي الله عنه من قوله: قال لا تكونن ",
+      "sharhPreview": "هذه الأحاديث من الأحاديث المنثورة التي ذكرها النووي رحمه الله في كتابه رياض الصا"
+    }
+  ]
+}

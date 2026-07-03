@@ -2,161 +2,295 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-
-interface HadithCollection {
-  slug: string
-  name: { en: string; ar: string }
-  intro: { en: string | null; ar: string | null }
-  hasBooks: boolean
-  hasChapters: boolean
-  totalHadith: number
-  totalAvailable: number
-}
-
-interface HadithBook {
-  collection: string
-  bookNumber: string
-  name: { en: string; ar: string }
-  hadithStartNumber: number
-  hadithEndNumber: number
-  hadithCount: number
-}
-
-interface HadithItem {
-  collection: string
-  bookNumber: string
-  hadithNumber: string
-  chapterTitle: { en: string | null; ar: string | null }
-  ar: { text: string; grades: Array<{ graded_by: string | null; grade: string }> }
-  en: { text: string; grades: Array<{ graded_by: string | null; grade: string }> }
-}
-
-interface SharhEntry {
-  text: string
-  source: string
-  scholar: string
-}
+import {
+  type HadithCollection,
+  type HadithBook,
+  type HadithItem,
+  type SharhEntry,
+  type ReviewedSharhEntry,
+  type ReviewedSharhFile,
+  type DorarApiResponse,
+  type DorarSearchResult,
+  COLORS,
+  COL_DESC,
+  COL_INTRO_AR,
+  FAV_KEY,
+  LIMIT,
+  DORAR_SEARCH_BASE_URL,
+  DORAR_PROXY_URL,
+  colorOf,
+  getFavs,
+  toggleFav,
+  hKey,
+  normalizeArabic,
+  normalizeGrade,
+  gradeBadgeCls,
+  gradeAr,
+  arBookName,
+  isPlaceholderEntry,
+  isApiHadithTextEntry,
+  isTrustedReviewedSharhEntry,
+  extractDorarHtmlResults,
+  resolveSharhEntry,
+} from "./hadith/hadith-utils"
 
 interface HadithLibraryProps {
   onBack: () => void
 }
 
-const COLORS: Record<string, { color: string; gradient: string }> = {
-  bukhari: { color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b, #d97706)" },
-  muslim: { color: "#10b981", gradient: "linear-gradient(135deg, #10b981, #059669)" },
-  tirmidhi: { color: "#3b82f6", gradient: "linear-gradient(135deg, #3b82f6, #2563eb)" },
-  abudawud: { color: "#8b5cf6", gradient: "linear-gradient(135deg, #8b5cf6, #7c3aed)" },
-  nasai: { color: "#ec4899", gradient: "linear-gradient(135deg, #ec4899, #db2777)" },
-  ibnmajah: { color: "#ef4444", gradient: "linear-gradient(135deg, #ef4444, #dc2626)" },
-  ahmad: { color: "#14b8a6", gradient: "linear-gradient(135deg, #14b8a6, #0d9488)" },
-  malik: { color: "#6366f1", gradient: "linear-gradient(135deg, #6366f1, #4f46e5)" },
-  darimi: { color: "#64748b", gradient: "linear-gradient(135deg, #64748b, #475569)" },
-  riyadussalihin: { color: "#34d399", gradient: "linear-gradient(135deg, #34d399, #059669)" },
-  adab: { color: "#06b6d4", gradient: "linear-gradient(135deg, #06b6d4, #0891b2)" },
-  shamail: { color: "#f43f5e", gradient: "linear-gradient(135deg, #f43f5e, #e11d48)" },
-  mishkat: { color: "#7c3aed", gradient: "linear-gradient(135deg, #7c3aed, #6d28d9)" },
-  bulugh: { color: "#f97316", gradient: "linear-gradient(135deg, #f97316, #ea580c)" },
-  forty: { color: "#84cc16", gradient: "linear-gradient(135deg, #84cc16, #65a30d)" },
-  hisn: { color: "#eab308", gradient: "linear-gradient(135deg, #eab308, #ca8a04)" },
-  virtues: { color: "#78716c", gradient: "linear-gradient(135deg, #78716c, #57534e)" },
+function sanitizeDorarHtml(html: string): string {
+  if (typeof window === "undefined") return ""
+
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(`<div>${html}</div>`, "text/html")
+  const allowedTags = new Set([
+    "DIV", "SPAN", "P", "BR", "B", "STRONG", "I", "EM", "U", "SMALL", "UL", "OL", "LI", "A",
+  ])
+
+  doc.body.querySelectorAll("*").forEach((element) => {
+    if (!allowedTags.has(element.tagName)) {
+      element.replaceWith(...Array.from(element.childNodes))
+      return
+    }
+
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase()
+      const value = attribute.value
+      const isSafeLink =
+        element.tagName === "A" &&
+        name === "href" &&
+        /^https:\/\/(?:www\.)?dorar\.net\//.test(value)
+      const isSafeClass = name === "class" && /^[\w\s:-]+$/.test(value)
+
+      if (isSafeLink) {
+        element.setAttribute("target", "_blank")
+        element.setAttribute("rel", "noopener noreferrer")
+        return
+      }
+
+      if (!isSafeClass) {
+        element.removeAttribute(attribute.name)
+      }
+    })
+  })
+
+  return doc.body.firstElementChild?.innerHTML || ""
 }
 
-const COL_DESC: Record<string, string> = {
-  bukhari: "الجامع المسند الصحيح",
-  muslim: "المسند الصحيح المختصر",
-  tirmidhi: "السنن والجامع",
-  abudawud: "سنن أبي داود السجستاني",
-  nasai: "السنن الصغرى",
-  ibnmajah: "السنن",
-  ahmad: "المسند",
-  malik: "الموطأ",
-  darimi: "السنن",
-  riyadussalihin: "من أهم كتب الحديث",
-  adab: "في الآداب الإسلامية",
-  shamail: "في شمائله ﷺ",
-  mishkat: "مشكاة المصابيح",
-  bulugh: "بلوغ المرام",
-  forty: "الأربعون النووية",
-  hisn: "الرقية والأذكار",
-  virtues: "فضائل القرآن",
+function searchDorarByJsonp(query: string): Promise<DorarApiResponse> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined") {
+      reject(new Error("Dorar search is browser-only"))
+      return
+    }
+
+    const callbackName = `tmaninaDorarCallback_${Date.now()}_${Math.random().toString(36).slice(2)}`
+    const script = document.createElement("script")
+    const cleanup = () => {
+      delete (window as typeof window & Record<string, unknown>)[callbackName]
+      script.remove()
+    }
+    const timeout = window.setTimeout(() => {
+      cleanup()
+      reject(new Error("Dorar search timed out"))
+    }, 12000)
+
+    ;(window as typeof window & Record<string, (data: DorarApiResponse) => void>)[callbackName] = (data) => {
+      window.clearTimeout(timeout)
+      cleanup()
+      resolve(data)
+    }
+
+    script.src = `https://dorar.net/dorar_api.json?skey=${encodeURIComponent(query)}&callback=${encodeURIComponent(callbackName)}`
+    script.async = true
+    script.onerror = () => {
+      window.clearTimeout(timeout)
+      cleanup()
+      reject(new Error("Dorar search failed"))
+    }
+
+    document.head.appendChild(script)
+  })
 }
 
-const COL_INTRO_AR: Record<string, string> = {
-  bukhari: "صحيح البخاري هو مجموعة من الأحاديث النبوية جمعها الإمام محمد بن إسماعيل البخاري (ت 256 هـ) رحمه الله. ويُعد كتابه أصح كتاب بعد كتاب الله عند جماهير المسلمين. يحتوي على أكثر من 7500 حديث (مع التكرار) موزعة على 97 كتاباً. الترجمة المقدمة هنا للدكتور محمد محسن خان.",
-  muslim: "صحيح مسلم هو مجموعة من الأحاديث النبوية جمعها الإمام مسلم بن الحجاج النيسابوري رحمه الله. ويُعد صحيح مسلم من أصح كتب الحديث النبوي، ويشكل مع صحيح البخاري \"الصحيحين\". يحتوي على حوالي 7500 حديث (مع التكرار) موزعة على 57 كتاباً.",
-  nasai: "سنن النسائي هو مجموعة من الأحاديث النبوية جمعها الإمام أحمد بن شعيب النسائي رحمه الله. يُعد أحد الكتب الستة المشهورة في الحديث النبوي (كُتب السِّتَّة). يحتوي على حوالي 5700 حديث (مع التكرار) في 52 كتاباً.",
-  abudawud: "سنن أبي داود هو مجموعة من الأحاديث النبوية جمعها الإمام أبو داود سليمان بن الأشعث السجستاني رحمه الله. يُعد أحد الكتب الستة المشهورة في الحديث النبوي. يحتوي على 5274 حديثاً في 43 كتاباً.",
-  tirmidhi: "الجامع الترمذي هو مجموعة من الأحاديث النبوية جمعها الإمام أبو عيسى محمد الترمذي رحمه الله. يُعد أحد الكتب الستة المشهورة في الحديث النبوي. يحتوي على حوالي 4400 حديث (مع التكرار) في 50 كتاباً.",
-  ibnmajah: "سنن ابن ماجه هو مجموعة من الأحاديث النبوية جمعها الإمام محمد بن يزيد ابن ماجه القزويني رحمه الله. يُعد سادس الكتب الستة المشهورة في الحديث النبوي. يحتوي على 4341 حديثاً في 37 كتاباً.",
-  ahmad: "مسند أحمد هو مجموعة من الأحاديث النبوية جمعها الإمام أحمد بن حنبل (ت 241 هـ) رحمه الله. وهو أحد أشهر كتب الحديث النبوي وأهمها، ويُعد أكبر كتب الحديث الرئيسية حيث يحتوي على حوالي 28,199 حديثاً (مع التكرار) في 24 كتاباً.",
-  darimi: "سنن الدارمي هو مجموعة من الأحاديث النبوية جمعها الإمام عبد الله بن عبد الرحمن الدارمي (ت 255 هـ) رحمه الله. يُعد أحد كتب الحديث المهمة، ويُصنف ضمن \"كتب الحديث التسعة\".",
-  riyadussalihin: "رياض الصالحين هو مجموعة منتقاة من الأحاديث النبوية جمعها الإمام يحيى بن شرف النووي رحمه الله. وهو من أكثر كتب الحديث شهرة وانتشاراً في العالم الإسلامي، يحتوي على حوالي 1900 حديث في الأخلاق والآداب والعبادات وغيرها.",
-  mishkat: "مشكاة المصابيح هو مجموعة منتقاة من الأحاديث النبوية جمعها الإمام الخطيب التبريزي. قام التبريزي بالتوسع في كتاب سابق اسمه \"مصابيح السنة\" للإمام البغوي. يحتوي على حوالي 6000 حديث منتقاة من الكتب الستة ومسند أحمد وغيرها.",
-  virtues: "هذه مجموعة قصيرة من الأحاديث الصحيحة جمعها الشيخ سليمان هاني حول فضائل سور وآيات القرآن الكريم. الغرض من هذه المجموعة هو جمع الأحاديث الصحيحة في مكان واحد مع استبعاد الأحاديث الضعيفة أو الموضوعة.",
+async function searchDorarByProxy(query: string): Promise<DorarApiResponse> {
+  const response = await fetch(`${DORAR_PROXY_URL}?skey=${encodeURIComponent(query)}`, {
+    headers: { accept: "application/json" },
+  })
+
+  if (!response.ok) {
+    throw new Error("Dorar proxy search failed")
+  }
+
+  return response.json() as Promise<DorarApiResponse>
 }
 
-const FAV_KEY = "hadith-favs"
-const LIMIT = 200
-
-function colorOf(slug: string) {
-  return COLORS[slug] || { color: "#6b7280", gradient: "linear-gradient(135deg, #6b7280, #4b5563)" }
+async function searchDorar(query: string): Promise<DorarApiResponse> {
+  try {
+    return await searchDorarByProxy(query)
+  } catch {
+    return searchDorarByJsonp(query)
+  }
 }
 
-function getFavs(): Set<string> {
-  try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")) }
-  catch { return new Set() }
-}
+export function DorarHadithSearch() {
+  const [query, setQuery] = React.useState("")
+  const [searchedQuery, setSearchedQuery] = React.useState("")
+  const [results, setResults] = React.useState<DorarSearchResult[]>([])
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState("")
 
-function toggleFav(key: string): Set<string> {
-  const set = getFavs()
-  if (set.has(key)) set.delete(key)
-  else set.add(key)
-  localStorage.setItem(FAV_KEY, JSON.stringify([...set]))
-  return set
-}
+  const directSearchUrl = searchedQuery
+    ? `${DORAR_SEARCH_BASE_URL}${encodeURIComponent(searchedQuery)}`
+    : "https://dorar.net/hadith"
 
-function hKey(h: { collection: string; bookNumber: string; hadithNumber: string }) {
-  return `${h.collection}:${h.bookNumber}:${h.hadithNumber}`
-}
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const trimmed = query.trim()
+    if (trimmed.length < 2) {
+      setError("اكتب كلمتين أو جزءًا واضحًا من الحديث للبحث.")
+      setResults([])
+      setSearchedQuery(trimmed)
+      return
+    }
 
-function normalizeArabic(text: string): string {
-  return text
-    .replace(/[\u064B-\u0652\u0656-\u065B\u065C-\u065E]/g, "")
-    .replace(/\u0640/g, "")
-    .replace(/[أإآ]/g, "ا")
-    .replace(/ؤ/g, "و")
-    .replace(/ئ/g, "ي")
-    .replace(/ة/g, "ه")
-    .replace(/ى/g, "ي")
-}
+    setLoading(true)
+    setError("")
+    setResults([])
+    setSearchedQuery(trimmed)
 
-function normalizeGrade(g: string): string {
-  return g.toLowerCase().replace(/['`]/g, "").trim()
-}
+    try {
+      const data = await searchDorar(trimmed)
+      const safeResults = extractDorarHtmlResults(data)
+        .map((html, index) => ({
+          id: `${Date.now()}-${index}`,
+          html: sanitizeDorarHtml(html),
+        }))
+        .filter((item) => item.html.trim().length > 0)
 
-function gradeBadgeCls(grade: string): string {
-  const g = normalizeGrade(grade)
-  if (g.startsWith("sahih")) return "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300"
-  if (g.startsWith("hasan")) return "text-amber-600 bg-amber-100 dark:bg-amber-900/20 dark:text-amber-300"
-  if (g.startsWith("daif")) return "text-red-600 bg-red-100 dark:bg-red-900/20 dark:text-red-300"
-  return "text-gray-600 bg-gray-100 dark:bg-muted dark:text-muted-foreground"
-}
+      setResults(safeResults)
+      if (safeResults.length === 0) {
+        setError("لم تظهر نتائج من الدرر السنية لهذا البحث.")
+      }
+    } catch {
+      setError("تعذر جلب النتائج داخل التطبيق الآن. افتح النتائج مباشرة في موقع الدرر من الزر التالي.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-function gradeAr(grade: string): string {
-  const g = grade.toLowerCase().replace(/['`]/g, "").trim()
-  if (g.includes("sahih") && g.includes("hasan")) return "حسن صحيح"
-  if (g.includes("hasan") && g.includes("daif")) return "حسن ضعيف"
-  if (g.startsWith("sahih")) return "صحيح"
-  if (g.startsWith("hasan")) return "حسن"
-  if (g.startsWith("daif")) return "ضعيف"
-  return grade
-}
+  return (
+    <section className="mb-5 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="bg-gradient-to-br from-amber-600 via-orange-600 to-emerald-700 p-5 text-white">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="mb-1 text-xl font-extrabold">بحث الدرر السنية</h2>
+            <p className="mb-0 text-sm leading-7 text-white/85">
+              ابحث في الموسوعة الحديثية من الدرر السنية. إذا منع المصدر العرض داخل التطبيق، افتح النتائج مباشرة.
+            </p>
+          </div>
+          <a
+            href="https://dorar.net/article/389/%D8%AE%D8%AF%D9%85%D8%A9-%D9%88%D8%A7%D8%AC%D9%87%D8%A9-%D8%A7%D9%84%D9%85%D9%88%D8%B3%D9%88%D8%B9%D8%A9-%D8%A7%D9%84%D8%AD%D8%AF%D9%8A%D8%AB%D9%8A%D8%A9-API"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/25"
+          >
+            <i className="fas fa-link ms-2" />
+            توثيق API
+          </a>
+        </div>
+      </div>
 
-function arBookName(book: { name: { en: string; ar: string | null } }): string {
-  if (book.name.ar) return book.name.ar
-  const m = book.name.en.match(/^Book\s+(\d+)(?::\s*(.*))?$/i)
-  if (m) return m[2] ? `الكتاب ${m[1]}: ${m[2]}` : `الكتاب ${m[1]}`
-  return book.name.en
+      <div className="p-4">
+        <form onSubmit={handleSearch} className="flex flex-col gap-3 md:flex-row">
+          <label className="relative flex-1">
+            <span className="sr-only">بحث في الدرر السنية</span>
+            <i className="fas fa-search absolute start-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              className="h-12 w-full rounded-xl border border-input bg-background px-4 pe-4 ps-11 text-sm text-foreground outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+              placeholder="مثال: إنما الأعمال بالنيات"
+            />
+          </label>
+          <Button type="submit" className="h-12 rounded-xl px-6" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="ms-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                محاولة العرض
+              </>
+            ) : (
+              <>
+                <i className="fas fa-magnifying-glass ms-2" />
+                عرض داخل التطبيق
+              </>
+            )}
+          </Button>
+          <a
+            href={query.trim() ? `${DORAR_SEARCH_BASE_URL}${encodeURIComponent(query.trim())}` : "https://dorar.net/hadith"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-background px-5 text-sm font-bold text-foreground transition hover:bg-muted"
+          >
+            <i className="fas fa-arrow-up-right-from-square ms-2" />
+            فتح في الدرر
+          </a>
+        </form>
+
+        <p className="mt-3 mb-0 text-xs leading-6 text-muted-foreground">
+          المصدر: مؤسسة الدرر السنية. يتم عرض النتائج عبر وسيط Cloudflare Worker مخصص للتطبيق، وزر “فتح في الدرر” يبقى المسار الموثوق دائمًا عند تعذر الجلب.
+        </p>
+
+        {error && (
+          <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm leading-7 text-amber-700 dark:text-amber-300">
+            {error}
+            {searchedQuery && (
+              <a
+                href={directSearchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ms-2 inline-flex font-bold underline"
+              >
+                فتح البحث في الدرر
+              </a>
+            )}
+          </div>
+        )}
+
+        {results.length > 0 && (
+          <div className="mt-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-sm font-bold text-card-foreground">
+                {results.length} نتيجة من الدرر السنية
+              </span>
+              <a
+                href={directSearchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-amber-700 underline dark:text-amber-300"
+              >
+                عرض في المصدر
+              </a>
+            </div>
+            {results.map((result, index) => (
+              <article
+                key={result.id}
+                className="rounded-xl border border-border bg-background p-4 text-sm leading-8 text-foreground"
+              >
+                <div className="mb-2 inline-flex rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300">
+                  نتيجة {index + 1}
+                </div>
+                <div
+                  className="dorar-result-content"
+                  dangerouslySetInnerHTML={{ __html: result.html }}
+                />
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
 }
 
 export function HadithLibrary({ onBack }: HadithLibraryProps) {
@@ -186,7 +320,10 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
   const [perPage, setPerPage] = React.useState(10)
   const [page, setPage] = React.useState(1)
   const [sharhData, setSharhData] = React.useState<Record<string, SharhEntry>>({})
-  const [openSharh, setOpenSharh] = React.useState<Set<string>>(new Set())
+  const [riyadSharhData, setRiyadSharhData] = React.useState<Record<string, ReviewedSharhEntry>>({})
+  const [sharhPool, setSharhPool] = React.useState<string[]>([])
+  const [sharhExpanded, setSharhExpanded] = React.useState<Set<string>>(new Set())
+  const [showOnlyWithSharh, setShowOnlyWithSharh] = React.useState(false)
 
   React.useEffect(() => {
     setColLoading(true)
@@ -206,6 +343,16 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
     fetch("/data/sharh.json")
       .then((r) => r.json())
       .then((d) => setSharhData(d || {}))
+      .catch(() => {})
+  }, [])
+
+  React.useEffect(() => {
+    fetch("/data/riyad-uthaymeen-shamela-final.json")
+      .then((r) => r.json())
+      .then((d: ReviewedSharhFile) => {
+        setRiyadSharhData(d?.entries || {})
+        setSharhPool(d?.sharhPool || [])
+      })
       .catch(() => {})
   }, [])
 
@@ -266,6 +413,23 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
     loadHadiths(selBook.collection, selBook.bookNumber, 0, false)
   }, [selBook, loadHadiths])
 
+  const toggleSharh = (key: string) => {
+    setSharhExpanded((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
+
+  // Wrapper that captures current state for resolveSharhEntry
+  const getSharhEntry = React.useCallback(
+    (h: HadithItem): SharhEntry | ReviewedSharhEntry | null => {
+      return resolveSharhEntry(h, riyadSharhData, sharhData, sharhPool)
+    },
+    [riyadSharhData, sharhData, sharhPool]
+  )
+
   const filtered = React.useMemo(() => {
     let items = hadiths
     if (search.trim()) {
@@ -278,8 +442,9 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
       )
     }
     if (showFavs) items = items.filter((h) => favs.has(hKey(h)))
+    if (showOnlyWithSharh) items = items.filter((h) => getSharhEntry(h) !== null)
     return items
-  }, [hadiths, search, favs, showFavs])
+  }, [hadiths, search, favs, showFavs, showOnlyWithSharh, getSharhEntry])
 
   const totalPages = Math.ceil(filtered.length / perPage)
   const paged = filtered.slice((page - 1) * perPage, page * perPage)
@@ -318,6 +483,7 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
             <p className="opacity-90">كتب الحديث النبوي الشريف</p>
           </div>
         </div>
+        {/* <DorarHadithSearch /> */}
         {colLoading ? (
           <div className="text-center py-12">
             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -476,6 +642,15 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
           <i className={`fas fa-heart ms-1 ${showFavs ? "" : "text-muted-foreground"}`} />
           {showFavs ? "الكل" : "المفضلة"}
         </Button>
+        <Button
+          variant={showOnlyWithSharh ? "default" : "outline"}
+          size="sm"
+          className="rounded-full"
+          onClick={() => { setShowOnlyWithSharh(!showOnlyWithSharh); setPage(1) }}
+        >
+          <i className={`fas fa-book-open ms-1 ${showOnlyWithSharh ? "" : "text-muted-foreground"}`} />
+          {showOnlyWithSharh ? "الكل" : "بشرح"}
+        </Button>
       </div>
 
       {!hLoading && filtered.length > 0 && !hError && (
@@ -538,6 +713,10 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
                     <div className="mb-3 px-3 py-2 rounded-lg bg-muted/50 text-sm text-muted-foreground font-medium">{h.chapterTitle.ar}</div>
                   )}
 
+                  <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                    <i className="fas fa-quote-right opacity-60" />
+                    نص الحديث
+                  </div>
                   <p
                     className="mb-4 leading-relaxed"
                     style={{
@@ -560,35 +739,101 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
 
                   {/* الشرح */}
                   {(() => {
-                    const sk = hKey(h)
-                    const entry = sharhData[sk]
-                    if (!entry) return null
-                    const isOpen = openSharh.has(sk)
+                    const entry = getSharhEntry(h)
+                    const isExpanded = sharhExpanded.has(key)
+                    const hasSharh = entry !== null
+                    const isApiTextOnly = entry && "match" in entry ? isApiHadithTextEntry(entry) : false
                     return (
-                      <div className="mb-3">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const n = new Set(openSharh)
-                            if (isOpen) n.delete(sk)
-                            else n.add(sk)
-                            setOpenSharh(n)
-                          }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 transition-colors"
-                        >
-                          <i className={`fas ${isOpen ? "fa-chevron-up" : "fa-chevron-down"} text-xs`} />
-                          {isOpen ? "إخفاء الشرح" : "عرض الشرح"}
-                          <span className="opacity-60 text-[10px]">· {entry.scholar}</span>
-                        </button>
-                        {isOpen && (
-                          <div className="mt-2 p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-800/30">
-                            <p className="text-sm leading-relaxed text-foreground mb-2" style={{ lineHeight: "1.9" }}>
-                              {entry.text}
-                            </p>
-                            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                              <span><i className="fas fa-book ms-1 opacity-60" />{entry.source}</span>
-                              <span><i className="fas fa-user ms-1 opacity-60" />{entry.scholar}</span>
+                      <div className="mb-3 rounded-xl border border-emerald-200/60 dark:border-emerald-800/30 overflow-hidden">
+                        {hasSharh ? (
+                          <>
+                            <div
+                              className="flex items-center justify-between gap-2 px-4 py-3 bg-emerald-50/80 dark:bg-emerald-900/10 cursor-pointer select-none transition hover:bg-emerald-100/50 dark:hover:bg-emerald-900/20"
+                              onClick={() => toggleSharh(key)}
+                            >
+                              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+                                <i className="fas fa-book-open opacity-70" />
+                                {isApiTextOnly ? "الحديث" : "شرح الحديث"}
+                                {isApiTextOnly && (
+                                  <span className="me-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                                    الشرح قادم إن شاء الله
+                                  </span>
+                                )}
+                                {!isApiTextOnly && entry?.verified && (
+                                  <span className="me-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                                    موثق
+                                  </span>
+                                )}
+                              </span>
+                              <i className={`fas fa-chevron-${isExpanded ? "up" : "down"} text-emerald-600 dark:text-emerald-400 text-xs transition-transform`} />
                             </div>
+                            {isExpanded && (
+                              <div className="p-4 bg-emerald-50/40 dark:bg-emerald-900/5">
+                                {isApiTextOnly ? (
+                                  <>
+                                    <p className="text-sm leading-relaxed text-foreground mb-2" style={{ lineHeight: "1.9" }}>
+                                      {entry.text}
+                                    </p>
+                                    <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900/40 dark:bg-amber-950/20">
+                                      <div className="flex items-center gap-2 text-xs text-amber-800 dark:text-amber-300">
+                                        <i className="fas fa-clock" />
+                                        <span>شرح ابن عثيمين غير متاح حالياً - سيتم إضافته إن شاء الله</span>
+                                      </div>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    {"summary" in entry && entry.summary && (
+                                      <div className="mb-3 rounded-lg bg-white/60 p-3 text-sm leading-relaxed text-foreground dark:bg-emerald-950/20">
+                                        <div className="mb-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">مختصر الشرح</div>
+                                        {entry.summary}
+                                      </div>
+                                    )}
+                                    <p className="text-sm leading-relaxed text-foreground mb-2" style={{ lineHeight: "1.9" }}>
+                                      {"deepExplanation" in entry && entry.deepExplanation ? entry.deepExplanation : entry.text}
+                                    </p>
+                                    {"benefits" in entry && entry.benefits?.length ? (
+                                      <div className="mb-3 rounded-lg bg-white/60 p-3 dark:bg-emerald-950/20">
+                                        <div className="mb-2 text-xs font-semibold text-emerald-800 dark:text-emerald-300">فوائد الحديث</div>
+                                        <ul className="m-0 list-disc space-y-1 pe-5 text-sm leading-relaxed text-foreground">
+                                          {entry.benefits.map((benefit, index) => (
+                                            <li key={index}>{benefit}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    ) : null}
+                                    {"notes" in entry && entry.notes && (
+                                      <div className="mb-3 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs leading-relaxed text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
+                                        {entry.notes}
+                                      </div>
+                                    )}
+                                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+                                      <span><i className="fas fa-book ms-1 opacity-60" />{entry.bookTitle || entry.bookName || entry.source}</span>
+                                      <span><i className="fas fa-user ms-1 opacity-60" />{entry.scholar}</span>
+                                      {entry.attribution && (
+                                        <span className="text-emerald-700 dark:text-emerald-400"><i className="fas fa-quote-right ms-1 opacity-60" />{entry.attribution}</span>
+                                      )}
+                                      {entry.sourceUrl && (
+                                        <a
+                                          href={entry.sourceUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-1 text-emerald-700 hover:underline dark:text-emerald-300"
+                                        >
+                                          <i className="fas fa-link opacity-60" />
+                                          المصدر
+                                        </a>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/30 text-[11px] text-muted-foreground">
+                            <i className="fas fa-circle-exclamation opacity-50" />
+                            لا يوجد شرح متاح لهذا الحديث
                           </div>
                         )}
                       </div>

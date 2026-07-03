@@ -1,0 +1,177 @@
+{
+  "summary": {
+    "totalEntries": 1896,
+    "withSharh": 1808,
+    "withoutSharh": 88,
+    "corrected": 114,
+    "verified": 1694,
+    "uniqueSharhTexts": 529,
+    "oldUniqueSharhTexts": 627,
+    "schemaVersion": 23,
+    "buildDate": "2026-06-25T00:52:20.421Z",
+    "method": "text_similarity_v2: API Arabic texts from Sunnah.com matched against sharh pool. Each hadith text is decomposed into overlapping phrases of 6-15 words, searched in all sharh texts."
+  },
+  "correctionsByBook": {
+    "1": 1,
+    "2": 2,
+    "3": 5,
+    "4": 4,
+    "5": 8,
+    "6": 7,
+    "7": 4,
+    "8": 31,
+    "10": 2,
+    "11": 7,
+    "12": 1,
+    "13": 1,
+    "14": 2,
+    "15": 9,
+    "16": 1,
+    "17": 22,
+    "18": 3,
+    "19": 1,
+    "introduction": 3
+  },
+  "sampleCorrections": [
+    {
+      "key": "riyadussalihin:10:1281",
+      "oldSharh": 208,
+      "newSharh": 20,
+      "oldScore": 0,
+      "newScore": 18
+    },
+    {
+      "key": "riyadussalihin:10:1283",
+      "oldSharh": 208,
+      "newSharh": 20,
+      "oldScore": 0,
+      "newScore": 31
+    },
+    {
+      "key": "riyadussalihin:11:1322",
+      "oldSharh": 214,
+      "newSharh": 18,
+      "oldScore": 0,
+      "newScore": 18
+    },
+    {
+      "key": "riyadussalihin:11:1345",
+      "oldSharh": 216,
+      "newSharh": 423,
+      "oldScore": 0,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:11:1347",
+      "oldSharh": 216,
+      "newSharh": 20,
+      "oldScore": 0,
+      "newScore": 18
+    },
+    {
+      "key": "riyadussalihin:11:1349",
+      "oldSharh": 216,
+      "newSharh": 208,
+      "oldScore": 12,
+      "newScore": 24
+    },
+    {
+      "key": "riyadussalihin:11:1351",
+      "oldSharh": 216,
+      "newSharh": 465,
+      "oldScore": 0,
+      "newScore": 37
+    },
+    {
+      "key": "riyadussalihin:11:1359",
+      "oldSharh": 219,
+      "newSharh": 0,
+      "oldScore": 4,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:11:1366",
+      "oldSharh": 221,
+      "newSharh": 14,
+      "oldScore": 0,
+      "newScore": 22
+    },
+    {
+      "key": "riyadussalihin:12:1376",
+      "oldSharh": 225,
+      "newSharh": 143,
+      "oldScore": 2,
+      "newScore": 22
+    },
+    {
+      "key": "riyadussalihin:13:1395",
+      "oldSharh": 235,
+      "newSharh": 503,
+      "oldScore": 0,
+      "newScore": 24
+    },
+    {
+      "key": "riyadussalihin:14:1398",
+      "oldSharh": 236,
+      "newSharh": 141,
+      "oldScore": 14,
+      "newScore": 22
+    },
+    {
+      "key": "riyadussalihin:14:1403",
+      "oldSharh": 237,
+      "newSharh": 21,
+      "oldScore": 0,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:15:1412",
+      "oldSharh": 240,
+      "newSharh": 0,
+      "oldScore": 0,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:15:1413",
+      "oldSharh": 240,
+      "newSharh": 444,
+      "oldScore": 3,
+      "newScore": 14
+    },
+    {
+      "key": "riyadussalihin:15:1423",
+      "oldSharh": 244,
+      "newSharh": 523,
+      "oldScore": 12,
+      "newScore": 29
+    },
+    {
+      "key": "riyadussalihin:15:1428",
+      "oldSharh": 246,
+      "newSharh": 48,
+      "oldScore": 0,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:15:1433",
+      "oldSharh": 248,
+      "newSharh": 531,
+      "oldScore": 1,
+      "newScore": 22
+    },
+    {
+      "key": "riyadussalihin:15:1437",
+      "oldSharh": 250,
+      "newSharh": 21,
+      "oldScore": 0,
+      "newScore": 15
+    },
+    {
+      "key": "riyadussalihin:15:1439",
+      "oldSharh": 250,
+      "newSharh": 21,
+      "oldScore": 0,
+      "newScore": 15
+    }
+  ]
+}

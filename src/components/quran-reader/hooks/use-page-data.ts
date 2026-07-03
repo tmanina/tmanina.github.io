@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import type { Verse, Line, PrecacheStatus } from "../types"
+import type { Verse, Line, Word, PrecacheStatus } from "../types"
 import { TOTAL_PAGES } from "../utils"
 
 /**
@@ -69,11 +69,11 @@ export function usePageData(currentPage: number) {
   return { verses, lines, loading }
 }
 
-function processPageData(data: any) {
-  const lineMap = new Map<number, any[]>()
-  data.verses.forEach((verse: any) => {
+function processPageData(data: { verses: Verse[] }): { verses: Verse[]; lines: Line[] } {
+  const lineMap = new Map<number, Word[]>()
+  data.verses.forEach((verse) => {
     if (verse.words) {
-      verse.words.forEach((word: any) => {
+      verse.words.forEach((word) => {
         const lineNum = word.line_number
         if (!lineMap.has(lineNum)) lineMap.set(lineNum, [])
         lineMap.get(lineNum)!.push(word)
@@ -82,7 +82,7 @@ function processPageData(data: any) {
   })
   const lineNumbers = Array.from(lineMap.keys()).sort((a, b) => a - b)
   const minLine = lineNumbers.length > 0 ? Math.min(lineNumbers[0], 1) : 1
-  const sortedLines = Array.from({ length: 15 - minLine + 1 }, (_, i) => ({
+  const sortedLines: Line[] = Array.from({ length: 15 - minLine + 1 }, (_, i) => ({
     lineNumber: minLine + i,
     words: lineMap.get(minLine + i) || [],
   }))

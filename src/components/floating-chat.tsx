@@ -217,6 +217,8 @@ export function FloatingChat() {
   const [input, setInput] = React.useState("")
   const [isLoading, setIsLoading] = React.useState(false)
   const messagesEndRef = React.useRef<HTMLDivElement | null>(null)
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const toggleBtnRef = React.useRef<HTMLButtonElement | null>(null)
   const nextIdRef = React.useRef(2)
 
   const scrollToBottom = () => {
@@ -224,6 +226,25 @@ export function FloatingChat() {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
   }
+
+  // Focus management: focus input when chat opens, return focus to toggle button when closed
+  React.useEffect(() => {
+    if (isOpen) {
+      // Small delay to allow animation to start before focusing
+      const timer = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
+      return () => clearTimeout(timer)
+    } else {
+      // Return focus to the toggle button when chat closes.
+      // The button re-renders visible when isOpen flips to false, so wait
+      // one frame before focusing to avoid targeting a display:none element.
+      const timer = requestAnimationFrame(() => {
+        toggleBtnRef.current?.focus()
+      })
+      return () => cancelAnimationFrame(timer)
+    }
+  }, [isOpen])
 
   React.useEffect(() => {
     if (isOpen) {
@@ -233,6 +254,32 @@ export function FloatingChat() {
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev)
+  }
+
+  // Trap focus within the chat panel when open (Escape closes)
+  const handlePanelKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape" && isOpen) {
+      e.preventDefault()
+      setIsOpen(false)
+      return
+    }
+    // Basic focus trap: if Tab is pressed, keep focus within the panel
+    if (e.key === "Tab" && isOpen) {
+      const panel = e.currentTarget
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
   }
 
   const addMessage = (sender: Sender, text: string, sources?: SourceLink[]) => {
@@ -311,6 +358,10 @@ export function FloatingChat() {
           style={{
             zIndex: 10000,
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="المساعد الديني"
+          onKeyDown={handlePanelKeyDown}
         >
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl md:rounded-xl">
             <div className="gradient-bg text-white flex items-center justify-between p-2.5 md:p-3">
@@ -447,6 +498,7 @@ export function FloatingChat() {
                 className="flex items-center gap-2 border-t border-border px-2.5 py-2 md:px-3"
               >
                 <input
+                  ref={inputRef}
                   type="text"
                   className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   placeholder="اكتب سؤالك هنا..."
@@ -471,10 +523,12 @@ export function FloatingChat() {
       )}
 
       <button
+        ref={toggleBtnRef}
         type="button"
         onClick={handleToggle}
         className={`group fixed left-4 bottom-[calc(4.875rem+env(safe-area-inset-bottom,0px))] z-[10001] size-14 items-center justify-center rounded-full border-0 bg-gradient-to-br from-gold-500 to-sage-400 p-0 text-white shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-[3px] hover:scale-105 hover:shadow-[0_12px_32px_rgba(212,165,116,0.3)] active:-translate-y-px active:scale-[1.02] md:left-5 md:bottom-[70px] md:flex md:size-[60px] ${isOpen ? "hidden" : "flex"}`}
         aria-label="المساعد الديني"
+        aria-expanded={isOpen}
       >
         <i className={`fas ${isOpen ? "fa-times" : "fa-comment-dots"} text-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[5deg] md:text-2xl`}></i>
       </button>

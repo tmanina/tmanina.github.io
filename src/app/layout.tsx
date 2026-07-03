@@ -3,6 +3,10 @@ import "./globals.css"
 import { Cairo, Amiri } from "next/font/google"
 import Script from "next/script"
 import { Footer } from "@/components/footer"
+import {
+  ThemeProvider,
+  themePreHydrationScript,
+} from "@/components/theme-provider"
 
 // Arabic fonts
 const cairo = Cairo({
@@ -55,9 +59,13 @@ export default function RootLayout({
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2b5a4b" id="theme-color-meta" />
-        <script dangerouslySetInnerHTML={{
-          __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark");var m=document.getElementById("theme-color-meta");if(m)m.setAttribute("content","#0d1515")}}catch(e){}})()`
-        }} />
+        {/*
+          Pre-hydration theme bootstrap — adds the `.dark` class on <html>
+          before first paint so dark-mode users never see a flash of light
+          theme. React-side logic (persistence, cross-tab sync, meta updates,
+          system-preference fallback) lives in <ThemeProvider>.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: themePreHydrationScript }} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="طمأنينة" />
@@ -68,44 +76,53 @@ export default function RootLayout({
       </head>
 
       <body className={`${cairo.variable} ${amiri.variable} flex flex-col min-h-screen`} style={{ fontFamily: "var(--font-cairo), Arial, sans-serif" }}>
+        <ThemeProvider>
+          {/* Skip to content link for accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:right-2 focus:z-[99999] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
+          >
+            تخطّي إلى المحتوى الرئيسي
+          </a>
 
-        {/* المحتوى الرئيسي */}
-        <main className="flex-1">
-          {children}
-        </main>
+          {/* المحتوى الرئيسي */}
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
 
-        {/* Footer يظهر فقط على الـ Desktop */}
-        <div className="hidden md:block">
-          <Footer />
-        </div>
+          {/* Footer يظهر فقط على الـ Desktop */}
+          <div className="hidden md:block">
+            <Footer />
+          </div>
 
-        {/* زر العودة للأعلى */}
-        <button
-          id="backToTopBtn"
-          className="back-to-top-btn"
-          aria-label="العودة للأعلى"
-        >
-          <i className="fas fa-arrow-up"></i>
-        </button>
+          {/* زر العودة للأعلى */}
+          <button
+            id="backToTopBtn"
+            className="back-to-top-btn"
+            aria-label="العودة للأعلى"
+          >
+            <i className="fas fa-arrow-up"></i>
+          </button>
 
-        {/* سكريبت زر العودة للأعلى */}
-        <Script id="back-to-top-script" strategy="afterInteractive">
-          {`
-            const btn = document.getElementById('backToTopBtn');
+          {/* سكريبت زر العودة للأعلى */}
+          <Script id="back-to-top-script" strategy="afterInteractive">
+            {`
+              const btn = document.getElementById('backToTopBtn');
 
-            window.addEventListener('scroll', () => {
-              if (window.scrollY > 300) {
-                btn.style.display = 'flex';
-              } else {
-                btn.style.display = 'none';
-              }
-            });
+              window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                  btn.style.display = 'flex';
+                } else {
+                  btn.style.display = 'none';
+                }
+              });
 
-            btn.addEventListener('click', () => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-          `}
-        </Script>
+              btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+            `}
+          </Script>
+        </ThemeProvider>
       </body>
     </html>
   )

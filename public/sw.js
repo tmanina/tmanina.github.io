@@ -4,7 +4,7 @@
 // ========================================
 
 // Cache versions - INCREMENT THESE FOR UPDATES!
-const APP_VERSION = 'v5';
+const APP_VERSION = 'v7';
 const CACHE_STATIC = `tmanina-static-${APP_VERSION}`;
 const CACHE_PAGES = `tmanina-pages-${APP_VERSION}`;
 const CACHE_ASSETS = `tmanina-assets-${APP_VERSION}`;
@@ -238,6 +238,11 @@ self.addEventListener('fetch', (event) => {
 
     // Skip chrome-extension and other non-http
     if (!url.startsWith('http')) {
+        return;
+    }
+
+    // Skip external proxy APIs - never cache these
+    if (url.includes('allorigins.win') || url.includes('dorar.net')) {
         return;
     }
 
@@ -501,3 +506,117 @@ async function checkQuranCacheStatus() {
 }
 
 console.log(`[SW ${APP_VERSION}] Loaded`);
+
+// ========================================
+// ADHKAR NOTIFICATION SCHEDULING
+// ========================================
+let adhkarTimers = [];
+
+self.addEventListener('message', (event) => {
+    // Schedule adhkar notifications from client
+    if (event.data && event.data.type === 'SCHEDULE_ADHKAR') {
+        const { morning, evening, enabled } = event.data;
+        clearAdhkarTimers();
+        if (enabled) {
+            scheduleAdhkarNotification('morning', morning);
+            scheduleAdhkarNotification('evening', evening);
+        }
+    }
+
+    // Cancel adhkar notifications
+    if (event.data && event.data.type === 'CANCEL_ADHKAR') {
+        clearAdhkarTimers();
+    }
+
+    // Check for missed notifications (called on app open)
+    if (event.data && event.data.type === 'CHECK_MISSED_ADHKAR') {
+        const { morning, evening, enabled } = event.data;
+        if (enabled) {
+            checkMissedAdhkar('morning', morning);
+            checkMissedAdhkar('evening', evening);
+            // Also reschedule
+            clearAdhkarTimers();
+            scheduleAdhkarNotification('morning', morning);
+            scheduleAdhkarNotification('evening', evening);
+        }
+    }
+});
+
+function clearAdhkarTimers() {
+    adhkarTimers.forEach(t => clearTimeout(t));
+    adhkarTimers = [];
+}
+
+function scheduleAdhkarNotification(kind, timeStr) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const now = new Date();
+    const target = new Date();
+    target.setHours(hours || 0, minutes || 0, 0, 0);
+    if (target <= now) target.setDate(target.getDate() + 1);
+
+    const delay = target.getTime() - now.getTime();
+    const title = kind === 'morning' ? 'حان وقت أذكار الصباح' : 'حان وقت أذكار المساء';
+    const body = 'افتح طمأنينة واقرأ وردك اليومي.';
+
+    const timer = setTimeout(() => {
+        self.registration.showNotification(title, {
+            body,
+            icon: '/icon-192x192.png',
+            badge: '/icon-192x192.png',
+            tag: `adhkar-${kind}`,
+            renotify: true,
+            vibrate: [200, 100, 200],
+        });
+        // Reschedule for next day
+        scheduleAdhkarNotification(kind, timeStr);
+    }, delay);
+
+    adhkarTimers.push(timer);
+}
+
+function checkMissedAdhkar(kind, timeStr) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const now = new Date();
+    const todayTarget = new Date();
+    todayTarget.setHours(hours || 0, minutes || 0, 0, 0);
+
+    // If the scheduled time was today and has passed (within last 2 hours), show it
+    const diff = now.getTime() - todayTarget.getTime();
+    if (diff > 0 && diff < 2 * 60 * 60 * 1000) {
+        const title = kind === 'morning' ? 'حان وقت أذكار الصباح' : 'حان وقت أذكار المساء';
+        self.registration.showNotification(title, {
+            body: 'افتح طمأنينة واقرأ وردك اليومي.',
+            icon: '/icon-192x192.png',
+            badge: '/icon-192x192.png',
+            tag: `adhkar-missed-${kind}`,
+            renotify: true,
+            vibrate: [200, 100, 200],
+        });
+    }
+}
+
+// ========================================
+// NOTIFICATION EVENTS
+// ========================================
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            // If app is already open, focus it
+            for (const client of clientList) {
+                if (client.url.includes(self.registration.scope) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // Otherwise open the app
+            if (clients.openWindow) {
+                return clients.openWindow('/');
+            }
+        })
+    );
+});
+
+self.addEventListener('notificationclose', (event) => {
+    console.log('[SW] Notification closed:', event.notification.tag);
+});

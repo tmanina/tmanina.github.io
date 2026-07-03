@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 // Lazy-loaded media components
 const AudioQuran = dynamic(() => import("./audio-quran").then(m => m.AudioQuran), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري التحميل...</p></div> })
 const HadithLibrary = dynamic(() => import("./hadith-library").then(m => m.HadithLibrary), { loading: LoadingSpinner })
+// const DorarHadithSearch = dynamic(() => import("./hadith-library").then(m => m.DorarHadithSearch), { loading: LoadingSpinner })
 const RuqyahPlayer = dynamic(() => import("./ruqyah-player").then(m => m.RuqyahPlayer), { loading: LoadingSpinner })
 const VectorMushaf = dynamic(() => import("./vector-mushaf").then(m => m.VectorMushaf), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري تحميل المصحف...</p></div> })
 const RadioPlayer = dynamic(() => import("./radio-player").then(m => m.RadioPlayer), { loading: LoadingSpinner })
@@ -16,8 +17,8 @@ const LivePlayer = dynamic(() => import("./live-player").then(m => m.LivePlayer)
 const PodcastPlayer = dynamic(() => import("./podcast-player").then(m => m.PodcastPlayer), { loading: LoadingSpinner })
 const DuaLibrary = dynamic(() => import("./dua-library/dua-library").then(m => m.DuaLibrary), { loading: LoadingSpinner })
 const AsmaaPage = dynamic(() => import("./asmaa/asmaa-page").then(m => m.AsmaaPage), { loading: LoadingSpinner })
-const SurahReader = dynamic(() => import("./surah-reader"), { loading: LoadingSpinner })
 const SurahList = dynamic(() => import("./surah-list"), { loading: LoadingSpinner })
+const MushafWithTafsir = dynamic(() => import("./mushaf-tafsir").then(m => m.MushafWithTafsir), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري تحميل المصحف...</p></div> })
 const QuranReader = dynamic(() => import("./quran-reader/quran-reader").then(m => m.QuranReader), { loading: () => <div className="flex items-center justify-center py-20"><div className="text-center"><div className="mx-auto mb-4 w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin"></div><p className="text-muted-foreground">جاري تحميل المصحف...</p></div></div> })
 
 function LoadingSpinner() {
@@ -73,6 +74,8 @@ export function MediaPage() {
                         <h2 className="text-3xl font-bold gradient-text mb-2">المكتبة الإسلامية</h2>
                         <p className="text-muted-foreground text-lg">محتوى إسلامي متنوع لإثراء معرفتك</p>
                     </div>
+
+                    {/* <DorarHadithSearch /> */}
 
                     {/* Media Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate__animated animate__fadeInUp">
@@ -160,27 +163,6 @@ export function MediaPage() {
                             </div>
                         </div> */}
 
-                        {/* قراءة السور */}
-                        <div>
-                            <div
-                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-                                onClick={() => handleSectionChange('surah-reader')}
-                            >
-                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-[#c9a961] to-[#8b6914]">
-                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
-                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
-                                        <i className="fas fa-book-open"></i>
-                                    </div>
-                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">قراءة السور</h3>
-                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">السور كاملة للقراءة</p>
-                                    <button className="bg-white text-[#8b6914] border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
-                                        <i className="fas fa-book-reader ms-2"></i>
-                                        قراءة القرآن
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* المصحف الرقمي - صور */}
                         <div>
                             <div
@@ -197,6 +179,27 @@ export function MediaPage() {
                                     <button className="bg-white text-emerald-800 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
                                         <i className="fas fa-eye ms-2"></i>
                                         عرض المصحف
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* مصحف مع التفسير */}
+                        <div>
+                            <div
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+                                onClick={() => handleSectionChange('mushaf-tafsir')}
+                            >
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-[#1a5c3a] to-[#0d3d24]">
+                                    <span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
+                                        <i className="fas fa-book"></i>
+                                    </div>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">مصحف مع التفسير</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">تفسير ابن كثير، الطبري، السعدي، الميسّر</p>
+                                    <button className="bg-white text-[#1a5c3a] border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-open ms-2"></i>
+                                        قراءة مع التفسير
                                     </button>
                                 </div>
                             </div>
@@ -397,16 +400,16 @@ export function MediaPage() {
                         <LivePlayer onBack={() => handleSectionChange(null)} />
                     )}
 
-                    {activeSection === 'surah-reader' && (
-                        <SurahReader />
-                    )}
-
                     {activeSection === 'surah-list' && (
                         <SurahList />
                     )}
 
                     {activeSection === 'mushaf' && (
                         <VectorMushaf onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'mushaf-tafsir' && (
+                        <MushafWithTafsir onBack={() => handleSectionChange(null)} />
                     )}
 
                     {activeSection === 'podcast' && (

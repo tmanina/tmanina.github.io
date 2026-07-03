@@ -620,7 +620,7 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                                         e.stopPropagation()
                                         toggleFavorite(playingSahaba.id, e)
                                     }}
-                                    aria-label="Favorite"
+                                    aria-label="إضافة إلى المفضلة"
                                 >
                                     <i className={favorites.includes(playingSahaba.id) ? "fas fa-heart" : "far fa-heart"}></i>
                                 </button>
@@ -709,7 +709,7 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                                 </div>
 
                                 {/* Skip Backward */}
-                                <button className="action-btn secondary-btn" onClick={skipBackward} aria-label="Rewind 10s">
+                                <button className="action-btn secondary-btn" onClick={skipBackward} aria-label="ترجيع 10 ثواني">
                                     <i className="fas fa-undo-alt"></i>
                                     <span className="tiny-text">10</span>
                                 </button>
@@ -719,7 +719,7 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                                     className="action-btn secondary-btn"
                                     onClick={playPrevious}
                                     disabled={!canGoPrevious()}
-                                    aria-label="Previous"
+                                    aria-label="السابق"
                                 >
                                     <i className="fas fa-step-forward fa-rotate-180"></i>
                                 </button>
@@ -738,13 +738,13 @@ export function SahabaPlayer({ onBack }: SahabaPlayerProps) {
                                     className="action-btn secondary-btn"
                                     onClick={playNext}
                                     disabled={!canGoNext()}
-                                    aria-label="Next"
+                                    aria-label="التالي"
                                 >
                                     <i className="fas fa-step-backward fa-rotate-180"></i>
                                 </button>
 
                                 {/* Skip Forward */}
-                                <button className="action-btn secondary-btn" onClick={skipForward} aria-label="Skip 10s">
+                                <button className="action-btn secondary-btn" onClick={skipForward} aria-label="تقديم 10 ثواني">
                                     <i className="fas fa-redo-alt"></i>
                                     <span className="tiny-text">10</span>
                                 </button>

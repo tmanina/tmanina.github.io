@@ -1,0 +1,2852 @@
+{
+  "generatedAt": "2026-07-03T17:07:15.086Z",
+  "source": "https://shamela.ws/book/9260",
+  "policy": "شرح كل حديث يؤخذ فقط من علامة الشرح الواقعة داخل حدوده قبل الحديث التالي. الشرح المشترك يعرض على آخر حديث قبل العلامة فقط.",
+  "pagesRead": 3781,
+  "hadithMarkers": 1323,
+  "totalEntries": 1896,
+  "entriesWithMatn": 1896,
+  "entriesWithSharh": 559,
+  "entriesWithoutSharh": 1337,
+  "uniqueSharhTexts": 537,
+  "warnings": [
+    {
+      "key": "riyadussalihin:introduction:2",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف حديث عائشة ـ رضي الله عنها- أن النبي صلي الله عليه وسلم أخبر أنه يغزو جيش الكعبة، الكعبة المشرفة حماها الله وأنقذها من كل شر.\n\nهذه الكعبة هي بيت الله"
+    },
+    {
+      "key": "riyadussalihin:introduction:4",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قوله: ((في غزاة)) أي في غزوة.\n\nفمعني الحديث أن الإنسان إذا نوي العمل الصالح، ولكنه حبسه عنه حابس فإنه يكتب له أجر ما نوي.\n\nأما إذا كان يعلمه في حال العذر؛ أي: ل"
+    },
+    {
+      "key": "riyadussalihin:introduction:12",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قوله: ((انطلق ثلاثة نفر)) أي: ثلاثة رجال.\n\n((فآواهم المبيت فدخلوا في غار)) يعني: ليبينوا فيهن والغار: هو ما يكون في الجبل مما يدخله الناس يبيتون فيه، أو يتظللون"
+    },
+    {
+      "key": "riyadussalihin:introduction:24",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذان الحديثان في بيان التوبة، وأن من تاب تاب الله عليه مهما عظم ذنبه؛ لأن الله تعالي قال في كتابه:) وَالَّذِينَ لا يَدْعُونَ مَعَ اللَّهِ إِلَهاً آخَرَ وَلا يَق"
+    },
+    {
+      "key": "riyadussalihin:introduction:53",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف ـ رحمه الله تعالى ـ فيما نقله عن عبد الله بن أبي أوفى ـ رضي الله عنه ـ أن النبي صلي الله عليه وسلم كان في بعض غزواته، فانتظر حتى مالت الشمس، أي: زالت"
+    },
+    {
+      "key": "riyadussalihin:introduction:59",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "((البيعان)) أي: البائع والمشتري، وأطلق عليهما أسم البيع من باب التغليب، كما يقال: القمران: للشمس والقمر، والعمران: لأبي بكر وعمر، فالبيعان يعني: البائع والمشتري"
+    },
+    {
+      "key": "riyadussalihin:introduction:60",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف - رحمه الله- حديث عمر بن الخطاب- رضي الله عنه - هذا الحديث العظيم، الذي قال فيه النبي صلي الله عليه وسلم لعمر في آخره: ((أتدري من السائل)) قال: الله "
+    },
+    {
+      "key": "riyadussalihin:introduction:94",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف ـ رحمه الله تعالى ـ فيما نقله عن أبي هريرة رضي الله عنه، أن رسول الله صلى الله عليه وسلم قال يوم خيبر: (لأعطين هذه الراية رجلاً يحب الله ورسوله) ، وف"
+    },
+    {
+      "key": "riyadussalihin:introduction:111",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف ـ رحمه الله تعالى ـ فيما نقله عن أبي ذر الغفاري ـ رضي الله عنه ـ في باب المجاهدة، عن النبي صلى الله عليه وسلم أنه قال فيما يرويه عن ربه ـ تبارك وتعال"
+    },
+    {
+      "key": "riyadussalihin:introduction:113",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف ـ رحمه الله تعالى ـ فيما نقله عن عبد الله بن عباس- رضي الله عنه ـ أن عمر بن الخطاب ـ رضي الله عنه -كان يدخله في أشياخ بدر وكان من سيره عمر وهديه ـ رض"
+    },
+    {
+      "key": "riyadussalihin:introduction:141",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "نقل المؤلف ـ رحمه الله ـ عن أبي موسى الأشعري ـ رضي الله عنه ـ أن النبي صلى الله عليه وسلم قال: (على كل مسلم صدقة) وقد مر علينا مثل هذا التعبير من رسول الله صلى "
+    },
+    {
+      "key": "riyadussalihin:introduction:152",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف ـ رحمه الله ـ في باب الاقتصاد في العبادة هذا الحديث؛ الذي نذر فيه رجل يقال له أبو إسرائيل؛ أن يقوم في الشمس ولا يقعد، وأن يصمت ولا يتكلم، وأن يصوم، و"
+    },
+    {
+      "key": "riyadussalihin:introduction:155",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف ـ رحمه الله تعالى ـ فيما نقله عن عبد الله بن عمرو بن العاص ـ رضي الله عنهما ـ أن النبي صلى الله عليه وسلم قال له: (يا عبد الله لا تكن مثل فلان، كان ي"
+    },
+    {
+      "key": "riyadussalihin:introduction:170",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "نقل المؤلف ـ رحمه الله تعالى ـ فيما نقله عن جابر بن عبد الله ـ رضي الله عنهما ـ في باب التحذير من البدع، قال: كان النبي صلى الله عليه وسلم: (إذا خطب) يعني يوم ا"
+    },
+    {
+      "key": "riyadussalihin:introduction:171",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف ـ رحمه الله ـ في باب من سن في الإسلام سنة حسنة فله أجرها وأجر من عمل بها حديث جرير بن عبد اله البجلي رضي الله عنه، وهو حديث عظيم يتبين منه حرص النبي "
+    },
+    {
+      "key": "riyadussalihin:introduction:176",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الحديث الذي ذكره المؤلف فيه الدلالة على الخير، فإن رجلاً جاء إلى النبي صلى الله عليه وسم ليطلب منه أن يتجهز إلى الغزو، فأرشده النبي صلى الله عليه وسمل ودله "
+    },
+    {
+      "key": "riyadussalihin:introduction:180",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف - رحمه الله تعالى - فما نقله عن أبي موسى الأشعري- رضي الله عنه- أن النبي صلى الله عليه وسلم قال: \" الخازنُ المسلمُ الأمينُ الذي ينفذُ ما أمر به، فيعط"
+    },
+    {
+      "key": "riyadussalihin:introduction:183",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله - عن جرير بن عبد الله البجلي رضي الله عنه قال: بايعت النبي صلى الله عليه وسلم على إقام الصلاة، وإيتاء الزكاة، والنصح لكل مسلم؛ هذه ثلاثة أش"
+    },
+    {
+      "key": "riyadussalihin:introduction:197",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى-فيما نقله عن أبي بكر الصديق رضي الله عنه قال: إما بعد أيها الناس، فإنكم تقرؤون هذه الآية (يَا أَيُّهَا الَّذِينَ آمَنُوا عَلَيْكُمْ أ"
+    },
+    {
+      "key": "riyadussalihin:introduction:198",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الحديث فيه التحذير الشديد من الرجل الذي يأمر بالمعروف ولا يأتيه، وينهى عن المنكر ويأتيه، والعياذ بالله.\n\nيقول: \" يؤتى بالرجل يوم القيامة\" أي تأتي به الملائك"
+    },
+    {
+      "key": "riyadussalihin:introduction:221",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف - رحمه الله - فيما نقله عن خولة زوجة حمزة بن عبد المطلب رضي الله عنه، أن النبي صلى الله عليه وسمل قال: \" إن رجالاً يتخوضون في مال الله بغير حق، فلهم "
+    },
+    {
+      "key": "riyadussalihin:introduction:239",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف - رحمه الله - في بيان حقوق المسلم على أخيه حديث البراء بن عازب رضي الله عنهما، أن النبي صلى الله عليه وسلم \" أمرنا بسبع، ونهانا عن سبع\" وقد تقدم الكل"
+    },
+    {
+      "key": "riyadussalihin:introduction:67",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى: باب كراهية تمني الموت لضُر نزل به. يعني من مرض أو نحوه، وأما إذا كان لخوف فتنة في الدين فلا بأس به، هكذا قال المؤلف رحمه الله، يعني "
+    },
+    {
+      "key": "riyadussalihin:introduction:73",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال الحافظ النووي رحمه الله في كتابه رياض الصالحين في باب حسن الخلق، يعني باب الحث عليه، وفضيلته، وبيان من اتصف به من عباد الله، وحسن الخلق يكون مع الله ويكون م"
+    },
+    {
+      "key": "riyadussalihin:introduction:77",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال الحافظ النووي رحمه الله تعالى في كتابه رياض الصالحين، باب الغضب إذا انتهكت حرمات الشرع، والانتصار لدين الله.\n\nوالغضب له عدة أسباب؛ منها أن ينتصر الإنسان لنف"
+    },
+    {
+      "key": "riyadussalihin:introduction:78",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الباب الذي عقده المؤلف النووي رحمه الله في كتابه رياض الصالحين هو باب عظيم مهم يُخاطب به ولاة الأمور ويخاطب به الرعية، ولكل منهم على الآخر حق يجب مراعاته.\n\n"
+    },
+    {
+      "key": "riyadussalihin:1:688",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى في باب حفظ السر فيما نقله عن ثابت عن أنس خادم رسول الله صلى الله عليه وسلم أن النبي صلى الله عليه وسلم مر به وهو يلعب مع الصبيان فسلم"
+    },
+    {
+      "key": "riyadussalihin:1:707",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف رحمه الله في باب الضيافة وإكرام الضيف الأحاديث التي تدل على إكرام الضيف وقراه ومن ذلك حديث أبي هريرة رضي الله عنه أن النبي صلى الله عليه وسلم قال: من"
+    },
+    {
+      "key": "riyadussalihin:1:720",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ثم ذكر النووي رحمه الله (باب استحباب مخالفة الطريق في العيد والجمعة وغيرها من العبادات)\n\nومعنى مخالفة الطريق: أن يذهب إلى العبادة من طريق ويرجع من الطريق الآخر "
+    },
+    {
+      "key": "riyadussalihin:3:778",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الباب عقده المؤلف رحمه الله في كتابه لبيان حكم الأواني واستعمالها في الشرب ليعلم أن هناك قاعدة نافعة وهي أن الأصل في كل ما خلق الله في الأرض أنه حلال فالأصل"
+    },
+    {
+      "key": "riyadussalihin:5:844",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث فيما يتعلق بالرؤيا وسبق شيء من ذلك وقد بينا أن الرؤيا ثلاثة أقسام: القسم الأول: رؤيا حسنة صالحة فهذه من الله عز وجل وذكرنا فيما يسر وأنها من عاجل ب"
+    },
+    {
+      "key": "riyadussalihin:6:934",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال النووي رحمه الله باب استحباب تكثير المصلين على\n\nالميت ثم ذكر المؤلف رحمه الله ثلاثة أحاديث حديث عائشة وحديث عبد الله بن عباس وحديث مالك بن هبيرة رضي الله عن"
+    },
+    {
+      "key": "riyadussalihin:7:990",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ذكر المؤلف رحمه الله في كتاب (رياض الصالحين) باب تحريم سفر المرأة وحدها يعني بلا محرم وذلك أن المرأة ناقصة العقل والدين كل إنسان يخدعها وكل\n\nإنسان يذل بها وهي ف"
+    },
+    {
+      "key": "riyadussalihin:8:1023",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف النووي رحمه الله في كتابه (رياض الصالحين) باب استحباب الاجتماع على تلاوة القرآن يعني بذلك أنه من المستحب أن الناس يجتمعون على تلاوة القرآن كما يوجد ا"
+    },
+    {
+      "key": "riyadussalihin:8:1041",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث بقية باب فضل الأذان ساقها النووي رحمه الله في (رياض الصالحين) منها: قول النبي صلى الله عليه وسلم إذا سمعتم النداء فقولوا مثل ما يقول المؤذن ومنها م"
+    },
+    {
+      "key": "riyadussalihin:8:1075",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى في كتابه رياض الصالحين باب وجوب المحافظة على الصلوات والتحذير من إضاعتها الصلوات خمس كتبهن الله عز وجل على عباده في كل يوم وليلة لقول"
+    },
+    {
+      "key": "riyadussalihin:8:1080",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث في التحذير من إضاعة الصلاة حديث جابر وحديث بريدة أما حديث جابر فقد قال النبي صلى الله عليه وسلم إن بين الرجل وبين الكفر والشرك ترك الصلاة وحديث بري"
+    },
+    {
+      "key": "riyadussalihin:8:1159",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال رحمه الله تعالى: باب سجود الشكر عند تجدد النعم واندفاع النقم.\n\nمن & المعلوم أن نعمة الله سبحانه وتعالى لا تحصى، كما قال الله تبارك وتعالى: وإن تعدوا نعمة ال"
+    },
+    {
+      "key": "riyadussalihin:8:1205",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ساق المؤلف رحمه الله أحاديث خصال الفطرة في باب فضل السواك وخصال الفطرة.\n\nوالفطرة يعني التي فطر الخلق على استحسانها وأنها من الخير والمراد بذلك الفطر السليمة لأن"
+    },
+    {
+      "key": "riyadussalihin:8:1214",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الحديث الذي أورده المؤلف رحمه الله في باب تأكيد وجوب الزكاة وبيان فضلها وهو حديث أبي هريرة الذي أخرجه مسلم مطولا فيه ذكر النبي صلى الله عليه وسلم الذهب والف"
+    },
+    {
+      "key": "riyadussalihin:10:1284",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث ساقها النووي رحمه الله في كتابه رياض الصالحين في باب وجوب الحج وفضله.\n\nالحديث الأول والثاني: فيمن عجز عن الحج هل يحج عنه أحد أم لا ففي حديث ابن عبا"
+    },
+    {
+      "key": "riyadussalihin:11:1375",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه بقية الأحاديث الواردة في فضل السماحة في البيع والشراء والقضاء والاقتضاء وقد سبق أحاديث كثيرة حول هذا الموضع والأحاديث التي ذكرها المؤلف رحمه الله وردت فيمن "
+    },
+    {
+      "key": "riyadussalihin:12:1383",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث الثلاثة في بيان فضل العلم وآثاره الحميدة عن أبي هريرة رضي الله عنه أن النبي صلى الله عليه وسلم قال: ومن سلك طريقا يلتمس فيه علما سهل الله له به طري"
+    },
+    {
+      "key": "riyadussalihin:12:1392",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ساق المؤلف الإمام النووي رحمه الله في كتابه رياض الصالحين باب فضل العلم تعلما وتعليما لله حديث عبد الله بن عمرو بن العاص أن النبي صلى الله عليه وسلم قال إن الله"
+    },
+    {
+      "key": "riyadussalihin:14:1407",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه أحاديث ثلاثة في بيان كيفية الصلاة على النبي صلى الله عليه وسلم حديث كعب بن عجرة رضي الله عنه في كيفية الصلاة أنهم سألوا النبي صلى الله عليه وسلم كيف يصلون ع"
+    },
+    {
+      "key": "riyadussalihin:15:1450",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "إن هذا الحديث من الأحاديث التي تدل على فضيلة الاجتماع على ذكر الله عز وجل وهو ما رواه أبو سعيد الخدري عن معاوية رضي الله عنهما أنه خرج على حلقة في المسجد فسألهم"
+    },
+    {
+      "key": "riyadussalihin:15:1464",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله في كتابه رياض الصالحين كتاب الدعوات: الدعوات جمع دعوة وهي دعوة الإنسان ربه عز وجل يقول يا رب يا رب وما أشبه ذلك يسأل الله تعالى أن يعطيه ما"
+    },
+    {
+      "key": "riyadussalihin:16:1502",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه الأحاديث من بقية الأحاديث التي جمعها النووي رحمه الله في كتاب رياض الصالحين منها الحديث الأول أن النبي صلى الله عليه وسلم سئل أي الدعاء أسمع يعني أي الدعاء "
+    },
+    {
+      "key": "riyadussalihin:16:1509",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "ساق المؤلف رحمه الله في باب كرامات الأولياء وفضلهم عدة أحاديث، ومنها حديث أبي هريرة رضي الله عنه في قصة عاصم بن ثابت الأنصاري وصحبه، أرسلهم النبي صلى الله عليه "
+    },
+    {
+      "key": "riyadussalihin:17:1530",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال النووي رحمه الله في كتابه (رياض الصاحين) في باب تحريم سماع الغيبة فيما نقله عن كعب بن مالك رضي الله عنه في قصة توبته، وكان كعب من الذين تخلفوا عن غزوة تبوك "
+    },
+    {
+      "key": "riyadussalihin:17:1541",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف النووي رحمه الله في كتابه (رياض الصالحين) باب ذم ذي الوجهين: ذو الوجهين هو الذي يأتي هؤلاء بوجه وهؤلاء بوجه، كما يفعل المنافقون وإذا لقوا الذين\n\nآمنو"
+    },
+    {
+      "key": "riyadussalihin:17:1543",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال النووي رحمه الله تعالى في باب تحريم الكذب في كتابه (رياض الصاحين) : عن عبد الله بن عمرو بن العاص رضي الله عنهما أن النبي صلى الله عليه وسلم قال:: أربع من كن"
+    },
+    {
+      "key": "riyadussalihin:17:1546",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "سبق الكلام على أول حديث عبد الله بن عباس رضي الله عنهما، على جملتين منه، الجملة الأولى (من تحلم بحلم لم يره) ، والثانية (من استمع إلى قوم هم له كارهون) .\n\nأما ا"
+    },
+    {
+      "key": "riyadussalihin:17:1551",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله في كتابه رياض الصالحين باب تحريم لعن المعين من آدمى أو دابة اللعن معناه: الطرد والإبعاد عن رحمة الله فإذا قلت: اللهم العن فلانا، فإنك تعني "
+    },
+    {
+      "key": "riyadussalihin:17:1558",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذه أحاديث ساقها النووي رحمه الله في كتابه رياض الصالحين في التحذير من اللعن فمنها حديث سمرة بن جندب أن النبي صلى الله عليه وسلم قال: لا تلاعنوا بلعنة الله ولا "
+    },
+    {
+      "key": "riyadussalihin:17:1566",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله في كتاب (رياض الصالحين) : باب تحريم الإيذاء بغير حق.\n\nالإيذاء يشمل الإيذاء بالقول والإيذاء بالفعل والإيذاء بالترك، أما الإيذاء بالقول فأن ي"
+    },
+    {
+      "key": "riyadussalihin:17:1614",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى في كتابه رياض الصالحين باب تحريم أموال اليتامى اليتامى هم الذين مات آباؤهم قبل البلوغ سواء كانوا ذكورا أو إناثا وهؤلاء أعني اليتامى م"
+    },
+    {
+      "key": "riyadussalihin:17:1615",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى في باب التغليظ في تحريم الربا فيما نقله عن ابن مسعود رضي الله عنه أن النبي صلى الله عليه وسلم لعن الله آكل الربا وموكله آكل الربا يعن"
+    },
+    {
+      "key": "riyadussalihin:17:1621",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف النووي رحمه الله في كتابه رياض الصالحين باب ما يتوهم أنه رياء وليس هو رياء يعني ما يظنه الإنسان أنه رياء ولكن ليس برياء ثم ذكر حديث أبي هريرة أن النب"
+    },
+    {
+      "key": "riyadussalihin:17:1793",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال المؤلف رحمه الله تعالى في كتابه (رياض الصالحين) باب تغليظ تحريم السحر، السحر هو عبارة عن عقد وقراءات ونفثات يتوصل بها الساحر إلى الإضرار بالمسحور فمنه ما يق"
+    },
+    {
+      "key": "riyadussalihin:17:1806",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "قال النووي رحمه الله تعالى في كتابه رياض الصالحين باب التحذير من الوقوع فيما نهى الله ورسوله محمد صلى الله عليه وسلم عنه يعني أن الإنسان يجب أن يكون حذرا من الو"
+    },
+    {
+      "key": "riyadussalihin:18:1866",
+      "type": "unsafe-sharh-hidden",
+      "reason": "A sharh marker was found but the extracted text failed safety checks.",
+      "preview": "هذا الحديث الطويل الذي ساقه المؤلف رحمه الله في آخر كتابه (رياض الصالحين) عن أبي هريرة رضي الله عنه أنهم كانوا مع النبي صلى الله عليه وسلم في دعوة فقدمت إليه ال"
+    },
+    {
+      "key": "riyadussalihin:introduction:35",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:61",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:62",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:63",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:64",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:65",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:68",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:69",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:70",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:71",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:72",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:74",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:75",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:76",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:79",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:80",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:81",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:82",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:83",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:84",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:85",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:86",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:95",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:96",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:114",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:115",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:116",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:121",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:122",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:138",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:158",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:159",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:172",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:173",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:178",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:181",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:184",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:185",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:192",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:195",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:196",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:199",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:202",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:207",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:209",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:212",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:214",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:215",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:224",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:240",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:241",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:242",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:243",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:244",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:245",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:246",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:247",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:248",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:249",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:250",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:251",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:252",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:253",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:254",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:255",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:256",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:257",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:258",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:259",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:260",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:261",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:262",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:263",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:264",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:265",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:266",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:267",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:268",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:269",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:270",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:271",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:272",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:273",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:274",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:275",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:276",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:277",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:278",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:279",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:280",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:281",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:282",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:283",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:284",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:285",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:286",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:287",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:288",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:289",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:290",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:291",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:292",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:293",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:294",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:295",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:296",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:297",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:298",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:299",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:300",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:301",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:302",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:303",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:304",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:305",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:306",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:307",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:308",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:309",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:310",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:311",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:312",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:313",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:314",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:315",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:316",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:317",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:318",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:319",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:320",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:321",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:322",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:323",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:324",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:325",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:326",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:327",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:328",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:329",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:330",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:331",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:332",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:333",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:334",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:335",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:336",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:337",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:338",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:339",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:340",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:341",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:342",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:343",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:344",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:345",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:346",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:347",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:348",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:349",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:350",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:351",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:352",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:353",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:354",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:355",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:356",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:357",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:358",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:359",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:360",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:361",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:362",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:363",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:364",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:365",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:366",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:367",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:368",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:369",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:370",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:371",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:372",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:373",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:374",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:375",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:376",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:377",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:378",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:379",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:380",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:381",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:382",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:383",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:384",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:385",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:386",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:387",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:388",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:389",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:390",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:391",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:392",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:393",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:394",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:395",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:396",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:397",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:398",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:399",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:400",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:401",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:402",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:403",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:404",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:405",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:406",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:407",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:408",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:409",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:410",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:411",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:412",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:413",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:414",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:415",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:416",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:417",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:418",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:419",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:420",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:421",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:422",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:423",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:424",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:425",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:426",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:427",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:428",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:429",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:430",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:431",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:432",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:433",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:434",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:435",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:436",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:437",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:438",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:439",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:440",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:441",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:442",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:443",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:444",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:445",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:446",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:447",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:448",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:449",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:450",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:451",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:452",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:453",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:454",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:455",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:456",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:457",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:458",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:459",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:460",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:461",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:462",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:463",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:464",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:465",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:466",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:467",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:468",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:469",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:470",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:471",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:472",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:473",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:474",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:475",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:476",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:477",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:478",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:479",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:480",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:481",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:482",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:483",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:484",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:485",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:486",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:487",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:488",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:489",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:490",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:491",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:492",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:493",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:494",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:495",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:496",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:497",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:498",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:499",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:500",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:501",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:502",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:503",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:504",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:505",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:506",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:507",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:508",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:509",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:510",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:511",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:512",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:513",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:514",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:515",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:516",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:517",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:518",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:519",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:520",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:521",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:522",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:523",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:524",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:525",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:526",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:527",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:528",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:529",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:530",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:531",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:532",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:533",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:534",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:535",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:536",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:537",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:538",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:539",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:540",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:541",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:542",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:543",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:544",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:545",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:546",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:547",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:548",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:549",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:550",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:551",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:552",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:553",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:554",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:555",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:556",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:557",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:558",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:559",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:560",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:561",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:562",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:563",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:564",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:565",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:566",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:567",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:568",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:569",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:570",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:571",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:572",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:573",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:574",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:575",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:576",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:577",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:578",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:579",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:580",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:581",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:582",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:583",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:584",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:585",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:586",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:587",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:588",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:589",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:590",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:591",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:592",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:593",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:594",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:595",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:596",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:597",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:598",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:599",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:600",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:601",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:602",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:603",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:604",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:605",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:606",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:607",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:608",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:609",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:610",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:611",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:612",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:613",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:614",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:615",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:616",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:617",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:618",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:619",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:620",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:621",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:622",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:623",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:624",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:625",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:626",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:627",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:628",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:629",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:630",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:631",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:632",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:633",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:634",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:635",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:636",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:637",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:638",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:639",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:640",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:641",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:642",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:643",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:644",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:645",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:646",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:647",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:648",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:649",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:650",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:651",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:652",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:653",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:654",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:655",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:656",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:657",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:658",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:659",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:660",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:661",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:662",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:663",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:664",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:665",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:666",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:667",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:668",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:669",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:670",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:671",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:672",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:673",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:introduction:677",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:1:686",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:1:687",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:1:702",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:2:755",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:2:756",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:3:795",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:846",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:874",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:875",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:876",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:877",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:882",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:883",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:5:884",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:903",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:912",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:918",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:925",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:926",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:938",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:939",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:940",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:6:953",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:958",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:959",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:960",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:961",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:977",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:7:978",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1000",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1001",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1009",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1081",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1104",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1105",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1106",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1107",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1108",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1109",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1130",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1134",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1143",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1146",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1153",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1155",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1158",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1161",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1162",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1163",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1165",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1166",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1179",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1180",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:8:1242",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:10:1278",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:11:1285",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:11:1286",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:11:1287",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:12:1384",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:12:1385",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:12:1386",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:12:1387",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:14:1400",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:15:1419",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:15:1420",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:15:1432",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:16:1503",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:16:1504",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:16:1510",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1517",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1597",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1598",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1642",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1643",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1644",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1645",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1646",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1647",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1724",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1725",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1757",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1758",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1778",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1779",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:17:1780",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:18:1858",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:18:1867",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:18:1868",
+      "type": "missing-hadith-marker"
+    },
+    {
+      "key": "riyadussalihin:19:1882",
+      "type": "missing-hadith-marker"
+    }
+  ],
+  "unsafeStarts": [],
+  "samples": {
+    "riyadussalihin:introduction:2": {
+      "matnPreview": "٢- وعن أم المؤمنين أم عبد الله عائشة رضي الله عنها قالت: قال رسول الله صلي الله عليه وسلم: ((يغزو جيش الكعبة فإذا كانوا ببيداء من الأرض يخسف بأولهم وآخرهم)) قالت: يا رسول الله، كيف تخسف بأولهم وآخرهم\n\nوفيهم اسوافهم، ومن ",
+      "sharhLength": 3056,
+      "sharhPreview": "ذكر المؤلف حديث عائشة ـ رضي الله عنها- أن النبي صلي الله عليه وسلم أخبر أنه يغزو جيش الكعبة، الكعبة المشرفة حماها الله وأنقذها من كل شر.\n\nهذه الكعبة هي بيت الله؛ بناه إبراهيم، وابنه إسماعيل - عليهما الصلاة والسلام - وكان",
+      "source": "manual_override",
+      "match": {
+        "method": "manual_override",
+        "confidence": 1,
+        "reviewed": true,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:3": {
+      "matnPreview": "٣- وعن عائشة - رضي الله عنها- قالت: قال النبي صلي الله عليه وسلم ((لا هجرة بعد الفتح ولكن جهاد ونبة وإذا استفرتم فانفروا)) متفق عليه.\n\nومعناه: لا هجرة من مكة؛ لأنها صارت دار إسلام.",
+      "sharhLength": 4755,
+      "sharhPreview": "في هذا الحديث نفي رسول الله صلي الله عليه وسلم الهجرة بعد الفتح، فقال: ((لا هجرة)) وهذا النفي ليس على عمومه، يعني أن الهجرة لم تبطل بالفتح، بل إنه ((وهذا النفي ليس على عمومه، يعني أن الهجرة لم تبطل بالفتح، بل إنه ((لا تن",
+      "source": "manual_override",
+      "match": {
+        "method": "manual_override",
+        "confidence": 1,
+        "reviewed": true,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:4": {
+      "matnPreview": "٤- وعن أبي عبد الله جابر بن عبد الله الأنصاري - رضي الله عنهما - قال: كنا مع النبي صلي الله عليه وسلم في غزاة فقال: ((إن بالمدينة لرجالاً ما سرتم مسيراً ولا قطعتم وادياً إلا كانوا معكم؛ حبسهم المرض)) وفي رواية: ((إلا شرك",
+      "sharhLength": 2807,
+      "sharhPreview": "قوله: ((في غزاة)) أي في غزوة.\n\nفمعني الحديث أن الإنسان إذا نوي العمل الصالح، ولكنه حبسه عنه حابس فإنه يكتب له أجر ما نوي.\n\nأما إذا كان يعلمه في حال العذر؛ أي: لما كان قادراً كان يعلمه، ثم عجز عنه فيما بعد؛ فإنه يكتب له أ",
+      "source": "manual_override",
+      "match": {
+        "method": "manual_override",
+        "confidence": 1,
+        "reviewed": true,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:5": {
+      "matnPreview": "٥- وعن أبي معن بن يزيد بن الأخنس- رضي الله عنهم - وهو وأبوه وجده صحابيون، قال: كان أبي - يزيد - اخرج دنانير يتصدق بها، فوضعها عند رجل في المسجد، فجئت فاخذتها، فآتيته بهان فقال: والله ما إياك أردت فخاصمته إلي رسول الله صل",
+      "sharhLength": 2642,
+      "sharhPreview": "هذا الحديث الذي ذكره المؤلف - رحمه الله - في قصة معن بن يزيد وأبيه - رضي الله عنهما -، أن أباه يزيد أخرج دراهم عند رجل في المسجد ليتصدق بها على الفقراء، فجاء ابنه معن فأخذها، وربما يكون ذلك الرجل الذي وكل فيها لم يعلم أن",
+      "source": "manual_override",
+      "match": {
+        "method": "manual_override",
+        "confidence": 1,
+        "reviewed": true,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:13": {
+      "matnPreview": "١٣- وعن أبي هريرة رضي الله عنه قال: سمعت رسول الله صلي الله عليه وسلم يقول: ((والله إني لاستغفر الله وأتوب إليه في اليوم أكثر من سبعين مرة)) (رواه البخاري) .",
+      "sharhLength": 0,
+      "sharhPreview": "",
+      "source": "no_sharh",
+      "match": {
+        "method": "no_direct_sharh_marker",
+        "confidence": 0,
+        "reviewed": false,
+        "sourcePage": 92,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:14": {
+      "matnPreview": "١٤- وعن الأعز بن يسار المزني رضي الله عنه قال: قال رسول الله صلي الله عليه وسلم: ((يا أيها الناس، توبوا إلي الله واستغفروه، فإني أتوب في اليوم مائة مرة)) (رواه مسلم) .",
+      "sharhLength": 3744,
+      "sharhPreview": "تقدم الكلام علي ما ذكره المؤلف- رحمه الله- من وجوب التوبة\n\nوشروطها، وما ساقه من الآيات الدالة على وجوبها.\n\nوهذان الحديثان ذكرهما المؤلف- رحمه الله- ليستدل على ذلك بالسنة.\n\nلأنه كلما تضافرت الأدلة على الشيء قوي، وصار أوكد",
+      "source": "shamela_direct_marker",
+      "match": {
+        "method": "shamela_direct_marker",
+        "confidence": 0.98,
+        "reviewed": true,
+        "sourcePage": 92,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:introduction:15": {
+      "matnPreview": "١٥- وعن أبي حمزة أنس بن مالك الأنصاري- خادم رسول الله صلي الله عليه وسلم _ رضي الله عنه قال: قال رسول الله صلي الله عليه وسلم: ((لله أفرح بتوبة عبده من أحدكم: سقط على بعيره، وقد أضله في أرض فلاة)) (متفق عليه) .\n\nوفي رواي",
+      "sharhLength": 2624,
+      "sharhPreview": "قوله- رحمه الله- ((خادم النبي صلي الله عليه وسلم)) وذلك أن أنساً - رضي الله عنه- حين قدم النبي عليه الصلاة والسلام المدينة أتت به أمة إلي رسول الله صلي الله عليه وسلم وقالت له: هذا أنس ابن مالك يخدمك، فقبل النبي عليه الص",
+      "source": "shamela_direct_marker",
+      "match": {
+        "method": "shamela_direct_marker",
+        "confidence": 0.98,
+        "reviewed": true,
+        "sourcePage": 96,
+        "policy": "direct-marker-only"
+      }
+    },
+    "riyadussalihin:1:680": {
+      "matnPreview": "وعن ابن عمر رضي الله عنهما أن رسول الله صلى الله عليه وسلم مر على رجل من الأنصار وهو يعظ أخاه في الحياء، فقال رسول الله صلى الله عليه وسلم‏:‏\n\"دعه فإن الحياء من الإيمان\" ‏(‏‏(‏متفق عليه‏)‏‏)‏ ‏.‏",
+      "sharhLength": 755,
+      "sharhPreview": "قال المؤلف النووي رحمه الله في كتابه رياض الصالحين (كتاب الأدب) (باب الحياء وفضله والحث عليه) الأدب: الأخلاق التي يتأدب بها الإنسان، وله أنواع كثيرة منها: الكرم والشجاعة وطيب النفس وانشراح الصدر وطلاقة الوجه وغير ذلك كثي",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "680"
+      }
+    },
+    "riyadussalihin:1:681": {
+      "matnPreview": "وعن عمران بن حصين، رضي الله عنهما، قال‏:‏ قال رسول الله صلى الله عليه وسلم‏:‏ “ الحياء لا يأتى إلا بخير” ‏(‏‏(‏متفق عليه‏)‏‏)‏ ‏.‏ \nوفي رواية لمسلم” ‏\n\"‏الحياءه خير كله”أوقال‏:‏ “الحياء كله خير‏\"‏‏.‏",
+      "sharhLength": 1488,
+      "sharhPreview": "قال المؤلف النووي رحمه الله في كتابه رياض الصالحين (كتاب الأدب) (باب الحياء وفضله والحث عليه) الأدب: الأخلاق التي يتأدب بها الإنسان، وله أنواع كثيرة منها: الكرم والشجاعة وطيب النفس وانشراح الصدر وطلاقة الوجه وغير ذلك كثي",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "681"
+      }
+    },
+    "riyadussalihin:1:682": {
+      "matnPreview": "-وعن أبى هريرة رضي الله عنه، أن رسول الله صلى الله عليه وسلم قال‏:‏ “الإيمان بضع وسبعون، أو بضع وستون شعبة، فأفضلها قول لا إله إلا الله، وأدناها إماطة الأذى عن الطريق، والحياء شعبة من الإيمان” ‏(‏‏(‏متفق عليه‏)‏‏)‏ ‏.‏",
+      "sharhLength": 4902,
+      "sharhPreview": "قال المؤلف رحمه الله تعالى فيما نقله عن أبي هريرة رضي الله عنه أن رسول الله صلى الله عليه وسلم قال الإيمان بضع وسبعون أو بضع وستون شعبة شك من الراوي هل قال النبي صلى الله عليه وسلم بضع وسبعون أو قال بضع وستون فأفضلها وفي",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "682"
+      }
+    },
+    "riyadussalihin:1:685": {
+      "matnPreview": "وعن عبد الله بن عمر رضي الله عنهما أن عمر رضي الله عنه حين تأيمت بنته حفصة قال‏:‏ لقيت عثمان بن عفان رضي الله عنه ، فعرضت عليه حفصة فقلت‏:‏ إن شئت أنكحتك حفصة بنت عمر‏؟‏ قال‏:‏ سأنظر في أمري‏.‏ فلبثت ليالي، ثم لقيني فقال",
+      "sharhLength": 3098,
+      "sharhPreview": "قال الإمام النووي رحمه الله (باب حفظ السر) والسر هو ما يقع خفية بينك وبين صاحبك ولا يحل لك أن تفشي هذا السر أو أن تبينه لأحد سواء قال لك لا تبينه لأحد أو علم بالقرينة الفعلية أنه لا يحب أن يطلع عليه أحد أو علم بالقرينة ا",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "685"
+      }
+    },
+    "riyadussalihin:1:688": {
+      "matnPreview": "وعن أبي هريرة رضي الله عنه ، أن رسول الله صلى الله عليه وسلم قال‏:‏ ‏\"‏آية المنافق ثلاث‏:‏ إذا حدث كذب، وإذا وعد أخلف، وإذا اؤتمن خان‏\"‏ ‏(‏‏(‏متفق عليه‏)‏‏)‏ ‏.‏ \nزاد في ‏(‏‏(‏رواية لمسلم‏)‏‏)‏‏:‏ ‏\"‏وإن صام وصلى وزعم أ",
+      "sharhLength": 6489,
+      "sharhPreview": "نقل المؤلف - رحمه الله في باب الوفاء بالعهد وإنجاز الوعد عن أبي هريرة رضي الله عنه أن رسول الله صلى الله عليه وسلم قال: آية المنافق ثلاث آيته يعني علامته ثلاث إذا حدث كذب وإذا وعد أخلف وإذا أؤتمن خان يعني أن هذه من علاما",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "688"
+      }
+    },
+    "riyadussalihin:1:718": {
+      "matnPreview": "عن جابر رضي الله عنه ‏:‏ كان النبي صلى الله عليه وسلم الله عليه وسلم إذا كان يوم عيد خالف الطريق‏.‏ ‏(‏‏(‏رواه البخاري‏)‏‏)‏‏.‏",
+      "sharhLength": 3743,
+      "sharhPreview": "ثم ذكر النووي رحمه الله (باب استحباب مخالفة الطريق في العيد والجمعة وغيرها من العبادات)\n\nومعنى مخالفة الطريق: أن يذهب إلى العبادة من طريق ويرجع من الطريق الآخر فمثلا يذهب من الجانب الأيمن ويرجع من الجانب الأيسر وهذا ثابت",
+      "source": "adab_manual_override",
+      "match": {
+        "method": "adab_manual_override",
+        "confidence": 0.92,
+        "reviewed": true,
+        "reviewer": "book-adab-topic-validation",
+        "policy": "adab-book-corrected-only",
+        "sourceHadithNumber": "719"
+      }
+    }
+  }
+}

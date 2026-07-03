@@ -63,47 +63,237 @@ export function QuranCompletionPlan() {
   }
 
   return (
-    <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <h3 className="mb-1 text-base font-bold">خطة ختم القرآن</h3>
-          <p className="mb-0 text-sm text-muted-foreground">آخر صفحة: {lastPage} من {TOTAL_PAGES}</p>
+    <section className="quran-plan-card">
+      <style jsx>{`
+        .quran-plan-card {
+          border-radius: 1rem;
+          overflow: hidden;
+          background: hsl(var(--card));
+          border: 1px solid hsl(var(--border));
+          box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .dark .quran-plan-card {
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .plan-header {
+          background: var(--hero-gradient);
+          padding: 1.1rem 1.25rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .plan-header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .plan-icon-wrap {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.1rem;
+          flex-shrink: 0;
+        }
+        .plan-header-text h3 {
+          margin: 0;
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: white;
+        }
+        .plan-header-text p {
+          margin: 0;
+          font-size: 0.72rem;
+          color: rgba(255,255,255,0.7);
+        }
+        .plan-progress-ring {
+          position: relative;
+          width: 48px;
+          height: 48px;
+        }
+        .plan-progress-ring svg {
+          transform: rotate(-90deg);
+        }
+        .progress-bg {
+          fill: none;
+          stroke: rgba(255,255,255,0.2);
+          stroke-width: 4;
+        }
+        .progress-fill {
+          fill: none;
+          stroke: white;
+          stroke-width: 4;
+          stroke-linecap: round;
+          transition: stroke-dashoffset 0.6s ease;
+        }
+        .progress-text {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.6rem;
+          font-weight: 800;
+          color: white;
+        }
+        .plan-body {
+          padding: 0.85rem 1.25rem 1rem;
+        }
+        .plan-tabs {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.5rem;
+          margin-bottom: 0.85rem;
+        }
+        .plan-tab {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.55rem 0.25rem;
+          border-radius: 0.75rem;
+          border: 1.5px solid hsl(var(--border));
+          background: hsl(var(--background));
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-family: inherit;
+        }
+        .plan-tab:hover {
+          border-color: hsl(var(--primary) / 0.4);
+          background: hsl(var(--primary) / 0.04);
+        }
+        .plan-tab.active {
+          border-color: hsl(var(--primary));
+          background: hsl(var(--primary) / 0.08);
+        }
+        .dark .plan-tab.active {
+          background: hsl(var(--primary) / 0.12);
+        }
+        .plan-tab-icon {
+          font-size: 0.85rem;
+          color: hsl(var(--muted-foreground));
+          transition: color 0.2s;
+        }
+        .plan-tab.active .plan-tab-icon {
+          color: hsl(var(--primary));
+        }
+        .plan-tab-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: hsl(var(--foreground));
+          transition: color 0.2s;
+        }
+        .plan-tab.active .plan-tab-label {
+          color: hsl(var(--primary));
+        }
+        .plan-stats {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 0.6rem;
+        }
+        .plan-stat-label {
+          font-size: 0.78rem;
+          color: hsl(var(--muted-foreground));
+        }
+        .plan-stat-value {
+          font-size: 0.82rem;
+          font-weight: 800;
+          color: hsl(var(--foreground));
+        }
+        .plan-progress-bar {
+          height: 8px;
+          border-radius: 10px;
+          background: hsl(var(--muted));
+          overflow: hidden;
+          position: relative;
+        }
+        .plan-progress-fill {
+          height: 100%;
+          border-radius: 10px;
+          background: var(--primary-gradient);
+          transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          position: relative;
+        }
+        .plan-progress-fill::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+          animation: shimmer-bar 2s infinite;
+        }
+        @keyframes shimmer-bar {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .plan-footer {
+          margin-top: 0.5rem;
+          font-size: 0.7rem;
+          color: hsl(var(--muted-foreground));
+          text-align: center;
+        }
+        .plan-footer strong {
+          color: hsl(var(--primary));
+        }
+      `}</style>
+
+      <div className="plan-header">
+        <div className="plan-header-left">
+          <div className="plan-icon-wrap">
+            <i className="fas fa-book-open" />
+          </div>
+          <div className="plan-header-text">
+            <h3>خطة ختم القرآن</h3>
+            <p>صفحة {lastPage} من {TOTAL_PAGES}</p>
+          </div>
         </div>
-        <div className="flex size-11 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
-          <i className="fas fa-quran" />
+        <div className="plan-progress-ring">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle className="progress-bg" cx="24" cy="24" r="20" />
+            <circle
+              className="progress-fill"
+              cx="24" cy="24" r="20"
+              strokeDasharray={125.66}
+              strokeDashoffset={125.66 - (125.66 * progress) / 100}
+            />
+          </svg>
+          <span className="progress-text">{progress}%</span>
         </div>
       </div>
 
-      <div className="mb-3 grid grid-cols-3 gap-2">
-        {plans.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            onClick={() => handlePlanChange(item.key)}
-            className={`rounded-lg border px-2 py-2 text-sm font-semibold transition ${selectedPlan === item.key
-              ? "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-              : "border-border bg-background hover:bg-accent"
-              }`}
-          >
-            <i className={`fas ${item.icon} mb-1 block`} />
-            {item.label}
-          </button>
-        ))}
-      </div>
+      <div className="plan-body">
+        <div className="plan-tabs">
+          {plans.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => handlePlanChange(item.key)}
+              className={`plan-tab ${selectedPlan === item.key ? "active" : ""}`}
+            >
+              <i className={`fas ${item.icon} plan-tab-icon`} />
+              <span className="plan-tab-label">{item.label}</span>
+            </button>
+          ))}
+        </div>
 
-      <div className="mb-2 flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">ورد اليوم</span>
-        <span className="font-bold">من {lastPage} إلى {todayTarget}</span>
+        <div className="plan-stats">
+          <span className="plan-stat-label">ورد اليوم</span>
+          <span className="plan-stat-value">{lastPage} → {todayTarget}</span>
+        </div>
+
+        <div className="plan-progress-bar">
+          <div className="plan-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+
+        <p className="plan-footer">
+          <strong>{pagesPerDay}</strong> صفحة يوميًا • {plan.days} يوم لإتمام الخطة
+        </p>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 transition-all"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      <p className="mt-2 mb-0 text-xs text-muted-foreground">
-        {pagesPerDay} صفحة يوميًا تقريبًا لإتمام الخطة.
-      </p>
     </section>
   )
 }

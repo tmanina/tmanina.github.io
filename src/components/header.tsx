@@ -4,11 +4,11 @@ import * as React from "react"
 import { Sun, Moon, Bell, Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 type AdhkarPeriod = "morning" | "evening" | "sleep" | null
 
 export function Header() {
-  const [isDark, setIsDark] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
   const [adhkarNotification, setAdhkarNotification] = React.useState<AdhkarPeriod>(null)
   const [showNotification, setShowNotification] = React.useState(false)
@@ -17,20 +17,6 @@ export function Header() {
   const buttonRef = React.useRef<HTMLButtonElement>(null)
 
   React.useEffect(() => {
-    const theme = localStorage.getItem("theme")
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark")
-      setIsDark(true)
-    } else {
-      document.documentElement.classList.remove("dark")
-      setIsDark(false)
-    }
-
-    const meta = document.querySelector('meta[name="theme-color"]')
-    if (meta) {
-      meta.setAttribute("content", theme === "dark" ? "#0d1515" : "#2b5a4b")
-    }
-
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
     }
@@ -106,17 +92,6 @@ export function Header() {
     return () => clearInterval(interval)
   }, [])
 
-  const toggleTheme = () => {
-    const newTheme = isDark ? "light" : "dark"
-    document.documentElement.classList.toggle("dark", newTheme === "dark")
-    localStorage.setItem("theme", newTheme)
-    setIsDark(!isDark)
-    const meta = document.querySelector('meta[name="theme-color"]')
-    if (meta) {
-      meta.setAttribute("content", newTheme === "dark" ? "#0d1515" : "#2b5a4b")
-    }
-  }
-
   const handleNotificationClick = () => {
     if (!adhkarNotification) return
 
@@ -179,19 +154,7 @@ export function Header() {
         </a>
 
         <div className="flex items-center gap-1.5">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="text-muted-foreground hover:text-foreground active:scale-90 size-9"
-            aria-label={isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"}
-          >
-            {isDark ? (
-              <Sun className="size-[18px]" />
-            ) : (
-              <Moon className="size-[18px]" />
-            )}
-          </Button>
+          <ThemeToggle />
 
           <div className="relative">
             <Button
