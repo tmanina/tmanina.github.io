@@ -38,15 +38,14 @@ export function MiniRadioPlayer() {
     const currentRadio = RADIOS[currentRadioIndex]
     const audioRef = React.useRef<HTMLAudioElement>(null)
     const retryCountRef = React.useRef(0)
+    const retryTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+    const stallTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+    const wantsPlaybackRef = React.useRef(false)
+    const startingPlaybackRef = React.useRef(false)
+    const currentRadioRef = React.useRef(currentRadio)
+    const playRequestRef = React.useRef(0)
     const prevRadioNameRef = React.useRef(currentRadio.name)
     const { activeRadioId, activeIsPlaying, setActiveRadio } = useRadioContext()
-
-    // Prepare the audio element on mount without opening the stream before interaction.
-    React.useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.volume = volume
-        }
-    }, [volume])
 
     // Handle volume changes
     React.useEffect(() => {
@@ -55,76 +54,157 @@ export function MiniRadioPlayer() {
         }
     }, [volume])
 
+    const clearRecoveryTimers = React.useCallback(() => {
+        if (retryTimerRef.current) clearTimeout(retryTimerRef.current)
+        if (stallTimerRef.current) clearTimeout(stallTimerRef.current)
+        retryTimerRef.current = null
+        stallTimerRef.current = null
+    }, [])
+
+    const stopPlayback = React.useCallback((updateContext: boolean) => {
+        wantsPlaybackRef.current = false
+        startingPlaybackRef.current = false
+        playRequestRef.current++
+        clearRecoveryTimers()
+        retryCountRef.current = 0
+        audioRef.current?.pause()
+        setIsPlaying(false)
+        setIsBuffering(false)
+        if (updateContext) setActiveRadio(currentRadioRef.current.id, false)
+    }, [clearRecoveryTimers, setActiveRadio])
+
+    // Retry only while this station is still the one the listener chose.
+    const scheduleReconnect = (radio = currentRadioRef.current) => {
+        if (!wantsPlaybackRef.current || currentRadioRef.current.id !== radio.id || retryTimerRef.current) return
+        if (stallTimerRef.current) clearTimeout(stallTimerRef.current)
+        stallTimerRef.current = null
+
+        if (retryCountRef.current >= 5) {
+            stopPlayback(true)
+            setAudioError(true)
+            setToast({ message: 'تعذر إعادة الاتصال بالراديو، اضغط للتشغيل مجددًا', variant: 'warning' })
+            return
+        }
+
+        const delay = Math.min(2000 * ++retryCountRef.current, 10000)
+        setIsPlaying(false)
+        setIsBuffering(true)
+        retryTimerRef.current = setTimeout(() => {
+            retryTimerRef.current = null
+            if (!wantsPlaybackRef.current || currentRadioRef.current.id !== radio.id || !audioRef.current) return
+
+            const audio = audioRef.current
+            const request = ++playRequestRef.current
+            startingPlaybackRef.current = true
+            audio.src = radio.url
+            audio.load()
+            audio.play().then(() => {
+                if (request === playRequestRef.current) startingPlaybackRef.current = false
+            }).catch((err) => {
+                if (request !== playRequestRef.current || !wantsPlaybackRef.current) return
+                startingPlaybackRef.current = false
+                if (err instanceof DOMException && err.name === 'NotAllowedError') {
+                    stopPlayback(true)
+                    setAudioError(true)
+                    setToast({ message: 'اضغط للتشغيل مجددًا', variant: 'warning' })
+                } else {
+                    scheduleReconnect(radio)
+                }
+            })
+        }, delay)
+    }
+
     // Sync with RadioContext: pause if another component starts playing a different radio
     React.useEffect(() => {
         if (activeRadioId !== null && activeRadioId !== currentRadio.id && activeIsPlaying) {
-            if (audioRef.current && isPlaying) {
-                audioRef.current.pause()
-                setIsPlaying(false)
-            }
+            if (wantsPlaybackRef.current) stopPlayback(false)
         }
-    }, [activeRadioId, activeIsPlaying, currentRadio.id, isPlaying])
+    }, [activeRadioId, activeIsPlaying, currentRadio.id, stopPlayback])
 
-    const togglePlay = React.useCallback(() => {
+    const togglePlay = () => {
         if (!audioRef.current) return
 
-        if (isPlaying) {
-            audioRef.current.pause()
-            setIsPlaying(false)
-            setActiveRadio(currentRadio.id, false)
+        if (wantsPlaybackRef.current) {
+            stopPlayback(true)
         } else {
-            // Announce to context that we're taking over
+            wantsPlaybackRef.current = true
+            currentRadioRef.current = currentRadio
+            retryCountRef.current = 0
+            clearRecoveryTimers()
             setActiveRadio(currentRadio.id, true)
-
             setAudioError(false)
             setIsBuffering(true)
-            // Open or reload the stream only after a user action.
+            startingPlaybackRef.current = true
             if (audioError || !audioRef.current.src) {
                 audioRef.current.src = currentRadio.url
                 audioRef.current.load()
             }
+            const request = ++playRequestRef.current
             audioRef.current.play()
                 .then(() => {
+                    if (request !== playRequestRef.current || !wantsPlaybackRef.current) return
+                    startingPlaybackRef.current = false
                     setIsPlaying(true)
                     setIsBuffering(false)
                     setAudioError(false)
                     retryCountRef.current = 0
                 })
                 .catch((err) => {
-                    console.error('Play failed:', err)
-                    setIsPlaying(false)
-                    setIsBuffering(false)
-                    setAudioError(true)
+                    if (request !== playRequestRef.current || !wantsPlaybackRef.current) return
+                    startingPlaybackRef.current = false
+                    if (err instanceof DOMException && err.name === 'NotAllowedError') {
+                        stopPlayback(true)
+                        setAudioError(true)
+                        setToast({ message: 'اضغط للتشغيل مجددًا', variant: 'warning' })
+                    } else {
+                        scheduleReconnect(currentRadio)
+                    }
                 })
         }
-    }, [audioError, currentRadio.id, currentRadio.url, isPlaying, setActiveRadio])
+    }
 
-    const selectRadio = React.useCallback((index: number) => {
+    const selectRadio = (index: number) => {
         if (currentRadioIndex === index) return
 
         const radio = RADIOS[index]
+        clearRecoveryTimers()
+        retryCountRef.current = 0
+        wantsPlaybackRef.current = true
+        startingPlaybackRef.current = true
+        currentRadioRef.current = radio
         setCurrentRadioIndex(index)
 
         if (!audioRef.current) return
 
+        playRequestRef.current++
         audioRef.current.pause()
         audioRef.current.src = radio.url
         audioRef.current.load()
         setActiveRadio(radio.id, true)
         setIsBuffering(true)
         setAudioError(false)
+        const request = ++playRequestRef.current
         audioRef.current.play()
             .then(() => {
+                if (request !== playRequestRef.current || !wantsPlaybackRef.current) return
+                startingPlaybackRef.current = false
                 setIsPlaying(true)
                 setIsBuffering(false)
                 setAudioError(false)
                 retryCountRef.current = 0
             })
-            .catch(() => {
-                setIsPlaying(false)
-                setIsBuffering(false)
+            .catch((err) => {
+                if (request !== playRequestRef.current || !wantsPlaybackRef.current) return
+                startingPlaybackRef.current = false
+                if (err instanceof DOMException && err.name === 'NotAllowedError') {
+                    stopPlayback(true)
+                    setAudioError(true)
+                    setToast({ message: 'اضغط للتشغيل مجددًا', variant: 'warning' })
+                } else {
+                    scheduleReconnect(radio)
+                }
             })
-    }, [currentRadioIndex, setActiveRadio])
+    }
 
     const renderRadioButtons = () => (
         RADIOS.map((radio, index) => (
@@ -141,18 +221,15 @@ export function MiniRadioPlayer() {
 
     // Refs for Media Session handlers (defined after togglePlay to avoid TDZ)
     const togglePlayRef = React.useRef(togglePlay)
-    const isPlayingRef = React.useRef(isPlaying)
 
     React.useEffect(() => {
         togglePlayRef.current = togglePlay
-        isPlayingRef.current = isPlaying
-    }, [togglePlay, isPlaying])
+    })
 
     // Media Session API - show playing info in mobile notification/lock screen
     React.useEffect(() => {
-        if (!('mediaSession' in navigator)) return
+        if (!('mediaSession' in navigator) || activeRadioId !== currentRadio.id) return
 
-        // Always set metadata while MiniRadioPlayer is mounted (even when paused)
         navigator.mediaSession.metadata = new MediaMetadata({
             title: currentRadio.name,
             artist: 'إذاعة القرآن الكريم',
@@ -167,23 +244,19 @@ export function MiniRadioPlayer() {
 
         // Register handlers — they use refs to always have fresh state
         navigator.mediaSession.setActionHandler('play', () => {
-            if (audioRef.current && !isPlayingRef.current) {
+            if (audioRef.current && !wantsPlaybackRef.current) {
                 togglePlayRef.current()
             }
         })
 
         navigator.mediaSession.setActionHandler('pause', () => {
-            if (audioRef.current && isPlayingRef.current) {
+            if (audioRef.current && wantsPlaybackRef.current) {
                 togglePlayRef.current()
             }
         })
 
         navigator.mediaSession.setActionHandler('stop', () => {
-            if (audioRef.current) {
-                audioRef.current.pause()
-                setIsPlaying(false)
-                setActiveRadio(currentRadio.id, false)
-            }
+            stopPlayback(true)
         })
 
         return () => {
@@ -194,64 +267,33 @@ export function MiniRadioPlayer() {
                 navigator.mediaSession.setActionHandler('stop', null)
             }
         }
-    }, [isPlaying, currentRadio, setActiveRadio])
+    }, [isPlaying, currentRadio, activeRadioId, stopPlayback])
 
     const handleAudioError = () => {
-        console.error('Audio stream error')
-        setIsPlaying(false)
-        setIsBuffering(false)
-        setAudioError(true)
-        setActiveRadio(null, false)
-
-        setToast({
-            message: 'تعذر الاتصال بالراديو، جاري إعادة المحاولة...',
-            variant: 'error',
-        })
-
-        // Auto-retry up to 3 times
-        if (retryCountRef.current < 3) {
-            retryCountRef.current++
-            setTimeout(() => {
-                if (audioRef.current) {
-                    audioRef.current.src = currentRadio.url
-                    audioRef.current.load()
-                    audioRef.current.play()
-                        .then(() => {
-                            setIsPlaying(true)
-                            setAudioError(false)
-                            setIsBuffering(false)
-                            setActiveRadio(currentRadio.id, true)
-                            setToast({
-                                message: 'تم إعادة الاتصال بنجاح ✅',
-                                variant: 'success',
-                            })
-                        })
-                        .catch(() => {
-                            setToast({
-                                message: 'فشلت إعادة المحاولة، يرجى النقر للتشغيل',
-                                variant: 'warning',
-                            })
-                        })
-                }
-            }, 2000 * retryCountRef.current)
-        } else {
-            setToast({
-                message: 'تعذر تشغيل الراديو بعد 3 محاولات',
-                variant: 'warning',
-            })
-        }
-    }
-
-    const handleCanPlay = () => {
-        setIsBuffering(false)
-        retryCountRef.current = 0
+        startingPlaybackRef.current = false
+        if (wantsPlaybackRef.current) scheduleReconnect()
     }
 
     const handleWaiting = () => {
+        if (!wantsPlaybackRef.current || stallTimerRef.current) return
         setIsBuffering(true)
+        stallTimerRef.current = setTimeout(() => {
+            stallTimerRef.current = null
+            if (wantsPlaybackRef.current && audioRef.current &&
+                audioRef.current.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
+                scheduleReconnect()
+            }
+        }, 15000)
     }
 
     const handlePlaying = () => {
+        if (!wantsPlaybackRef.current) {
+            audioRef.current?.pause()
+            return
+        }
+        clearRecoveryTimers()
+        retryCountRef.current = 0
+        startingPlaybackRef.current = false
         setIsBuffering(false)
         setIsPlaying(true)
         setAudioError(false)
@@ -267,12 +309,39 @@ export function MiniRadioPlayer() {
     }
 
     const handleEnded = () => {
-        setIsPlaying(false)
-        setToast({
-            message: 'انتهى البث المباشر للإذاعة',
-            variant: 'info',
-        })
+        startingPlaybackRef.current = false
+        if (wantsPlaybackRef.current) scheduleReconnect()
     }
+
+    const handlePause = () => {
+        setIsPlaying(false)
+        if (wantsPlaybackRef.current && !startingPlaybackRef.current) scheduleReconnect()
+    }
+
+    React.useEffect(() => {
+        const resumeIfInterrupted = () => {
+            if (wantsPlaybackRef.current && audioRef.current &&
+                (audioRef.current.paused || audioRef.current.error)) {
+                scheduleReconnect()
+            }
+        }
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') resumeIfInterrupted()
+        }
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        window.addEventListener('online', resumeIfInterrupted)
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+            window.removeEventListener('online', resumeIfInterrupted)
+        }
+    })
+
+    React.useEffect(() => () => {
+        wantsPlaybackRef.current = false
+        startingPlaybackRef.current = false
+        playRequestRef.current++
+        clearRecoveryTimers()
+    }, [clearRecoveryTimers])
 
     return (
         <>
@@ -303,10 +372,10 @@ export function MiniRadioPlayer() {
             <audio
                 ref={audioRef}
                 onError={handleAudioError}
-                onCanPlay={handleCanPlay}
                 onWaiting={handleWaiting}
+                onStalled={handleWaiting}
                 onPlaying={handlePlaying}
-                onPause={() => setIsPlaying(false)}
+                onPause={handlePause}
                 onEnded={handleEnded}
                 crossOrigin="anonymous"
                 preload="metadata"
@@ -339,10 +408,10 @@ export function MiniRadioPlayer() {
                             className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-gradient-to-br from-[#ffd700] to-[#f59e0b] text-[#1a3a2a] shadow-[0_4px_12px_rgba(255,215,0,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_6px_20px_rgba(255,215,0,0.5)] active:scale-95 max-[400px]:h-9 max-[400px]:w-9 max-[400px]:text-sm md:h-10 md:w-10"
                             onClick={togglePlay}
                             type="button"
-                            title={isPlaying ? 'إيقاف' : 'تشغيل'}
-                            aria-label={isPlaying ? 'إيقاف الراديو' : 'تشغيل الراديو'}
+                            title={isPlaying || isBuffering ? 'إيقاف' : 'تشغيل'}
+                            aria-label={isPlaying || isBuffering ? 'إيقاف الراديو' : 'تشغيل الراديو'}
                         >
-                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying ? 0 : '2px' }}></i>
+                            <i className={`fas ${isPlaying || isBuffering ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying || isBuffering ? 0 : '2px' }}></i>
                         </button>
                     </div>
                 </div>
@@ -400,10 +469,10 @@ export function MiniRadioPlayer() {
                             className="w-[42px] h-[42px] md:w-10 md:h-10 rounded-full border-0 bg-gradient-to-br from-[#ffd700] to-[#f59e0b] text-[#1a3a2a] flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_12px_rgba(255,215,0,0.3)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(255,215,0,0.5)] active:scale-95 shrink-0 max-[400px]:w-[38px] max-[400px]:h-[38px] max-[400px]:text-sm"
                             onClick={togglePlay}
                             type="button"
-                            title={isPlaying ? 'إيقاف' : 'تشغيل'}
-                            aria-label={isPlaying ? 'إيقاف الراديو' : 'تشغيل الراديو'}
+                            title={isPlaying || isBuffering ? 'إيقاف' : 'تشغيل'}
+                            aria-label={isPlaying || isBuffering ? 'إيقاف الراديو' : 'تشغيل الراديو'}
                         >
-                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying ? 0 : '2px' }}></i>
+                            <i className={`fas ${isPlaying || isBuffering ? 'fa-pause' : 'fa-play'}`} style={{ marginRight: isPlaying || isBuffering ? 0 : '2px' }}></i>
                         </button>
                         <div className="items-center gap-2 hidden md:flex">
                             <i className="fas fa-volume-up text-white/50 text-sm"></i>

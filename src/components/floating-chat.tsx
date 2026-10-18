@@ -20,8 +20,12 @@ interface ChatMessage {
 const systemPrompt =
   "أنت مساعد ديني لتطبيق طمأنينة (tmanina) متخصص في الإجابة على الأسئلة الدينية الإسلامية. يجب أن تستند إجاباتك فقط إلى مواقع دينية موثوقة، مثل: الدرر السنية (dorar.net)، إسلام ويب (islamweb.net)، الإسلام سؤال وجواب (islamqa.info)، طريق الإسلام (ar.islamway.net)، شبكة الألوكة (alukah.net)، موقع ابن باز (binbaz.org.sa)، موقع ابن عثيمين (binothaimeen.net)، دار الإفتاء المصرية (dar-alifta.org)، الرئاسة العامة للبحوث العلمية والإفتاء (alifta.gov.sa)، ومصحف جامعة الملك سعود (quran.ksu.edu.sa). لا تستخدم ولا تذكر أي مصادر من مواقع عامة أو غير دينية. إذا لم تجد إجابة في هذه المواقع فقط فقل: (لا أعلم يقينًا، يُفضَّل سؤال أهل العلم مباشرة). اذكر مصادرك الدينية دائمًا إن أمكن، وكن مختصرًا ومحترمًا."
 
-const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY ?? ""
-const groqApiUrl = "https://api.groq.com/openai/v1/chat/completions"
+const dahlApiKey =
+  process.env.NEXT_PUBLIC_DAHL_API_KEY ||
+  process.env.NEXT_PUBLIC_GROQ_API_KEY ||
+  "dahl_5b9ymChPMU2JPiibQirQBvYLNntixgwJN"
+const dahlApiUrl = "https://inference.dahl.global/v1/chat/completions"
+const dahlModel = "MiniMaxAI/MiniMax-M2.7"
 
 
 const ALLOWED_DOMAINS = [
@@ -143,34 +147,34 @@ function formatMarkdownSafe(text: string) {
   return { __html: html }
 }
 
-async function callGroqAPI(prompt: string): Promise<{ text: string; sources: SourceLink[] }> {
-  if (!groqApiKey) {
+async function callDahlAPI(prompt: string): Promise<{ text: string; sources: SourceLink[] }> {
+  if (!dahlApiKey) {
     throw new Error(
-      "API key غير مضبوط. تأكد من إضافة NEXT_PUBLIC_GROQ_API_KEY في ملف .env.local"
+      "API key غير مضبوط. تأكد من إضافة NEXT_PUBLIC_DAHL_API_KEY في ملف .env.local"
     )
   }
 
   const payload = {
-    model: "llama-3.3-70b-versatile",
+    model: dahlModel,
     messages: [
       {
         role: "system",
-        content: systemPrompt,
+        content: `${systemPrompt}\n\nتنبيه هام جداً: لا تكتب أي وسوم تفكير داخلية مثل <think> ولا تكتب أفكارك بالإنجليزية؛ أجب مباشرة باللغة العربية بأسلوب راقٍ وموجز وموثق.`,
       },
       {
         role: "user",
         content: prompt,
       },
     ],
-    temperature: 0.2,
+    temperature: 0.3,
   }
 
   const apiCall = async () => {
-    const response = await fetch(groqApiUrl, {
+    const response = await fetch(dahlApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${groqApiKey}`,
+        Authorization: `Bearer ${dahlApiKey}`,
       },
       body: JSON.stringify(payload),
     })
@@ -181,7 +185,10 @@ async function callGroqAPI(prompt: string): Promise<{ text: string; sources: Sou
   }
 
   const result = await exponentialBackoff(apiCall, 3, 1000)
-  const text: string = result?.choices?.[0]?.message?.content ?? ""
+  const rawText: string = result?.choices?.[0]?.message?.content ?? ""
+
+  // إزالة أي وسوم تفكير بالإنجليزية تظهر أحياناً من النموذج
+  const text = rawText.replace(/<think>[\s\S]*?<\/think>/gi, "").trim()
 
   const sources: SourceLink[] = []
   const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g
@@ -315,10 +322,10 @@ export function FloatingChat() {
     setIsLoading(true)
 
     try {
-      const response = await callGroqAPI(userMessage)
+      const response = await callDahlAPI(userMessage)
       addMessage("bot", response.text, response.sources)
     } catch (error) {
-      console.error("Error calling Groq API:", error)
+      console.error("Error calling Dahl AI API:", error)
       addMessage(
         "bot",
         "حدث خطأ أثناء محاولة جلب الإجابة. يرجى التحقق من اتصالك بالإنترنت أو المحاولة لاحقاً."

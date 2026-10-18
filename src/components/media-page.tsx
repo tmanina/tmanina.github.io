@@ -20,6 +20,7 @@ const AsmaaPage = dynamic(() => import("./asmaa/asmaa-page").then(m => m.AsmaaPa
 const SurahList = dynamic(() => import("./surah-list"), { loading: LoadingSpinner })
 const MushafWithTafsir = dynamic(() => import("./mushaf-tafsir").then(m => m.MushafWithTafsir), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري تحميل المصحف...</p></div> })
 const QuranReader = dynamic(() => import("./quran-reader/quran-reader").then(m => m.QuranReader), { loading: () => <div className="flex items-center justify-center py-20"><div className="text-center"><div className="mx-auto mb-4 w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin"></div><p className="text-muted-foreground">جاري تحميل المصحف...</p></div></div> })
+const ProphetsStories = dynamic(() => import("./prophets/prophets-stories").then(m => m.ProphetsStories), { loading: LoadingSpinner })
 
 function LoadingSpinner() {
   return (
@@ -247,6 +248,27 @@ export function MediaPage() {
                             </div>
                         </div>
 
+                        {/* قصص الأنبياء */}
+                        <div>
+                            <div
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+                                onClick={() => handleSectionChange('prophets')}
+                            >
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-amber-600 via-amber-700 to-emerald-800">
+                                    <span className="absolute top-2 end-2 bg-emerald-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10 shadow-sm">جديد</span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
+                                        <i className="fas fa-book-open-reader"></i>
+                                    </div>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">قصص الأنبياء</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">سير وعِبر الأنبياء والمرسلين</p>
+                                    <button className="bg-white text-amber-800 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-open ms-2"></i>
+                                        تصفح القصص
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* راديو */}
                         <div>
                             <div
@@ -340,11 +362,10 @@ export function MediaPage() {
                                         <i className="fas fa-video"></i>
                                     </div>
                                     <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">بث مباشر</h3>
-                                </div>
-                                <div className="media-card-body text-center p-4">
-                                    <p className="media-description">الحرم المكي - بث مباشر</p>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">الحرم المكي - بث مباشر على مدار الساعة</p>
                                     <button className="bg-white text-red-600 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
-                                        مشاهدة <i className="fas fa-play-circle ms-2"></i>
+                                        <i className="fas fa-play ms-2"></i>
+                                        مشاهدة الآن
                                     </button>
                                 </div>
                             </div>
@@ -414,6 +435,10 @@ export function MediaPage() {
 
                     {activeSection === 'podcast' && (
                         <PodcastPlayer onBack={() => handleSectionChange(null)} />
+                    )}
+
+                    {activeSection === 'prophets' && (
+                        <ProphetsStories onBack={() => handleSectionChange(null)} />
                     )}
 
                 </div>

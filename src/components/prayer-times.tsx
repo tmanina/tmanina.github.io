@@ -3,60 +3,11 @@
 import * as React from "react"
 import { FloatingToast } from "@/components/floating-toast"
 import type { ToastVariant } from "@/components/floating-toast"
-
-type City = "cairo" | "giza" | "alexandria" | "port-said" | "suez" | "ismailia" | "damietta" |
-  "damanhur" | "tanta" | "mansoura" | "zagazig" | "shebin" | "banha" | "kafr-el-sheikh" |
-  "fayoum" | "beni-suef" | "minya" | "assiut" | "sohag" | "qena" | "luxor" | "aswan" |
-  "hurghada" | "new-valley" | "matrouh" | "north-sinai" | "south-sinai"
-
-interface CityInfo {
-  name: string
-  englishName: string
-  latitude: number
-  longitude: number
-}
-
-interface PrayerTimesData {
-  fajr: string
-  sunrise: string
-  dhuhr: string
-  asr: string
-  maghrib: string
-  isha: string
-}
+import { egyptCities, type City, type CityInfo } from "@/lib/egypt-prayer-cities"
+import { getEgyptClock, getEgyptDateKey, getPrayerTimingsUrl, parsePrayerTimings, type PrayerTimings } from "@/lib/prayer-timings"
 
 const PRAYER_CITY_STORAGE_KEY = "selectedPrayerCity"
 const DEFAULT_CITY: City = "cairo"
-
-const egyptCities: Record<City, CityInfo> = {
-  cairo: { name: "القاهرة", englishName: "Cairo", latitude: 30.0444, longitude: 31.2357 },
-  giza: { name: "الجيزة", englishName: "Giza", latitude: 30.0131, longitude: 31.2089 },
-  alexandria: { name: "الإسكندرية", englishName: "Alexandria", latitude: 31.2001, longitude: 29.9187 },
-  "port-said": { name: "بورسعيد", englishName: "Port Said", latitude: 31.2653, longitude: 32.3019 },
-  suez: { name: "السويس", englishName: "Suez", latitude: 29.9668, longitude: 32.5498 },
-  ismailia: { name: "الإسماعيلية", englishName: "Ismailia", latitude: 30.5833, longitude: 32.2722 },
-  damietta: { name: "دمياط", englishName: "Damietta", latitude: 31.4175, longitude: 31.8144 },
-  damanhur: { name: "البحيرة", englishName: "Damanhur", latitude: 31.0341, longitude: 30.4682 },
-  tanta: { name: "الغربية", englishName: "Tanta", latitude: 30.7865, longitude: 31.0004 },
-  mansoura: { name: "الدقهلية", englishName: "Mansoura", latitude: 31.0409, longitude: 31.3785 },
-  zagazig: { name: "الشرقية", englishName: "Zagazig", latitude: 30.5877, longitude: 31.5021 },
-  shebin: { name: "المنوفية", englishName: "Shebin El Kom", latitude: 30.5594, longitude: 31.0118 },
-  banha: { name: "القليوبية", englishName: "Banha", latitude: 30.4659, longitude: 31.1784 },
-  "kafr-el-sheikh": { name: "كفر الشيخ", englishName: "Kafr El Sheikh", latitude: 31.1107, longitude: 30.9388 },
-  fayoum: { name: "الفيوم", englishName: "Fayoum", latitude: 29.3084, longitude: 30.8428 },
-  "beni-suef": { name: "بني سويف", englishName: "Beni Suef", latitude: 29.0661, longitude: 31.0994 },
-  minya: { name: "المنيا", englishName: "Minya", latitude: 28.0871, longitude: 30.7618 },
-  assiut: { name: "أسيوط", englishName: "Assiut", latitude: 27.1783, longitude: 31.1859 },
-  sohag: { name: "سوهاج", englishName: "Sohag", latitude: 26.5569, longitude: 31.6948 },
-  qena: { name: "قنا", englishName: "Qena", latitude: 26.1551, longitude: 32.7160 },
-  luxor: { name: "الأقصر", englishName: "Luxor", latitude: 25.6872, longitude: 32.6396 },
-  aswan: { name: "أسوان", englishName: "Aswan", latitude: 24.0889, longitude: 32.8998 },
-  hurghada: { name: "البحر الأحمر", englishName: "Hurghada", latitude: 27.2579, longitude: 33.8116 },
-  "new-valley": { name: "الوادي الجديد", englishName: "Al Wadi al Jadid", latitude: 25.4514, longitude: 30.5461 },
-  matrouh: { name: "مطروح", englishName: "Marsa Matrouh", latitude: 31.3543, longitude: 27.2373 },
-  "north-sinai": { name: "شمال سيناء", englishName: "Arish", latitude: 31.1312, longitude: 33.7989 },
-  "south-sinai": { name: "جنوب سيناء", englishName: "Sharm El Sheikh", latitude: 27.9158, longitude: 34.3300 },
-}
 
 const cityOptions = Object.entries(egyptCities) as Array<[City, CityInfo]>
 
@@ -76,16 +27,12 @@ const resolveCity = (city: string): City => {
   return cityEntry?.[0] ?? DEFAULT_CITY
 }
 
-const resolveApiCountry = (country: string) => {
-  return country.trim().toUpperCase() === "EG" ? "Egypt" : country
-}
-
 const getStoredCity = (): City | null => {
   if (typeof window === "undefined") return null
 
   try {
     const savedCity = window.localStorage.getItem(PRAYER_CITY_STORAGE_KEY)
-    if (savedCity && savedCity in egyptCities) {
+    if (savedCity && Object.prototype.hasOwnProperty.call(egyptCities, savedCity)) {
       return savedCity as City
     }
   } catch {
@@ -137,7 +84,7 @@ const findNearestCity = (latitude: number, longitude: number): City => {
   ).city
 }
 
-export function PrayerTimes({ country, city }: PrayerTimesProps) {
+export function PrayerTimes({ city }: PrayerTimesProps) {
   const [currentTime, setCurrentTime] = React.useState(new Date())
 
   // قراءة المحافظة المحفوظة من localStorage أو استخدام الافتراضية
@@ -145,13 +92,15 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
     return getStoredCity() ?? resolveCity(city)
   })
 
-  const [prayerTimesData, setPrayerTimesData] = React.useState<PrayerTimesData | null>(null)
-  const [qiblaDirection, setQiblaDirection] = React.useState<number>(0)
+  const [prayerTimesData, setPrayerTimesData] = React.useState<PrayerTimings | null>(null)
+  const [qiblaDirection, setQiblaDirection] = React.useState<number | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const [timingsError, setTimingsError] = React.useState(false)
+  const [retryToken, setRetryToken] = React.useState(0)
   const [detectingLocation, setDetectingLocation] = React.useState(false)
   const [isClient, setIsClient] = React.useState(false)
   const [toast, setToast] = React.useState<{ message: string; variant: ToastVariant } | null>(null)
-  const apiCountry = React.useMemo(() => resolveApiCountry(country), [country])
+  const egyptDateKey = getEgyptDateKey(currentTime)
 
   const showToast = React.useCallback((message: string, variant: ToastVariant = "info") => {
     setToast({ message, variant })
@@ -185,75 +134,54 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
     )
   }
 
-  // Fetch prayer times and Qibla from API
+  // The date and clock must both use the timezone of the selected Egyptian city.
   React.useEffect(() => {
-    const fetchData = async () => {
+    const controller = new AbortController()
+    const cityInfo = egyptCities[selectedCity]
+    setPrayerTimesData(null)
+    setTimingsError(false)
+    setLoading(true)
+    setQiblaDirection(null)
+
+    const fetchPrayerTimes = async () => {
       try {
-        setLoading(true)
-        const cityInfo = egyptCities[selectedCity]
-
-        // Fetch Prayer Times
-        const prayerResponse = await fetch(
-          `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(
-            cityInfo.englishName
-          )}&country=${encodeURIComponent(apiCountry)}&method=5`
-        )
-        if (!prayerResponse.ok) {
-          throw new Error("Prayer times request failed")
-        }
-
-        const prayerData = await prayerResponse.json()
-
-        if (prayerData.code === 200 && prayerData.data.timings) {
-          const timings = prayerData.data.timings
-          setPrayerTimesData({
-            fajr: timings.Fajr,
-            sunrise: timings.Sunrise,
-            dhuhr: timings.Dhuhr,
-            asr: timings.Asr,
-            maghrib: timings.Maghrib,
-            isha: timings.Isha,
-          })
-        } else {
-          throw new Error("Prayer times response was malformed")
-        }
-
-        // Fetch Qibla Direction
-        const qiblaResponse = await fetch(
-          `https://api.aladhan.com/v1/qibla/${cityInfo.latitude}/${cityInfo.longitude}`
-        )
-        if (!qiblaResponse.ok) {
-          throw new Error("Qibla request failed")
-        }
-
-        const qiblaData = await qiblaResponse.json()
-
-        if (qiblaData.code === 200 && qiblaData.data) {
-          setQiblaDirection(Math.round(qiblaData.data.direction))
-        } else {
-          throw new Error("Qibla response was malformed")
-        }
-
+        const prayerResponse = await fetch(getPrayerTimingsUrl(egyptDateKey, cityInfo), { signal: controller.signal })
+        if (!prayerResponse.ok) throw new Error("Prayer times request failed")
+        const timings = parsePrayerTimings(await prayerResponse.json())
+        if (!timings) throw new Error("Prayer times response was malformed")
+        if (!controller.signal.aborted) setPrayerTimesData(timings)
       } catch (error) {
-        console.error("Error fetching data:", error)
-        // Fallback to static times if API fails
-        setPrayerTimesData({
-          fajr: "04:45",
-          sunrise: "06:15",
-          dhuhr: "12:05",
-          asr: "15:25",
-          maghrib: "17:55",
-          isha: "19:15",
-        })
-        setQiblaDirection(136) // Default approx direction
-        showToast("تعذر تحديث مواقيت الصلاة الآن. تم عرض أوقات تقريبية مؤقتة.", "warning")
+        if (controller.signal.aborted) return
+        console.error("Error fetching prayer times:", error)
+        setTimingsError(true)
+        showToast("تعذر تحديث مواقيت الصلاة الآن. أعد المحاولة عند توفر الاتصال.", "warning")
       } finally {
-        setLoading(false)
+        if (!controller.signal.aborted) setLoading(false)
       }
     }
 
-    fetchData()
-  }, [apiCountry, selectedCity, showToast])
+    const fetchQibla = async () => {
+      try {
+        const qiblaResponse = await fetch(
+          `https://api.aladhan.com/v1/qibla/${cityInfo.latitude}/${cityInfo.longitude}`,
+          { signal: controller.signal }
+        )
+        if (!qiblaResponse.ok) throw new Error("Qibla request failed")
+        const qiblaData = await qiblaResponse.json()
+        if (qiblaData.code === 200 && Number.isFinite(qiblaData.data?.direction)) {
+          if (!controller.signal.aborted) setQiblaDirection(Math.round(qiblaData.data.direction))
+        } else {
+          throw new Error("Qibla response was malformed")
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) console.error("Error fetching Qibla direction:", error)
+      }
+    }
+
+    fetchPrayerTimes()
+    fetchQibla()
+    return () => controller.abort()
+  }, [selectedCity, egyptDateKey, retryToken, showToast])
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -265,16 +193,16 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
 
   const cityData = egyptCities[selectedCity]
 
-  const defaultPrayerTimes: PrayerTimesData = {
-    fajr: "00:00",
-    sunrise: "00:00",
-    dhuhr: "00:00",
-    asr: "00:00",
-    maghrib: "00:00",
-    isha: "00:00",
+  const unavailablePrayerTimes: PrayerTimings = {
+    fajr: "--:--",
+    sunrise: "--:--",
+    dhuhr: "--:--",
+    asr: "--:--",
+    maghrib: "--:--",
+    isha: "--:--",
   }
 
-  const times = prayerTimesData || defaultPrayerTimes
+  const times = prayerTimesData || unavailablePrayerTimes
 
   const prayerTimes = [
     {
@@ -321,16 +249,15 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
     },
   ]
 
-  const currentHour = currentTime.getHours()
-  const currentMinute = currentTime.getMinutes()
-  const currentSeconds = currentTime.getSeconds()
+  const { hour: currentHour, minute: currentMinute, second: currentSeconds } = getEgyptClock(currentTime)
+  const upcomingPrayers = prayerTimes.filter((prayer) => prayer.name !== "الشروق")
 
   // Determine next prayer
   const getCurrentPrayerIndex = () => {
     const currentTimeMinutes = currentHour * 60 + currentMinute
 
-    for (let i = 0; i < prayerTimes.length; i++) {
-      const [hour, minute] = prayerTimes[i].time.split(":").map(Number)
+    for (let i = 0; i < upcomingPrayers.length; i++) {
+      const [hour, minute] = upcomingPrayers[i].time.split(":").map(Number)
       const prayerTimeMinutes = hour * 60 + minute
       if (currentTimeMinutes < prayerTimeMinutes) {
         return i
@@ -339,27 +266,29 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
     return 0 // Next day's Fajr
   }
 
-  const nextPrayerIndex = getCurrentPrayerIndex()
-  const nextPrayer = prayerTimes[nextPrayerIndex]
+  const nextPrayerIndex = prayerTimesData ? getCurrentPrayerIndex() : -1
+  const nextPrayer = nextPrayerIndex >= 0 ? upcomingPrayers[nextPrayerIndex] : {
+    name: "غير متاح",
+    time: "--:--",
+    color: "#6b7280",
+    gradient: "linear-gradient(135deg, #6b7280, #4b5563)",
+  }
 
   // Calculate time remaining until next prayer
   const getTimeRemaining = () => {
     const [prayerHour, prayerMinute] = nextPrayer.time.split(":").map(Number)
-    let totalMinutesRemaining = prayerHour * 60 + prayerMinute - (currentHour * 60 + currentMinute)
+    let remainingSeconds = (prayerHour * 60 + prayerMinute) * 60 -
+      (currentHour * 60 + currentMinute) * 60 - currentSeconds
+    if (remainingSeconds <= 0) remainingSeconds += 24 * 60 * 60
 
-    // If negative, it's tomorrow's Fajr
-    if (totalMinutesRemaining < 0) {
-      totalMinutesRemaining += 24 * 60
-    }
-
-    const hours = Math.floor(totalMinutesRemaining / 60)
-    const minutes = totalMinutesRemaining % 60
-    const seconds = 60 - currentSeconds
+    const hours = Math.floor(remainingSeconds / 3600)
+    const minutes = Math.floor((remainingSeconds % 3600) / 60)
+    const seconds = remainingSeconds % 60
 
     return { hours, minutes, seconds }
   }
 
-  const timeRemaining = getTimeRemaining()
+  const timeRemaining = prayerTimesData ? getTimeRemaining() : null
 
   return (
     <div className="flex justify-center">
@@ -384,6 +313,15 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                         <i className="fas fa-spinner fa-spin ms-1 text-amber-600 dark:text-amber-400"></i>
                         <span>جاري التحديث...</span>
                       </p>
+                    )}
+                    {timingsError && (
+                      <button
+                        type="button"
+                        className="mt-2 rounded-lg border border-amber-600 px-3 py-1 text-sm font-semibold text-amber-700 dark:text-amber-300"
+                        onClick={() => setRetryToken((token) => token + 1)}
+                      >
+                        إعادة تحميل المواقيت
+                      </button>
                     )}
                   </div>
                   <div className="md:w-1/3 text-center mb-3 md:mb-0">
@@ -417,6 +355,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                       <>
                         <div className="font-mono text-4xl font-extrabold leading-none text-foreground">
                           {currentTime.toLocaleTimeString("en-US", {
+                            timeZone: "Africa/Cairo",
                             hour: "2-digit",
                             minute: "2-digit",
                             second: "2-digit",
@@ -425,6 +364,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                         </div>
                         <p className="mb-0 mt-2 text-sm font-semibold text-muted-foreground">
                           {currentTime.toLocaleDateString("ar-SA-u-ca-gregory", {
+                            timeZone: "Africa/Cairo",
                             weekday: "long",
                             day: "numeric",
                             month: "long",
@@ -467,7 +407,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                             className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
-                            {String(timeRemaining.hours).padStart(2, "0")}
+                            {timeRemaining ? String(timeRemaining.hours).padStart(2, "0") : "--"}
                           </div>
                           <small className="text-muted-foreground">ساعة</small>
                         </div>
@@ -479,7 +419,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                             className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
-                            {String(timeRemaining.minutes).padStart(2, "0")}
+                            {timeRemaining ? String(timeRemaining.minutes).padStart(2, "0") : "--"}
                           </div>
                           <small className="text-muted-foreground">دقيقة</small>
                         </div>
@@ -491,7 +431,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                             className="text-4xl font-bold text-white rounded-lg flex items-center justify-center font-mono"
                             style={{ background: nextPrayer.gradient, width: "80px", height: "80px" }}
                           >
-                            {String(timeRemaining.seconds).padStart(2, "0")}
+                            {timeRemaining ? String(timeRemaining.seconds).padStart(2, "0") : "--"}
                           </div>
                           <small className="text-muted-foreground">ثانية</small>
                         </div>
@@ -508,13 +448,13 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
           {/* All Prayer Times */}
           <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {prayerTimes.map((prayer, index) => (
+              {prayerTimes.map((prayer) => (
                 <div key={prayer.name}>
                   <div
-                    className={`shadow card-hover h-full bg-card border rounded-xl overflow-hidden ${index === nextPrayerIndex ? "" : "border-border"
+                    className={`shadow card-hover h-full bg-card border rounded-xl overflow-hidden ${prayer.name === nextPrayer.name ? "" : "border-border"
                       }`}
                     style={
-                      index === nextPrayerIndex
+                      prayer.name === nextPrayer.name
                         ? { borderColor: prayer.color, borderWidth: "3px", borderStyle: "solid" }
                         : {}
                     }
@@ -537,7 +477,7 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                       <div className="text-2xl font-bold font-mono">
                         {prayer.time}
                       </div>
-                      {index === nextPrayerIndex && (
+                      {prayer.name === nextPrayer.name && (
                         <div className="mt-3">
                           <span
                             className="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold text-white"
@@ -567,7 +507,8 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                     </h5>
                     {isClient ? (
                       <p className="text-lg mb-0">
-                        {new Date().toLocaleDateString("ar-SA-u-ca-islamic", {
+                        {currentTime.toLocaleDateString("ar-SA-u-ca-islamic", {
+                          timeZone: "Africa/Cairo",
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -595,13 +536,13 @@ export function PrayerTimes({ country, city }: PrayerTimesProps) {
                           className="fas fa-location-arrow text-2xl"
                           style={{
                             color: 'var(--primary-gold)',
-                            transform: `rotate(${qiblaDirection - 45}deg)`,
+                            transform: `rotate(${(qiblaDirection ?? 45) - 45}deg)`,
                             transition: 'transform 1s ease-out'
                           }}
                         ></i>
                       </div>
                       <div>
-                        <p className="text-lg mb-0 font-bold">{qiblaDirection}°</p>
+                        <p className="text-lg mb-0 font-bold">{qiblaDirection === null ? "--" : `${qiblaDirection}°`}</p>
                         <p className="text-muted-foreground text-sm mb-0">من الشمال</p>
                       </div>
                     </div>

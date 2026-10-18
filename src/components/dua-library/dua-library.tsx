@@ -310,28 +310,31 @@ function DuaDetail({ category, onBack }: { category: DuaCategory; onBack: () => 
                       <button
                         type="button"
                         onClick={() => handleFav(item.id)}
-                        className="rounded-full p-2 transition-colors hover:bg-accent"
+                        className="rounded-full p-2 transition-colors hover:bg-accent text-muted-foreground hover:text-red-500"
+                        title={isFav ? "إزالة من المفضلة" : "إضافة للمفضلة"}
                         aria-label={isFav ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
                       >
-                        <i className={`${isFav ? "fas" : "far"} fa-heart ${isFav ? "text-red-500" : "text-muted-foreground"}`} />
+                        <i className={`${isFav ? "fas" : "far"} fa-heart ${isFav ? "text-red-500" : ""}`} />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleShareImage(item.text, item.source)}
-                        className="rounded-full p-2 transition-colors hover:bg-accent"
-                        aria-label="مشاركة الدعاء كصورة"
+                        className="rounded-full p-2 transition-colors hover:bg-accent text-muted-foreground hover:text-amber-600 dark:hover:text-amber-400"
+                        title="حفظ ومشاركة كصورة فاخرة"
+                        aria-label="مشاركة الدعاء كصورة فاخرة"
                       >
-                        <i className="fas fa-image text-muted-foreground" />
+                        <i className="fas fa-image" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleCopy(item.id, item.text)}
-                        className="rounded-full p-2 transition-colors hover:bg-accent"
+                        className="rounded-full p-2 transition-colors hover:bg-accent text-muted-foreground hover:text-foreground"
+                        title="نسخ نص الدعاء"
                         aria-label="نسخ الدعاء"
                       >
-                        <i className={`fas ${isCopied ? "fa-check text-emerald-500" : "fa-copy text-muted-foreground"}`} />
+                        <i className={`fas ${isCopied ? "fa-check text-emerald-500" : "fa-copy"}`} />
                       </button>
                     </div>
                   </div>

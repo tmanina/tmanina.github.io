@@ -15,6 +15,7 @@ interface RuqyahTrack {
 }
 
 export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
+    const [activeTrackIndex, setActiveTrackIndex] = React.useState<number | null>(null)
     const tracks: RuqyahTrack[] = [
         {
             title: "رقية شرعية - تحصين",
@@ -120,17 +121,37 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
                             </div>
                         </div>
 
-                        {/* SoundCloud Embed */}
-                        <div className="w-full rounded-xl overflow-hidden shadow-sm">
-                            <iframe
-                                width="100%"
-                                height="166"
-                                scrolling="no"
-                                frameBorder="no"
-                                allow="autoplay"
-                                src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%238b5cf6&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
-                            ></iframe>
-                        </div>
+                        {/* SoundCloud Embed - On demand */}
+                        {activeTrackIndex === index ? (
+                            <div className="w-full rounded-xl overflow-hidden shadow-sm animate-fade-in">
+                                <div className="flex justify-end mb-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveTrackIndex(null)}
+                                        className="text-xs text-muted-foreground hover:text-purple-600 flex items-center gap-1 font-semibold"
+                                    >
+                                        <i className="fas fa-times-circle"></i> إغلاق المشغل
+                                    </button>
+                                </div>
+                                <iframe
+                                    width="100%"
+                                    height="166"
+                                    scrolling="no"
+                                    frameBorder="no"
+                                    allow="autoplay"
+                                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%238b5cf6&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+                                ></iframe>
+                            </div>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => setActiveTrackIndex(index)}
+                                className="w-full py-3 px-4 rounded-xl border border-purple-500/20 bg-purple-50/60 dark:bg-purple-950/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                            >
+                                <i className="fas fa-play text-xs"></i>
+                                <span>استماع للمقطع الصوتي</span>
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>

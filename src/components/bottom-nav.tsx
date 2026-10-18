@@ -15,6 +15,7 @@ import {
   Clock,
   Calendar,
   Share2,
+  Library,
   MoreHorizontal,
   LayoutDashboard,
   Download,
@@ -33,12 +34,13 @@ const MAIN_ITEMS: NavItem[] = [
   { id: "home", label: "الرئيسية", icon: Home },
   { id: "adhkar-list", label: "الأذكار", icon: BookOpen },
   { id: "prayer-times", label: "الصلاة", icon: Clock },
+  { id: "media", label: "المكتبة", icon: Library },
   { id: "calendar", label: "التقويم", icon: Calendar },
-  { id: "share", label: "نشر", icon: Share2 },
 ]
 
 const MORE_ITEMS: NavItem[] = [
   { id: "dashboard", label: "لوحة النشاط", icon: LayoutDashboard },
+  { id: "share", label: "مشاركة التطبيق", icon: Share2 },
   { id: "install", label: "تثبيت التطبيق", icon: Download },
   { id: "about", label: "عن التطبيق", icon: Info },
 ]

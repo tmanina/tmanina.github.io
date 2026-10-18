@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { egyptCities, type City } from "@/lib/egypt-prayer-cities"
+import { getEgyptClock, getEgyptDateKey, getPrayerTimingsUrl, parsePrayerTimings } from "@/lib/prayer-timings"
 
 type PrayerKey = "fajr" | "dhuhr" | "asr" | "maghrib" | "isha"
 
@@ -11,36 +13,6 @@ interface PrayerInfo {
 }
 
 const PRAYER_CITY_STORAGE_KEY = "selectedPrayerCity"
-const cityNames: Record<string, { name: string; englishName: string }> = {
-  cairo: { name: "القاهرة", englishName: "Cairo" },
-  giza: { name: "الجيزة", englishName: "Giza" },
-  alexandria: { name: "الإسكندرية", englishName: "Alexandria" },
-  "port-said": { name: "بورسعيد", englishName: "Port Said" },
-  suez: { name: "السويس", englishName: "Suez" },
-  ismailia: { name: "الإسماعيلية", englishName: "Ismailia" },
-  damietta: { name: "دمياط", englishName: "Damietta" },
-  damanhur: { name: "البحيرة", englishName: "Damanhur" },
-  tanta: { name: "الغربية", englishName: "Tanta" },
-  mansoura: { name: "الدقهلية", englishName: "Mansoura" },
-  zagazig: { name: "الشرقية", englishName: "Zagazig" },
-  shebin: { name: "المنوفية", englishName: "Shebin El Kom" },
-  banha: { name: "القليوبية", englishName: "Banha" },
-  "kafr-el-sheikh": { name: "كفر الشيخ", englishName: "Kafr El Sheikh" },
-  fayoum: { name: "الفيوم", englishName: "Fayoum" },
-  "beni-suef": { name: "بني سويف", englishName: "Beni Suef" },
-  minya: { name: "المنيا", englishName: "Minya" },
-  assiut: { name: "أسيوط", englishName: "Assiut" },
-  sohag: { name: "سوهاج", englishName: "Sohag" },
-  qena: { name: "قنا", englishName: "Qena" },
-  luxor: { name: "الأقصر", englishName: "Luxor" },
-  aswan: { name: "أسوان", englishName: "Aswan" },
-  hurghada: { name: "البحر الأحمر", englishName: "Hurghada" },
-  "new-valley": { name: "الوادي الجديد", englishName: "Al Wadi al Jadid" },
-  matrouh: { name: "مطروح", englishName: "Marsa Matrouh" },
-  "north-sinai": { name: "شمال سيناء", englishName: "Arish" },
-  "south-sinai": { name: "جنوب سيناء", englishName: "Sharm El Sheikh" },
-}
-
 const prayerLabels: Record<PrayerKey, string> = {
   fajr: "الفجر",
   dhuhr: "الظهر",
@@ -71,25 +43,27 @@ function parsePrayerMinutes(time: string) {
 }
 
 function getStoredCity() {
-  if (typeof window === "undefined") return cityNames.cairo
+  if (typeof window === "undefined") return egyptCities.cairo
 
   try {
     const value = window.localStorage.getItem(PRAYER_CITY_STORAGE_KEY) || "cairo"
-    return cityNames[value] || cityNames.cairo
+    return Object.prototype.hasOwnProperty.call(egyptCities, value) ? egyptCities[value as City] : egyptCities.cairo
   } catch {
-    return cityNames.cairo
+    return egyptCities.cairo
   }
 }
 
 function getNextPrayer(prayers: Record<PrayerKey, string>, now: Date): PrayerInfo {
-  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+  const { hour, minute } = getEgyptClock(now)
+  const currentMinutes = hour * 60 + minute
   const ordered = Object.entries(prayers) as Array<[PrayerKey, string]>
   const next = ordered.find(([, time]) => currentMinutes < parsePrayerMinutes(time)) || ordered[0]
   return { name: prayerLabels[next[0]], time: next[1], key: next[0] }
 }
 
 function getRemainingText(prayer: PrayerInfo, now: Date) {
-  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+  const { hour, minute } = getEgyptClock(now)
+  const currentMinutes = hour * 60 + minute
   let remaining = parsePrayerMinutes(prayer.time) - currentMinutes
   if (remaining < 0) remaining += 24 * 60
   const hours = Math.floor(remaining / 60)
@@ -101,14 +75,11 @@ function getRemainingText(prayer: PrayerInfo, now: Date) {
 export function NextPrayerWidget() {
   const [now, setNow] = React.useState(new Date())
   const [city, setCity] = React.useState(() => getStoredCity())
-  const [prayers, setPrayers] = React.useState<Record<PrayerKey, string>>({
-    fajr: "04:45",
-    dhuhr: "12:05",
-    asr: "15:25",
-    maghrib: "17:55",
-    isha: "19:15",
-  })
+  const [prayers, setPrayers] = React.useState<Record<PrayerKey, string> | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState(false)
+  const [retryToken, setRetryToken] = React.useState(0)
+  const egyptDateKey = getEgyptDateKey(now)
 
   React.useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 30000)
@@ -116,41 +87,46 @@ export function NextPrayerWidget() {
   }, [])
 
   React.useEffect(() => {
+    const controller = new AbortController()
     const selectedCity = getStoredCity()
     setCity(selectedCity)
+    setPrayers(null)
+    setError(false)
+    setLoading(true)
 
     const loadTimings = async () => {
       try {
-        setLoading(true)
-        const response = await fetch(
-          `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(selectedCity.englishName)}&country=Egypt&method=5`
-        )
+        const response = await fetch(getPrayerTimingsUrl(egyptDateKey, selectedCity), { signal: controller.signal })
         if (!response.ok) throw new Error("Prayer widget request failed")
-        const data = await response.json()
-        const timings = data?.data?.timings
+        const timings = parsePrayerTimings(await response.json())
         if (!timings) throw new Error("Prayer widget response malformed")
 
-        setPrayers({
-          fajr: timings.Fajr,
-          dhuhr: timings.Dhuhr,
-          asr: timings.Asr,
-          maghrib: timings.Maghrib,
-          isha: timings.Isha,
-        })
+        if (!controller.signal.aborted) {
+          setPrayers({
+            fajr: timings.fajr,
+            dhuhr: timings.dhuhr,
+            asr: timings.asr,
+            maghrib: timings.maghrib,
+            isha: timings.isha,
+          })
+        }
       } catch {
-        // Keep static fallback values.
+        if (!controller.signal.aborted) setError(true)
       } finally {
-        setLoading(false)
+        if (!controller.signal.aborted) setLoading(false)
       }
     }
 
     loadTimings()
-  }, [])
+    return () => controller.abort()
+  }, [egyptDateKey, retryToken])
 
-  const nextPrayer = getNextPrayer(prayers, now)
-  const remaining = getRemainingText(nextPrayer, now)
-  const allPrayers = Object.entries(prayers) as Array<[PrayerKey, string]>
-  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+  const unavailablePrayers: Record<PrayerKey, string> = {
+    fajr: "--:--", dhuhr: "--:--", asr: "--:--", maghrib: "--:--", isha: "--:--",
+  }
+  const nextPrayer = prayers ? getNextPrayer(prayers, now) : { name: "غير متاح", time: "--:--", key: "fajr" as PrayerKey }
+  const remaining = prayers ? getRemainingText(nextPrayer, now) : { text: "--" }
+  const allPrayers = Object.entries(prayers || unavailablePrayers) as Array<[PrayerKey, string]>
 
   return (
     <section className="prayer-widget-card">
@@ -313,7 +289,7 @@ export function NextPrayerWidget() {
           <div className="prayer-time-big">{nextPrayer.time}</div>
           <div className="prayer-countdown">
             <span className="countdown-dot" />
-            بعد {remaining.text}
+            {prayers ? `بعد ${remaining.text}` : loading ? "جاري التحديث..." : "المواقيت غير متاحة"}
           </div>
         </div>
       </div>
@@ -321,11 +297,16 @@ export function NextPrayerWidget() {
       <div className="prayer-city">
         <i className="fas fa-map-marker-alt" />
         {city.name} {loading ? "• جاري التحديث..." : ""}
+        {error && (
+          <button type="button" className="ms-2 rounded border border-current px-2 py-1 text-xs" onClick={() => setRetryToken((token) => token + 1)}>
+            إعادة المحاولة
+          </button>
+        )}
       </div>
 
       <div className="prayer-times-row">
         {allPrayers.map(([key, time]) => (
-          <div key={key} className={`prayer-time-item ${key === nextPrayer.key ? "is-next" : ""}`}>
+          <div key={key} className={`prayer-time-item ${prayers && key === nextPrayer.key ? "is-next" : ""}`}>
             <span className="prayer-time-emoji"><i className={`fas ${prayerIcons[key]}`} style={{ color: prayerIconColors[key] }} /></span>
             <span className="prayer-time-label">{prayerLabels[key]}</span>
             <span className="prayer-time-value">{time}</span>

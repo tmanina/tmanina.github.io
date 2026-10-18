@@ -4,7 +4,7 @@
 // ========================================
 
 // Cache versions - INCREMENT THESE FOR UPDATES!
-const APP_VERSION = 'v7';
+const APP_VERSION = 'v8';
 const CACHE_STATIC = `tmanina-static-${APP_VERSION}`;
 const CACHE_PAGES = `tmanina-pages-${APP_VERSION}`;
 const CACHE_ASSETS = `tmanina-assets-${APP_VERSION}`;
