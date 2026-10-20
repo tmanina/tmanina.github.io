@@ -122,22 +122,37 @@ export function MediaPage() {
                             </div>
                         </div>
 
-                        {/* أحاديث */}
+                        {/* موسوعة الأحاديث النبوية */}
                         <div>
                             <div
                                 className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                                 onClick={() => handleSectionChange('hadiths')}
                             >
-                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-amber-500 to-amber-700">
-                                    {showNewBadge && (<span className="absolute top-2 end-2 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg z-10">جديد</span>)}
-                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md">
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700">
+                                    <span className="absolute top-2 end-2 bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg z-10 shadow-sm">
+                                        موسوعة شاملة
+                                    </span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-4 backdrop-blur-md shadow-md group-hover:scale-105 transition-transform duration-300">
                                         <i className="fas fa-book-quran"></i>
                                     </div>
-                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">أحاديث</h3>
-                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">أحاديث نبوية شريفة</p>
-                                    <button className="bg-white text-amber-700 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
-                                        <i className="fas fa-folder-open ms-2"></i>
-                                        عرض المحتوى
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">موسوعة الأحاديث النبوية</h3>
+                                    <p className="text-white/95 text-xs sm:text-sm mt-2 font-medium mb-3 leading-relaxed">
+                                        صحيح البخاري ومسلم، رياض الصالحين، الأربعون النووية بالشرح، وبحث الدرر السنية
+                                    </p>
+                                    <div className="flex flex-wrap items-center justify-center gap-1.5 mb-4">
+                                        <span className="bg-white/20 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold backdrop-blur-sm">
+                                            39,000+ حديث
+                                        </span>
+                                        <span className="bg-white/20 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold backdrop-blur-sm">
+                                            الأربعون النووية
+                                        </span>
+                                        <span className="bg-white/20 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold backdrop-blur-sm">
+                                            الشرح والفوائد
+                                        </span>
+                                    </div>
+                                    <button className="bg-white text-amber-700 border-0 rounded-full px-6 py-2.5 font-bold text-sm shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-book-open ms-2"></i>
+                                        تصفح الموسوعة
                                     </button>
                                 </div>
                             </div>

@@ -479,11 +479,11 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
         <div className="text-center mb-6">
           <div className="rounded-2xl p-8 text-white mb-6" style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}>
             <i className="fas fa-book-open text-5xl mb-3 opacity-75 block" />
-            <h1 className="text-2xl font-bold">الموسوعة الحديثية</h1>
-            <p className="opacity-90">كتب الحديث النبوي الشريف</p>
+            <h1 className="text-2xl font-bold">الموسوعة الحديثية الكبرى</h1>
+            <p className="opacity-90">كتب الحديث النبوي الشريف والشروح الموثقة وبحث الدرر السنية</p>
           </div>
         </div>
-        {/* <DorarHadithSearch /> */}
+        <DorarHadithSearch />
         {colLoading ? (
           <div className="text-center py-12">
             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -499,17 +499,29 @@ export function HadithLibrary({ onBack }: HadithLibraryProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {collections.map((col) => {
               const c = colorOf(col.slug)
+              const isForty = col.slug === "forty"
+              const isRiyad = col.slug === "riyadussalihin"
               return (
                 <div
                   key={col.slug}
                   className="rounded-2xl overflow-hidden shadow-md bg-card border border-border cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                   onClick={() => pickCollection(col)}
                 >
-                  <div className="p-6 text-white text-center" style={{ background: c.gradient }}>
+                  <div className="p-6 text-white text-center relative" style={{ background: c.gradient }}>
+                    {isForty && (
+                      <span className="absolute top-3 end-3 bg-white/25 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
+                        شرح كامل وفوائد
+                      </span>
+                    )}
+                    {isRiyad && (
+                      <span className="absolute top-3 end-3 bg-white/25 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
+                        شرح ابن عثيمين
+                      </span>
+                    )}
                     <div className="rounded-full flex items-center justify-center mx-auto mb-3" style={{ width: "72px", height: "72px", backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(10px)" }}>
                       <i className="fas fa-book text-2xl" />
                     </div>
-                    <h3 className="text-xl font-bold mb-1">{col.name.ar}</h3>
+                    <h3 className="text-xl font-bold mb-1">{isForty ? "الأربعون النووية والقدسية" : col.name.ar}</h3>
                     <p className="text-sm opacity-90">{COL_DESC[col.slug] || col.name.ar}</p>
                   </div>
                   <div className="p-4 text-center">
