@@ -21,6 +21,7 @@ const SurahList = dynamic(() => import("./surah-list"), { loading: LoadingSpinne
 const MushafWithTafsir = dynamic(() => import("./mushaf-tafsir").then(m => m.MushafWithTafsir), { loading: () => <div className="text-center py-12"><div className="w-10 h-10 border-4 border-border border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" /><p className="text-muted-foreground text-sm">جاري تحميل المصحف...</p></div> })
 const QuranReader = dynamic(() => import("./quran-reader/quran-reader").then(m => m.QuranReader), { loading: () => <div className="flex items-center justify-center py-20"><div className="text-center"><div className="mx-auto mb-4 w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin"></div><p className="text-muted-foreground">جاري تحميل المصحف...</p></div></div> })
 const ProphetsStories = dynamic(() => import("./prophets/prophets-stories").then(m => m.ProphetsStories), { loading: LoadingSpinner })
+const SunnahPage = dynamic(() => import("./sunnah/sunnah-page").then(m => m.SunnahPage), { loading: LoadingSpinner })
 
 function LoadingSpinner() {
   return (
@@ -263,6 +264,29 @@ export function MediaPage() {
                             </div>
                         </div>
 
+                        {/* السنن المهجورة */}
+                        <div>
+                            <div
+                                className="transition-all duration-300 ease-out border-0 overflow-hidden h-full cursor-pointer group shadow bg-card rounded-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+                                onClick={() => handleSectionChange('sunnah')}
+                            >
+                                <div className="p-10 max-md:p-8 border-0 relative text-center bg-gradient-to-br from-teal-600 via-emerald-700 to-teal-800">
+                                    <span className="absolute top-2 end-2 bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg z-10 shadow-sm">
+                                        إحياء السنة
+                                    </span>
+                                    <div className="w-20 h-20 max-md:w-[70px] max-md:h-[70px] bg-white/25 rounded-full flex items-center justify-center text-3xl max-md:text-2xl mx-auto mb-5 backdrop-blur-md shadow-md group-hover:scale-105 transition-transform duration-300">
+                                        <i className="fas fa-seedling"></i>
+                                    </div>
+                                    <h3 className="text-white text-2xl max-md:text-xl font-bold m-0 shadow-[0_2px_4px_rgba(0,0,0,0.15)]">السنن المهجورة</h3>
+                                    <p className="text-white/95 text-sm mt-1.5 font-medium mb-4">إحياء السنن النبوية الثابتة في اليوم والليلة مع كيفية تطبيقها وأجرها</p>
+                                    <button className="bg-white text-teal-800 border-0 rounded-full px-5 py-3 font-semibold text-base shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50" type="button">
+                                        <i className="fas fa-seedling ms-2"></i>
+                                        تصفح السنن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* قصص الأنبياء */}
                         <div>
                             <div
@@ -406,6 +430,10 @@ export function MediaPage() {
 
                     {activeSection === 'asmaa' && (
                         <AsmaaPage />
+                    )}
+
+                    {activeSection === 'sunnah' && (
+                        <SunnahPage onBack={() => handleSectionChange(null)} />
                     )}
 
                     {activeSection === 'hadiths' && (
