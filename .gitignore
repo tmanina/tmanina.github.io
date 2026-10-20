@@ -12,3 +12,10 @@ dist
 
 .cache/
 public/data/riyad-uthaymeen-sharh.json
+
+# Local AI agent documentation and instructions (kept local only, not pushed to production)
+AGENTS.md
+CLAUDE.md
+docs/ai/
+.agents/
+
