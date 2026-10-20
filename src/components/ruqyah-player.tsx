@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
+import { RuqyahReader } from "@/components/ruqyah/ruqyah-reader"
+import { cn } from "@/lib/utils"
 
 interface RuqyahPlayerProps {
     onBack: () => void
@@ -14,8 +16,18 @@ interface RuqyahTrack {
     reciter?: string
 }
 
+type RuqyahTab = "reader" | "audio"
+
 export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
+    const [activeTab, setActiveTab] = React.useState<RuqyahTab>("reader")
     const [activeTrackIndex, setActiveTrackIndex] = React.useState<number | null>(null)
+
+    const switchTab = (tab: RuqyahTab) => {
+        if (tab === activeTab) return
+        // إيقاف التشغيل الصوتي عند مغادرة تبويب الاستماع
+        setActiveTrackIndex(null)
+        setActiveTab(tab)
+    }
     const tracks: RuqyahTrack[] = [
         {
             title: "رقية شرعية - تحصين",
@@ -97,64 +109,113 @@ export function RuqyahPlayer({ onBack }: RuqyahPlayerProps) {
                 <div className="mb-3">
                     <i className="fas fa-book-medical text-4xl mb-2 opacity-75 block"></i>
                     <h1 className="font-bold mb-1">رقية شرعية</h1>
-                    <p className="opacity-90">آيات وأدعية الرقية الشرعية - مجموعة متنوعة</p>
+                    <p className="opacity-90">آيات وأدعية الرقية الشرعية - اقرأ مع عدّاد التكرار أو استمع</p>
                 </div>
             </div>
 
-            {/* Tracks Grid */}
-            <div className="grid gap-6">
-                {tracks.map((track, index) => (
-                    <div key={index} className="bg-card border border-border rounded-xl p-6 shadow-sm border-2 border-transparent transition-all duration-300 hover:border-purple-500 hover:shadow-[0_8px_16px_rgba(139,92,246,0.15)] hover:-translate-y-0.5">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-[50px] h-[50px] max-md:w-[45px] max-md:h-[45px] bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center text-white text-2xl max-md:text-xl shrink-0">
-                                <i className="fas fa-play"></i>
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-lg max-md:text-base font-bold text-foreground m-0 mb-1">{track.title}</h3>
-                                <p className="text-sm text-muted-foreground m-0">{track.description}</p>
-                                {track.reciter && (
-                                    <div className="text-xs text-purple-600 dark:text-purple-400 font-semibold mt-1">
-                                        <i className="fas fa-microphone-alt ms-1"></i>
-                                        {track.reciter}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+            {/* Tab Navigation */}
+            <div className="flex gap-2 mb-6" role="tablist" aria-label="أقسام الرقية الشرعية">
+                <button
+                    type="button"
+                    role="tab"
+                    id="ruqyah-tab-reader"
+                    aria-selected={activeTab === "reader"}
+                    aria-controls="ruqyah-panel-reader"
+                    onClick={() => switchTab("reader")}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all",
+                        activeTab === "reader"
+                            ? "bg-purple-600 text-white shadow-md"
+                            : "bg-card border border-border text-muted-foreground hover:text-purple-600 dark:hover:text-purple-400"
+                    )}
+                >
+                    <i className="fas fa-book-open"></i>
+                    قراءة الرقية
+                </button>
+                <button
+                    type="button"
+                    role="tab"
+                    id="ruqyah-tab-audio"
+                    aria-selected={activeTab === "audio"}
+                    aria-controls="ruqyah-panel-audio"
+                    onClick={() => switchTab("audio")}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all",
+                        activeTab === "audio"
+                            ? "bg-purple-600 text-white shadow-md"
+                            : "bg-card border border-border text-muted-foreground hover:text-purple-600 dark:hover:text-purple-400"
+                    )}
+                >
+                    <i className="fas fa-headphones"></i>
+                    استماع صوتي
+                </button>
+            </div>
 
-                        {/* SoundCloud Embed - On demand */}
-                        {activeTrackIndex === index ? (
-                            <div className="w-full rounded-xl overflow-hidden shadow-sm animate-fade-in">
-                                <div className="flex justify-end mb-2">
+            {/* Written Ruqyah Reader */}
+            {activeTab === "reader" && (
+                <div role="tabpanel" id="ruqyah-panel-reader" aria-labelledby="ruqyah-tab-reader" className="animate-fade-in">
+                    <RuqyahReader />
+                </div>
+            )}
+
+            {/* Audio Ruqyah Tracks */}
+            {activeTab === "audio" && (
+                <div role="tabpanel" id="ruqyah-panel-audio" aria-labelledby="ruqyah-tab-audio" className="animate-fade-in">
+                    <div className="grid gap-6">
+                        {tracks.map((track, index) => (
+                            <div key={index} className="bg-card border border-border rounded-xl p-6 shadow-sm border-2 border-transparent transition-all duration-300 hover:border-purple-500 hover:shadow-[0_8px_16px_rgba(139,92,246,0.15)] hover:-translate-y-0.5">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-[50px] h-[50px] max-md:w-[45px] max-md:h-[45px] bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center text-white text-2xl max-md:text-xl shrink-0">
+                                        <i className="fas fa-play"></i>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="text-lg max-md:text-base font-bold text-foreground m-0 mb-1">{track.title}</h3>
+                                        <p className="text-sm text-muted-foreground m-0">{track.description}</p>
+                                        {track.reciter && (
+                                            <div className="text-xs text-purple-600 dark:text-purple-400 font-semibold mt-1">
+                                                <i className="fas fa-microphone-alt ms-1"></i>
+                                                {track.reciter}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* SoundCloud Embed - On demand */}
+                                {activeTrackIndex === index ? (
+                                    <div className="w-full rounded-xl overflow-hidden shadow-sm animate-fade-in">
+                                        <div className="flex justify-end mb-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveTrackIndex(null)}
+                                                className="text-xs text-muted-foreground hover:text-purple-600 flex items-center gap-1 font-semibold"
+                                            >
+                                                <i className="fas fa-times-circle"></i> إغلاق المشغل
+                                            </button>
+                                        </div>
+                                        <iframe
+                                            width="100%"
+                                            height="166"
+                                            scrolling="no"
+                                            frameBorder="no"
+                                            allow="autoplay"
+                                            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%238b5cf6&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+                                        ></iframe>
+                                    </div>
+                                ) : (
                                     <button
                                         type="button"
-                                        onClick={() => setActiveTrackIndex(null)}
-                                        className="text-xs text-muted-foreground hover:text-purple-600 flex items-center gap-1 font-semibold"
+                                        onClick={() => setActiveTrackIndex(index)}
+                                        className="w-full py-3 px-4 rounded-xl border border-purple-500/20 bg-purple-50/60 dark:bg-purple-950/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                                     >
-                                        <i className="fas fa-times-circle"></i> إغلاق المشغل
+                                        <i className="fas fa-play text-xs"></i>
+                                        <span>استماع للمقطع الصوتي</span>
                                     </button>
-                                </div>
-                                <iframe
-                                    width="100%"
-                                    height="166"
-                                    scrolling="no"
-                                    frameBorder="no"
-                                    allow="autoplay"
-                                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%238b5cf6&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
-                                ></iframe>
+                                )}
                             </div>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => setActiveTrackIndex(index)}
-                                className="w-full py-3 px-4 rounded-xl border border-purple-500/20 bg-purple-50/60 dark:bg-purple-950/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-                            >
-                                <i className="fas fa-play text-xs"></i>
-                                <span>استماع للمقطع الصوتي</span>
-                            </button>
-                        )}
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
 
             {/* Info Section */}
             <div className="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-6 mt-8">
