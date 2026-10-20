@@ -37,7 +37,7 @@ export function HomeClient() {
   const activeTab = searchParams.get("view") || "home"
   const [showLibraryBadge, setShowLibraryBadge] = React.useState(false)
   React.useEffect(() => {
-    const key = 'libraryNewBadgeTimestamp'
+    const key = 'libraryUpdatesBadge_v2'
     const stored = localStorage.getItem(key)
     const now = Date.now()
     if (!stored) {
@@ -47,11 +47,10 @@ export function HomeClient() {
     }
     const saved = parseInt(stored, 10)
     const diffDays = (now - saved) / (1000 * 60 * 60 * 24)
-    if (diffDays < 2) {
+    if (diffDays < 3) {
       setShowLibraryBadge(true)
     } else {
       setShowLibraryBadge(false)
-      localStorage.removeItem(key)
     }
   }, [])
 
@@ -115,7 +114,7 @@ export function HomeClient() {
           zIndex: activeTab === "media" && searchParams.get("id") === "quran" ? 12000 : undefined,
           position: activeTab === "media" && searchParams.get("id") === "quran" ? 'relative' : undefined
         }}>
-          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+          <BottomNav activeTab={activeTab} onTabChange={setActiveTab} hasLibraryBadge={showLibraryBadge} />
 
           <RadioProvider>
           <div className="mb-4">

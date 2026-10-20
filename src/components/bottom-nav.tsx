@@ -48,6 +48,7 @@ const MORE_ITEMS: NavItem[] = [
 interface BottomNavProps {
   activeTab: string
   onTabChange: (tab: string) => void
+  hasLibraryBadge?: boolean
 }
 
 interface BeforeInstallPromptEvent extends Event {
@@ -55,7 +56,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform?: string }>
 }
 
-export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
+export function BottomNav({ activeTab, onTabChange, hasLibraryBadge = false }: BottomNavProps) {
   const [moreOpen, setMoreOpen] = React.useState(false)
   const [toastMsg, setToastMsg] = React.useState<string>("")
   const [toastVariant, setToastVariant] = React.useState<ToastVariant>("info")
@@ -176,7 +177,15 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                 {isActive && (
                   <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-gradient-to-r from-gold-400 to-gold-600" />
                 )}
-                <Icon className={cn("size-5", isActive ? "drop-shadow-sm" : "")} />
+                <div className="relative inline-flex items-center justify-center">
+                  <Icon className={cn("size-5", isActive ? "drop-shadow-sm" : "")} />
+                  {item.id === "media" && hasLibraryBadge && (
+                    <span className="absolute -top-1 -end-1 flex h-2.5 w-2.5" aria-label="محتوى جديد في المكتبة">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-background shadow-sm" />
+                    </span>
+                  )}
+                </div>
                 <span className={cn(
                   "text-[0.6rem] font-medium leading-tight",
                   isActive ? "font-semibold" : ""
