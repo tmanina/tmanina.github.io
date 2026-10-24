@@ -49,6 +49,27 @@ function buildShareText(item: RuqyahItem): string {
     return `${item.title}\n\n${item.text}\n\nالمصدر: ${item.source}`
 }
 
+function renderRuqyahText(text: string) {
+    const parts = text.split(/(﴿[0-9٠-٩]+﴾)/g)
+    if (parts.length === 1) {
+        return text
+    }
+    return parts.map((part, index) => {
+        const isAyahMarker = /^﴿[0-9٠-٩]+﴾$/.test(part.trim())
+        if (isAyahMarker) {
+            return (
+                <span
+                    key={index}
+                    className="inline-flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold mx-2 px-1 select-none align-middle"
+                >
+                    {part.trim()}
+                </span>
+            )
+        }
+        return <React.Fragment key={index}>{part}</React.Fragment>
+    })
+}
+
 export function RuqyahReader() {
     const [counts, setCounts] = React.useState<Record<string, number>>(loadStoredCounts)
     const [filter, setFilter] = React.useState<CategoryFilter>("all")
@@ -268,12 +289,12 @@ export function RuqyahReader() {
                                 <p
                                     data-testid="ruqyah-text"
                                     className={cn(
-                                        "text-foreground leading-loose whitespace-pre-line mb-4",
+                                        "text-foreground leading-[2.3] md:leading-[2.5] whitespace-pre-line mb-4",
                                         FONT_SIZE_CLASSES[fontSize]
                                     )}
                                     style={{ fontFamily: "var(--font-amiri), Amiri, serif" }}
                                 >
-                                    {item.text}
+                                    {renderRuqyahText(item.text)}
                                 </p>
 
                                 {item.note && (
