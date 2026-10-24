@@ -50,24 +50,46 @@ function buildShareText(item: RuqyahItem): string {
 }
 
 function renderRuqyahText(text: string) {
-    const parts = text.split(/(﴿[0-9٠-٩]+﴾)/g)
-    if (parts.length === 1) {
-        return text
+    // Split on ayah markers ﴿N﴾ keeping the marker
+    const segments = text.split(/(﴿[0-9٠-٩]+﴾)/g).filter(Boolean)
+    if (segments.length === 1) {
+        return <span>{text}</span>
     }
-    return parts.map((part, index) => {
-        const isAyahMarker = /^﴿[0-9٠-٩]+﴾$/.test(part.trim())
-        if (isAyahMarker) {
-            return (
-                <span
-                    key={index}
-                    className="inline-flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold mx-2 px-1 select-none align-middle"
-                >
-                    {part.trim()}
+
+    // Reassemble into [verseText, markerNum] pairs and render each as its own line
+    const lines: React.ReactNode[] = []
+    let buffer = ""
+    let lineKey = 0
+
+    segments.forEach((seg) => {
+        const isMarker = /^﴿[0-9٠-٩]+﴾$/.test(seg.trim())
+        if (isMarker) {
+            // Flush buffer + marker as one line
+            const lineText = buffer.trim()
+            buffer = ""
+            lines.push(
+                <span key={lineKey++} className="block py-1">
+                    {lineText && <span>{lineText} </span>}
+                    <span className="text-amber-600 dark:text-amber-400 font-bold select-none mx-1">
+                        {seg.trim()}
+                    </span>
                 </span>
             )
+        } else {
+            buffer += seg
         }
-        return <React.Fragment key={index}>{part}</React.Fragment>
     })
+
+    // Flush remaining text (shouldn't happen in valid Quran text but just in case)
+    if (buffer.trim()) {
+        lines.push(
+            <span key={lineKey++} className="block py-1">
+                {buffer.trim()}
+            </span>
+        )
+    }
+
+    return <>{lines}</>
 }
 
 export function RuqyahReader() {
@@ -286,16 +308,16 @@ export function RuqyahReader() {
                                 </div>
 
                                 {/* نص الرقية */}
-                                <p
+                                <div
                                     data-testid="ruqyah-text"
                                     className={cn(
-                                        "text-foreground leading-[2.3] md:leading-[2.5] whitespace-pre-line mb-4",
+                                        "text-foreground mb-4 space-y-1",
                                         FONT_SIZE_CLASSES[fontSize]
                                     )}
-                                    style={{ fontFamily: "var(--font-amiri), Amiri, serif" }}
+                                    style={{ fontFamily: "var(--font-amiri), Amiri, serif", lineHeight: "2.4" }}
                                 >
                                     {renderRuqyahText(item.text)}
-                                </p>
+                                </div>
 
                                 {item.note && (
                                     <p className="text-sm text-muted-foreground leading-relaxed mb-4 bg-muted/50 rounded-lg p-3 m-0">
